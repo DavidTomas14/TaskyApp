@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.davidtomas.taskyapp.ui.theme.TaskyAppTheme
+import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 class MainActivity : ComponentActivity() {
 
