@@ -1,13 +1,15 @@
 [versions]
 activity-compose = "1.8.2"
 androidx-junit = "1.1.5"
+android-gradle = "8.2.2"
+bom = "2024.02.01"
 core-ktx = "1.12.0"
+detekt = "1.23.5"
 espresso-core = "3.5.1"
 junit = "4.13.2"
-lifecycle-runtime-ktx = "2.7.0"
-bom = "2024.02.01"
-android-gradle = "8.2.2"
 kotlin = "1.9.0"
+ktlint = "11.0.0"
+lifecycle-runtime-ktx = "2.7.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -54,3 +56,5 @@ testing-android = [
 [plugins]
 android-application = {id = "com.android.application", version.ref = "android-gradle"}
 android-kotlin = {id = "org.jetbrains.kotlin.android", version.ref = "kotlin"}
+ktlint = {id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint"}
+detekt = {id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
