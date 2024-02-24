@@ -12,11 +12,15 @@ class MainActivityViewModel : ViewModel() {
     private val _isAuthenticated = MutableStateFlow(false)
     val isAuthenticated = _isAuthenticated.asStateFlow()
 
+    private val _isAuthChecked = MutableStateFlow(false)
+    val isAuthChecked = _isAuthChecked.asStateFlow()
+
     init {
 
         viewModelScope.launch {
             delay(ESTIMATED_TIME)
-            _isAuthenticated.value = true
+            _isAuthChecked.value = true
+            _isAuthenticated.value = false
         }
     }
 

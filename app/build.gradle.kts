@@ -80,4 +80,6 @@ dependencies {
     debugImplementation(libs.bundles.compose.debug)
     // Splash
     implementation(libs.splash.api)
+    // Navigation
+    implementation(libs.compose.navigation)
 }
