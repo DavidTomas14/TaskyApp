@@ -1,0 +1,56 @@
+[versions]
+activity-compose = "1.8.2"
+androidx-junit = "1.1.5"
+core-ktx = "1.12.0"
+espresso-core = "3.5.1"
+junit = "4.13.2"
+lifecycle-runtime-ktx = "2.7.0"
+bom = "2024.02.01"
+android-gradle = "8.2.2"
+kotlin = "1.9.0"
+
+[libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "bom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-material-3 = { module = "androidx.compose.material3:material3" }
+compose-ui-test-junit-4 = { module = "androidx.compose.ui:ui-test-junit4" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+junit = { module = "junit:junit", version.ref = "junit" }
+
+[bundles]
+androidx = [
+    "androidx-core-ktx",
+    "androidx-lifecycle-runtime-ktx",
+    "androidx-activity-compose"
+]
+
+compose = [
+    "compose-ui",
+    "compose-ui-graphics",
+    "compose-ui-tooling-preview",
+    "compose-material-3",
+]
+
+compose-debug = [
+    "compose-ui-tooling",
+    "compose-ui-test-manifest"
+]
+
+testing-android = [
+    "androidx-junit",
+    "androidx-espresso-core",
+    "compose-ui-test-junit-4"
+]
+
+
+[plugins]
+android-application = {id = "com.android.application", version.ref = "android-gradle"}
+android-kotlin = {id = "org.jetbrains.kotlin.android", version.ref = "kotlin"}
