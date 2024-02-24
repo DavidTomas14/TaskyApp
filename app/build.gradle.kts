@@ -78,4 +78,6 @@ dependencies {
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.bundles.testing.android)
     debugImplementation(libs.bundles.compose.debug)
+    // Splash
+    implementation(libs.splash.api)
 }
