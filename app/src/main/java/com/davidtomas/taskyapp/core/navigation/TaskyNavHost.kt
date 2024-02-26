@@ -9,9 +9,9 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.davidtomas.taskyapp.features.agenda.AgendaScreen
-import com.davidtomas.taskyapp.features.auth.login.LoginScreen
-import com.davidtomas.taskyapp.features.auth.register.RegisterScreen
+import com.davidtomas.taskyapp.features.agenda.presentation.AgendaScreen
+import com.davidtomas.taskyapp.features.auth.login.presentation.LoginScreen
+import com.davidtomas.taskyapp.features.auth.register.presentation.RegisterScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

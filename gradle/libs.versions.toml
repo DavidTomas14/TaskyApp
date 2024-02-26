@@ -7,9 +7,9 @@ core-ktx = "1.12.0"
 detekt = "1.23.5"
 espresso-core = "3.5.1"
 junit = "4.13.2"
-koin = "3.6.0"
+koin = "3.5.3"
 kotlin = "1.9.0"
-ktlint = "11.0.0"
+ktlint = "11.1.0"
 lifecycle-runtime-ktx = "2.7.0"
 navigation = "2.7.7"
 splash = "1.0.1"
@@ -31,6 +31,7 @@ compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 junit = { module = "junit:junit", version.ref = "junit" }
 koin = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 splash-api = { module = "androidx.core:core-splashscreen", version.ref = "splash" }
 
 [bundles]
@@ -50,6 +51,11 @@ compose = [
 compose-debug = [
     "compose-ui-tooling",
     "compose-ui-test-manifest"
+]
+
+koin = [
+    "koin",
+    "koin-compose"
 ]
 
 testing-android = [
