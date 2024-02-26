@@ -82,4 +82,6 @@ dependencies {
     implementation(libs.splash.api)
     // Navigation
     implementation(libs.compose.navigation)
+    // Koin
+    implementation(libs.bundles.koin)
 }

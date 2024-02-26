@@ -8,10 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.davidtomas.taskyapp.features.agenda.AgendaScreen
-import com.davidtomas.taskyapp.features.auth.login.LoginScreen
-import com.davidtomas.taskyapp.features.auth.register.RegisterScreen
+import com.davidtomas.taskyapp.features.agenda.presentation.AgendaScreen
+import com.davidtomas.taskyapp.features.auth.presentation.login.LoginRoot
+import com.davidtomas.taskyapp.features.auth.presentation.register.RegisterRoot
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -23,16 +24,21 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
         content = { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = if (isAuthenticated) Route.AGENDA else Route.LOGIN
+                startDestination = Route.AUTH
             ) {
-                composable(route = Route.LOGIN) {
-                    LoginScreen()
-                }
-                composable(route = Route.REGISTER) {
-                    RegisterScreen()
-                }
-                composable(route = Route.AGENDA) {
-                    AgendaScreen()
+                navigation(
+                    startDestination = if (isAuthenticated) Route.AGENDA else Route.LOGIN,
+                    route = Route.AUTH
+                ) {
+                    composable(route = Route.LOGIN) {
+                        LoginRoot(navController = navController)
+                    }
+                    composable(route = Route.REGISTER) {
+                        RegisterRoot(navController = navController)
+                    }
+                    composable(route = Route.AGENDA) {
+                        AgendaScreen()
+                    }
                 }
             }
         }
