@@ -7,9 +7,11 @@ core-ktx = "1.12.0"
 detekt = "1.23.5"
 espresso-core = "3.5.1"
 junit = "4.13.2"
+koin = "3.5.3"
 kotlin = "1.9.0"
-ktlint = "11.0.0"
+ktlint = "11.1.0"
 lifecycle-runtime-ktx = "2.7.0"
+navigation = "2.7.7"
 splash = "1.0.1"
 
 [libraries]
@@ -19,6 +21,7 @@ androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", vers
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "bom" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -27,6 +30,8 @@ compose-ui-test-junit-4 = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 junit = { module = "junit:junit", version.ref = "junit" }
+koin = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 splash-api = { module = "androidx.core:core-splashscreen", version.ref = "splash" }
 
 [bundles]
@@ -48,6 +53,11 @@ compose-debug = [
     "compose-ui-test-manifest"
 ]
 
+koin = [
+    "koin",
+    "koin-compose"
+]
+
 testing-android = [
     "androidx-junit",
     "androidx-espresso-core",
@@ -56,7 +66,7 @@ testing-android = [
 
 
 [plugins]
-android-application = {id = "com.android.application", version.ref = "android-gradle"}
-android-kotlin = {id = "org.jetbrains.kotlin.android", version.ref = "kotlin"}
-ktlint = {id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint"}
-detekt = {id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
+android-application = { id = "com.android.application", version.ref = "android-gradle" }
+android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

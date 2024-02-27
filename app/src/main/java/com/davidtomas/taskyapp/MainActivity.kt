@@ -10,12 +10,11 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.davidtomas.taskyapp.core.navigation.TaskyNavHost
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,9 +22,24 @@ class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<MainActivityViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initSplashScreen()
+        setContent {
+            TaskyAppTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    TaskyNavHost(isAuthenticated = viewModel.isAuthenticated.collectAsState().value)
+                }
+            }
+        }
+    }
+
+    private fun initSplashScreen() {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                !viewModel.isAuthenticated.value
+                !viewModel.isAuthChecked.value
             }
 
             setOnExitAnimationListener { screen ->
@@ -52,38 +66,11 @@ class MainActivity : ComponentActivity() {
                 zoomY.start()
             }
         }
-        setContent {
-            TaskyAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
     }
 
     companion object {
         const val INTERPOLATION_DURATION = 500L
         const val INTERPOLATION_INITIAL_VALUE = 0.4f
         const val INTERPOLATION_FINAL_VALUE = 0.0f
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TaskyAppTheme {
-        Greeting("Android")
     }
 }
