@@ -24,9 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
-import com.davidtomas.taskyapp.features.auth.presentation.login.LoginConstants.FORM_WEIGHT
-import com.davidtomas.taskyapp.features.auth.presentation.login.LoginConstants.HEADER_WEIGHT
 import com.davidtomas.taskyapp.features.auth.presentation.login.components.BasicInput
+import com.davidtomas.taskyapp.features.auth.presentation.login.components.InputPassword
 
 @Composable
 fun LoginScreen(
@@ -45,12 +44,12 @@ fun LoginScreen(
             Header(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(HEADER_WEIGHT)
+                    .weight(1f)
                     .background(MaterialTheme.colorScheme.onPrimaryContainer),
             )
             Form(
                 modifier = Modifier
-                    .weight(FORM_WEIGHT)
+                    .weight(3f)
                     .clip(
                         RoundedCornerShape(
                             topStart = 20.dp,
@@ -99,8 +98,7 @@ fun Form(
             value = "Name",
             onValueChanged = {}
         )
-        BasicInput(
-            label = stringResource(id = R.string.label_password),
+        InputPassword(
             value = "Password",
             onValueChanged = {}
         )

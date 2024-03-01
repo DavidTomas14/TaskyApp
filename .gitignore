@@ -15,5 +15,5 @@
 local.properties
 
 /buildSrc/build
-config
 /app/detekt-baseline.xml
+/config/
