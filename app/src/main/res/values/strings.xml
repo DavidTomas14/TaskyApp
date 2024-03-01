@@ -2,6 +2,7 @@
     <string name="app_name">TaskyApp</string>
     <string name="title_log_in">Introduce your Credentials</string>
     <string name="label_name">Name</string>
+    <string name="label_email">Email address</string>
     <string name="label_password">Password</string>
     <string name="txt_dont_have_an_account">DON\'T HAVE AN ACCOUNT?</string>
     <string name="txt_sign_up">SIGN UP</string>
