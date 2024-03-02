@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.core.domain.util
+package com.davidtomas.taskyapp.core.domain.model
 
 sealed interface DataError : Failure
 enum class Network : DataError {
