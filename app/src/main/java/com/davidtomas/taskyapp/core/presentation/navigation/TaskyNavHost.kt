@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.core.navigation
+package com.davidtomas.taskyapp.core.presentation.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
@@ -31,7 +31,7 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                     route = Route.AUTH
                 ) {
                     composable(route = Route.LOGIN) {
-                        LoginRoot()
+                        LoginRoot(navController = navController)
                     }
                     composable(route = Route.REGISTER) {
                         RegisterRoot(navController = navController)

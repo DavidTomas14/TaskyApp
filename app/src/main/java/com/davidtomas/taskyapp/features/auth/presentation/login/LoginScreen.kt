@@ -29,8 +29,8 @@ import com.davidtomas.taskyapp.features.auth.presentation.login.components.Input
 
 @Composable
 fun LoginScreen(
-    // navigateToAgenda: () -> Unit,
-    // navigateToRegister: () -> Unit,
+    state: LoginState,
+    onAction: (LoginAction) -> Unit
 ) {
     val spacing = LocalSpacing.current
     Box(
@@ -57,13 +57,31 @@ fun LoginScreen(
                         )
                     )
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(Color.White),
+                email = state.email,
+                onEmailChanged = { email ->
+                    onAction(OnEmailChanged(email))
+                },
+                password = state.password,
+                onPasswordChanged = { password ->
+                    onAction(OnPasswordChanged(password))
+                },
+                isLoginBtnEnabled = state.isLoginBtnEnabled,
+                passwordErrMsg = state.passwordErrMsg.asString(),
+                emailErrMsg = state.emailErrMsg.asString(),
+                isPasswordVisible = state.isPasswordVisible,
+                onVisibilityIconClicked = {
+                    onAction(OnChangePasswordVisibility)
+                }
             )
         }
         Footer(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = spacing.spaceLarge),
+            onLoginClicked = {
+                onAction(NavigateToRegister)
+            }
         )
     }
 }
@@ -87,20 +105,33 @@ fun Header(
 
 @Composable
 fun Form(
-    modifier: Modifier
+    modifier: Modifier,
+    email: String,
+    onEmailChanged: (String) -> Unit,
+    password: String,
+    onPasswordChanged: (String) -> Unit,
+    isLoginBtnEnabled: Boolean,
+    passwordErrMsg: String,
+    emailErrMsg: String,
+    isPasswordVisible: Boolean,
+    onVisibilityIconClicked: () -> Unit,
 ) {
     val spacing = LocalSpacing.current
     Column(
         modifier = modifier
     ) {
         BasicInput(
-            label = stringResource(id = R.string.label_name),
-            value = "Name",
-            onValueChanged = {}
+            label = stringResource(id = R.string.label_email),
+            value = email,
+            onValueChanged = { onEmailChanged(it) },
+            errorMessage = emailErrMsg
         )
         InputPassword(
-            value = "Password",
-            onValueChanged = {}
+            value = password,
+            onValueChanged = { onPasswordChanged(it) },
+            errorMessage = passwordErrMsg,
+            isVisible = isPasswordVisible,
+            onVisibilityIconClick = onVisibilityIconClicked,
         )
         Button(
             modifier = Modifier
@@ -110,7 +141,8 @@ fun Form(
                     end = spacing.spaceLarge
                 )
                 .fillMaxWidth(),
-            onClick = {}
+            onClick = {},
+            enabled = isLoginBtnEnabled
         ) {
             Text(text = stringResource(id = R.string.btn_text_log_in))
         }
@@ -119,7 +151,8 @@ fun Form(
 
 @Composable
 fun Footer(
-    modifier: Modifier
+    modifier: Modifier,
+    onLoginClicked: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     Row(
@@ -136,7 +169,7 @@ fun Footer(
             text = stringResource(id = R.string.txt_sign_up),
             modifier = Modifier
                 .clickable {
-                    // TODO
+                    onLoginClicked()
                 }
                 .padding(start = spacing.spaceTiny)
         )
@@ -151,6 +184,6 @@ fun Footer(
 @Composable
 fun LoginPreview() {
     TaskyAppTheme {
-        LoginScreen()
+        LoginScreen(LoginState(), {})
     }
 }

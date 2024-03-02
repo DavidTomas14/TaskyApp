@@ -14,7 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.davidtomas.taskyapp.core.navigation.TaskyNavHost
+import com.davidtomas.taskyapp.core.presentation.navigation.TaskyNavHost
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 class MainActivity : ComponentActivity() {
