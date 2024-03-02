@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
-import com.davidtomas.taskyapp.features.auth.presentation.login.components.BasicInput
-import com.davidtomas.taskyapp.features.auth.presentation.login.components.InputPassword
+import com.davidtomas.taskyapp.features.auth.presentation.components.BasicInput
+import com.davidtomas.taskyapp.features.auth.presentation.components.InputPassword
 
 @Composable
 fun LoginScreen(

@@ -1,7 +1,7 @@
 package com.davidtomas.taskyapp.features.auth.domain.useCase
 
-import com.davidtomas.taskyapp.core.domain.util.Failure
-import com.davidtomas.taskyapp.core.domain.util.Result
+import com.davidtomas.taskyapp.core.domain.model.Failure
+import com.davidtomas.taskyapp.core.domain.model.Result
 import com.davidtomas.taskyapp.features.auth.domain.model.AllFieldsLoginValidationType
 import com.davidtomas.taskyapp.features.auth.domain.model.EmailLoginValidationType
 import com.davidtomas.taskyapp.features.auth.domain.model.LoginInputValidationError

@@ -1,6 +1,6 @@
 package com.davidtomas.taskyapp.features.auth.domain.model
 
-import com.davidtomas.taskyapp.core.domain.util.Failure
+import com.davidtomas.taskyapp.core.domain.model.Failure
 
 sealed class LoginInputValidationError : Failure
 data object MissingMandatoryField : LoginInputValidationError()

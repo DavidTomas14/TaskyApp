@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.core.domain.util
+package com.davidtomas.taskyapp.core.domain.model
 
 sealed class Result<T, R : Failure>(val data: T? = null, val error: R? = null) {
     class Success<T, R : Failure>(data: T?) : Result<T, R>(data, null)

@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.auth.presentation.login.components
+package com.davidtomas.taskyapp.features.auth.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
