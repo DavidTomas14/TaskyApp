@@ -2,7 +2,7 @@ package com.davidtomas.taskyapp.features.auth.presentation.register
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import com.davidtomas.taskyapp.core.navigation.Route
+import com.davidtomas.taskyapp.core.presentation.navigation.Route
 
 @Composable
 fun RegisterRoot(

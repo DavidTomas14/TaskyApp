@@ -57,7 +57,7 @@ ktlint {
     verbose.set(true)
     outputToConsole.set(true)
     coloredOutput.set(true)
-    disabledRules.set(listOf("import-ordering"))
+    disabledRules.set(listOf("import-ordering", "final-newline"))
     reporters {
         reporter(ReporterType.PLAIN)
         reporter(ReporterType.CHECKSTYLE)

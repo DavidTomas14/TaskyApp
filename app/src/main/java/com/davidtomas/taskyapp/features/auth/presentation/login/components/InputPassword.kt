@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.davidtomas.taskyapp.R
-import com.davidtomas.taskyapp.core.util.EMPTY_STRING
+import com.davidtomas.taskyapp.core.domain.util.EMPTY_STRING
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.Shapes
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
@@ -33,7 +33,7 @@ fun InputPassword(
     value: String,
     onValueChanged: (String) -> Unit,
     isVisible: Boolean = false,
-    onTrailingIconClick: () -> Unit = {},
+    onVisibilityIconClick: () -> Unit = {},
     errorMessage: String = String.EMPTY_STRING,
 ) {
     val spacing = LocalSpacing.current
@@ -79,7 +79,8 @@ fun InputPassword(
         visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
             Icon(
-                modifier = Modifier.clickable { onTrailingIconClick() },
+                modifier = Modifier
+                    .clickable { onVisibilityIconClick() },
                 painter = painterResource(
                     id = if (isVisible)
                         R.drawable.ic_hide
@@ -105,7 +106,7 @@ fun CustomTextFieldPreview() {
                 value = "Password",
                 onValueChanged = {},
                 isVisible = isVisible,
-                onTrailingIconClick = { isVisible = !isVisible }
+                onVisibilityIconClick = { isVisible = !isVisible },
             )
             InputPassword(
                 value = "1234aBc.",
@@ -118,7 +119,7 @@ fun CustomTextFieldPreview() {
                 onValueChanged = {},
                 errorMessage = "Error",
                 isVisible = isVisible,
-                onTrailingIconClick = { isVisible = !isVisible }
+                onVisibilityIconClick = { isVisible = !isVisible }
             )
         }
     }
