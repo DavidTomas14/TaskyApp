@@ -8,18 +8,18 @@ import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.domain.model.Failure
 import com.davidtomas.taskyapp.core.domain.util.EMPTY_STRING
 import com.davidtomas.taskyapp.core.presentation.util.UiText
-import com.davidtomas.taskyapp.features.auth.domain.model.AllFieldsLoginValidationType
+import com.davidtomas.taskyapp.features.auth.domain.model.AllFieldsLoginInputValidationType
 import com.davidtomas.taskyapp.features.auth.domain.model.EmailFormatError
-import com.davidtomas.taskyapp.features.auth.domain.model.EmailLoginValidationType
-import com.davidtomas.taskyapp.features.auth.domain.model.LoginInputValidationErrors
-import com.davidtomas.taskyapp.features.auth.domain.model.LoginValidationType
+import com.davidtomas.taskyapp.features.auth.domain.model.EmailInputValidationType
+import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationErrors
+import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationType
 import com.davidtomas.taskyapp.features.auth.domain.model.MissingMandatoryField
 import com.davidtomas.taskyapp.features.auth.domain.model.PasswordFormatError
-import com.davidtomas.taskyapp.features.auth.domain.model.PasswordLoginValidationType
-import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateLoginInputsUseCase
+import com.davidtomas.taskyapp.features.auth.domain.model.PasswordLoginInputValidationType
+import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateInputsUseCase
 
 class LoginViewModel(
-    private val validateLoginInputsUseCase: ValidateLoginInputsUseCase
+    private val validateInputsUseCase: ValidateInputsUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(LoginState())
@@ -33,12 +33,12 @@ class LoginViewModel(
 
             is OnEmailChanged -> {
                 state = state.copy(email = action.email)
-                validateInputs(EmailLoginValidationType(action.email))
+                validateInputs(EmailInputValidationType(action.email))
             }
 
             is OnPasswordChanged -> {
                 state = state.copy(password = action.password)
-                validateInputs(PasswordLoginValidationType(action.password))
+                validateInputs(PasswordLoginInputValidationType(action.password))
             }
 
             else -> Unit
@@ -46,32 +46,32 @@ class LoginViewModel(
     }
 
     private fun validateInputs(
-        loginValidationType: LoginValidationType
+        inputValidationType: InputValidationType
     ) {
-        validateLoginInputsUseCase.invoke(loginValidationType).fold(
+        validateInputsUseCase.invoke(inputValidationType).fold(
             onError = ::onValidationError,
             onSuccess = {
-                onValidationSuccess(loginValidationType)
+                onValidationSuccess(inputValidationType)
             }
         )
     }
 
-    private fun onValidationSuccess(loginValidationType: LoginValidationType) {
-        when (loginValidationType) {
-            is AllFieldsLoginValidationType -> state = state.copy(isLoginBtnEnabled = true)
+    private fun onValidationSuccess(inputValidationType: InputValidationType) {
+        when (inputValidationType) {
+            is AllFieldsLoginInputValidationType -> state = state.copy(isLoginBtnEnabled = true)
             else -> {
                 state = state.copy(
                     emailErrMsg = UiText.DynamicString(String.EMPTY_STRING),
                     passwordErrMsg = UiText.DynamicString(String.EMPTY_STRING)
                 )
-                validateInputs(AllFieldsLoginValidationType(state.email, state.password))
+                validateInputs(AllFieldsLoginInputValidationType(state.email, state.password))
             }
         }
     }
 
     private fun onValidationError(failure: Failure) {
         state = state.copy(isLoginBtnEnabled = false)
-        val validationsErrors = (failure as LoginInputValidationErrors).validationErrors
+        val validationsErrors = (failure as InputValidationErrors).validationErrors
         validationsErrors.forEach { loginInputValidationError ->
             when (loginInputValidationError) {
                 EmailFormatError ->
@@ -83,6 +83,7 @@ class LoginViewModel(
                         state.copy(passwordErrMsg = UiText.StringResource(R.string.error_password_wrong_format))
 
                 MissingMandatoryField -> Unit
+                else -> Unit
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.davidtomas.taskyapp.features.auth.presentation.register
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +29,10 @@ import com.davidtomas.taskyapp.features.auth.presentation.components.BasicInput
 import com.davidtomas.taskyapp.features.auth.presentation.components.InputPassword
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(
+    state: RegisterState,
+    onAction: (RegisterAction) -> Unit
+) {
     val spacing = LocalSpacing.current
     Box(
         modifier = Modifier.fillMaxSize()
@@ -44,6 +48,9 @@ fun RegisterScreen() {
                     .fillMaxWidth()
                     .weight(1f)
                     .background(MaterialTheme.colorScheme.onPrimaryContainer),
+                onBackIconClick = {
+                    onAction(NavigateBackToLogin)
+                }
             )
             Form(
                 modifier = Modifier
@@ -55,7 +62,27 @@ fun RegisterScreen() {
                         )
                     )
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(Color.White),
+                userName = state.userName,
+                onUserNameChanged = { userName ->
+                    onAction(OnUserNameChanged(userName))
+                },
+                email = state.email,
+                onEmailChanged = { email ->
+                    onAction(OnEmailChanged(email))
+                },
+                password = state.password,
+                onPasswordChanged = { password ->
+                    onAction(OnPasswordChanged(password))
+                },
+                isLoginBtnEnabled = state.isLoginBtnEnabled,
+                userNameErrMsg = state.userNameErrMsg.asString(),
+                passwordErrMsg = state.passwordErrMsg.asString(),
+                emailErrMsg = state.emailErrMsg.asString(),
+                isPasswordVisible = state.isPasswordVisible,
+                onVisibilityIconClicked = {
+                    onAction(OnChangePasswordVisibility)
+                }
             )
         }
     }
@@ -64,6 +91,7 @@ fun RegisterScreen() {
 @Composable
 fun RegisterHeader(
     modifier: Modifier,
+    onBackIconClick: () -> Unit
 ) {
     Box(
         modifier = modifier,
@@ -71,6 +99,7 @@ fun RegisterHeader(
         Header(
             leadingIcon = {
                 IconD(
+                    modifier = Modifier.clickable { onBackIconClick() },
                     painter = painterResource(id = R.drawable.ic_arrow_back),
                 )
             }
@@ -86,7 +115,19 @@ fun RegisterHeader(
 
 @Composable
 fun Form(
-    modifier: Modifier
+    modifier: Modifier,
+    userName: String,
+    onUserNameChanged: (String) -> Unit,
+    email: String,
+    onEmailChanged: (String) -> Unit,
+    password: String,
+    onPasswordChanged: (String) -> Unit,
+    isLoginBtnEnabled: Boolean,
+    userNameErrMsg: String,
+    passwordErrMsg: String,
+    emailErrMsg: String,
+    isPasswordVisible: Boolean,
+    onVisibilityIconClicked: () -> Unit,
 ) {
     val spacing = LocalSpacing.current
     Column(
@@ -94,17 +135,28 @@ fun Form(
     ) {
         BasicInput(
             label = stringResource(id = R.string.label_name),
-            value = "Username",
-            onValueChanged = {}
+            value = userName,
+            onValueChanged = {
+                onUserNameChanged(it)
+            },
+            errorMessage = userNameErrMsg
         )
         BasicInput(
             label = stringResource(id = R.string.label_email),
-            value = "dtalonsocalderon@gmail.com",
-            onValueChanged = {}
+            value = email,
+            onValueChanged = {
+                onEmailChanged(it)
+            },
+            errorMessage = emailErrMsg
         )
         InputPassword(
-            value = "Password",
-            onValueChanged = {}
+            value = password,
+            onValueChanged = {
+                onPasswordChanged(it)
+            },
+            errorMessage = passwordErrMsg,
+            isVisible = isPasswordVisible,
+            onVisibilityIconClick = onVisibilityIconClicked
         )
         Button(
             modifier = Modifier
@@ -114,6 +166,7 @@ fun Form(
                     end = spacing.spaceLarge
                 )
                 .fillMaxWidth(),
+            enabled = isLoginBtnEnabled,
             onClick = {}
         ) {
             Text(text = stringResource(id = R.string.btn_text_register))
@@ -127,8 +180,11 @@ fun Form(
     name = "Redmin Note 10 Pro"
 )
 @Composable
-fun RegisterPreview() {
+fun RegisterScreenPreview() {
     TaskyAppTheme {
-        RegisterScreen()
+        RegisterScreen(
+            state = RegisterState(),
+            onAction = {}
+        )
     }
 }
