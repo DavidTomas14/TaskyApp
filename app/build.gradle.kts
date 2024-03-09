@@ -1,10 +1,12 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.android.kotlin)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -22,8 +24,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-    }
 
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
+
+        buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY")}\"")
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -42,9 +48,10 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
@@ -84,4 +91,8 @@ dependencies {
     implementation(libs.compose.navigation)
     // Koin
     implementation(libs.bundles.koin)
+    // Ktor Client
+    implementation(libs.bundles.ktor)
+    // Data Store
+    implementation(libs.bundles.datastore)
 }

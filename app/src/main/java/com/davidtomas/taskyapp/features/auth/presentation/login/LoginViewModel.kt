@@ -4,8 +4,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
+import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val loginUseCase: LoginUseCase
+) : ViewModel() {
 
     var state by mutableStateOf(LoginState())
         private set
@@ -25,6 +30,24 @@ class LoginViewModel : ViewModel() {
             }
 
             else -> Unit
+        }
+    }
+
+    private fun login() {
+        viewModelScope.launch {
+            loginUseCase(
+                LoginUseCase.LoginParams(
+                    email = state.email,
+                    password = state.password
+                )
+            ).fold(
+                onError = {
+                    println(it)
+                },
+                onSuccess = {
+                    println(it)
+                }
+            )
         }
     }
 }

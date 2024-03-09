@@ -1,6 +1,7 @@
 package com.davidtomas.taskyapp
 
 import android.app.Application
+import com.davidtomas.taskyapp.core.di.coreModule
 import com.davidtomas.taskyapp.features.agenda.di.agendaModule
 import com.davidtomas.taskyapp.features.auth.di.authModule
 import org.koin.android.ext.koin.androidContext
@@ -14,7 +15,7 @@ class TaskyApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@TaskyApp)
-            modules(agendaModule, authModule)
+            modules(coreModule, agendaModule, authModule)
         }
     }
 }

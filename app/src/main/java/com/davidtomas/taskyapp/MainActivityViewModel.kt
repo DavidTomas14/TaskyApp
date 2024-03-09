@@ -2,12 +2,14 @@ package com.davidtomas.taskyapp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
+import com.davidtomas.taskyapp.core.domain.useCase.AuthenticateUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel : ViewModel() {
+class MainActivityViewModel(
+    private val authenticateUseCase: AuthenticateUseCase
+) : ViewModel() {
 
     private val _isAuthenticated = MutableStateFlow(false)
     val isAuthenticated = _isAuthenticated.asStateFlow()
@@ -16,15 +18,19 @@ class MainActivityViewModel : ViewModel() {
     val isAuthChecked = _isAuthChecked.asStateFlow()
 
     init {
-
-        viewModelScope.launch {
-            delay(ESTIMATED_TIME)
-            _isAuthChecked.value = true
-            _isAuthenticated.value = false
-        }
+        authenticate()
     }
 
-    companion object {
-        const val ESTIMATED_TIME = 3000L
+    private fun authenticate() {
+        viewModelScope.launch {
+            authenticateUseCase().fold(
+                onError = {
+                    println(it)
+                },
+                onSuccess = {
+                    println(it)
+                }
+            )
+        }
     }
 }

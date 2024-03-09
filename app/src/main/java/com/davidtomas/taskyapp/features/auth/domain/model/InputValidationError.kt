@@ -1,8 +1,8 @@
 package com.davidtomas.taskyapp.features.auth.domain.model
 
-import com.davidtomas.taskyapp.core.domain.model.Failure
+import com.davidtomas.taskyapp.core.domain.util.Error
 
-sealed interface InputValidationError : Failure {
+sealed interface InputValidationError : Error {
     sealed interface EmailValidatorError : InputValidationError {
         data object Missing : EmailValidatorError
         data object Format : EmailValidatorError
@@ -23,4 +23,4 @@ sealed interface InputValidationError : Failure {
 
 data class InputValidationErrors(
     val validationErrors: List<InputValidationError>
-) : Failure
+) : Error

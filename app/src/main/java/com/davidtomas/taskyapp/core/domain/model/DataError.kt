@@ -1,16 +1,18 @@
 package com.davidtomas.taskyapp.core.domain.model
 
-sealed interface DataError : Failure
-enum class Network : DataError {
-    REQUEST_TIMEOUT,
-    TOO_MANY_REQUESTS,
-    NO_INTERNET,
-    PAYLOAD_TOO_LARGE,
-    SERVER_ERROR,
-    SERIALIZATION,
-    UNKNOWN
-}
+import com.davidtomas.taskyapp.core.domain.util.Error
 
-enum class Local : DataError {
-    DISK_FULL
+sealed interface DataError : Error {
+    enum class Network : DataError {
+        UNAUTHORIZED,
+        NO_INTERNET,
+        SERVER_ERROR,
+        SERIALIZATION,
+        UNKNOWN
+    }
+
+    data class CustomNetworkError(val message: String) : DataError
+    enum class Local : DataError {
+        DISK_FULL
+    }
 }

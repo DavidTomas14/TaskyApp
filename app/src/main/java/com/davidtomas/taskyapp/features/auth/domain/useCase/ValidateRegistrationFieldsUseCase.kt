@@ -1,6 +1,6 @@
 package com.davidtomas.taskyapp.features.auth.domain.useCase
 
-import com.davidtomas.taskyapp.core.domain.model.Result
+import com.davidtomas.taskyapp.core.domain.util.Result
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationError
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationErrors
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationType
