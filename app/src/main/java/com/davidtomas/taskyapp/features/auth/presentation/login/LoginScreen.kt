@@ -60,18 +60,15 @@ fun LoginScreen(
                     .background(Color.White),
                 email = state.email,
                 onEmailChanged = { email ->
-                    onAction(OnEmailChanged(email))
+                    onAction(LoginAction.OnEmailChanged(email))
                 },
                 password = state.password,
                 onPasswordChanged = { password ->
-                    onAction(OnPasswordChanged(password))
+                    onAction(LoginAction.OnPasswordChanged(password))
                 },
-                isLoginBtnEnabled = state.isLoginBtnEnabled,
-                passwordErrMsg = state.passwordErrMsg.asString(),
-                emailErrMsg = state.emailErrMsg.asString(),
                 isPasswordVisible = state.isPasswordVisible,
                 onVisibilityIconClicked = {
-                    onAction(OnChangePasswordVisibility)
+                    onAction(LoginAction.OnChangePasswordVisibility)
                 }
             )
         }
@@ -80,7 +77,7 @@ fun LoginScreen(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = spacing.spaceLarge),
             onLoginClicked = {
-                onAction(NavigateToRegister)
+                onAction(LoginAction.NavigateToRegister)
             }
         )
     }
@@ -110,9 +107,6 @@ fun Form(
     onEmailChanged: (String) -> Unit,
     password: String,
     onPasswordChanged: (String) -> Unit,
-    isLoginBtnEnabled: Boolean,
-    passwordErrMsg: String,
-    emailErrMsg: String,
     isPasswordVisible: Boolean,
     onVisibilityIconClicked: () -> Unit,
 ) {
@@ -122,14 +116,12 @@ fun Form(
     ) {
         BasicInput(
             label = stringResource(id = R.string.label_email),
-            value = email,
-            onValueChanged = { onEmailChanged(it) },
-            errorMessage = emailErrMsg
+            inputText = email,
+            onInputTextChanged = { onEmailChanged(it) },
         )
         InputPassword(
-            value = password,
-            onValueChanged = { onPasswordChanged(it) },
-            errorMessage = passwordErrMsg,
+            passwordText = password,
+            onPasswordChanged = { onPasswordChanged(it) },
             isVisible = isPasswordVisible,
             onVisibilityIconClick = onVisibilityIconClicked,
         )
@@ -142,7 +134,6 @@ fun Form(
                 )
                 .fillMaxWidth(),
             onClick = {},
-            enabled = isLoginBtnEnabled
         ) {
             Text(text = stringResource(id = R.string.btn_text_log_in))
         }

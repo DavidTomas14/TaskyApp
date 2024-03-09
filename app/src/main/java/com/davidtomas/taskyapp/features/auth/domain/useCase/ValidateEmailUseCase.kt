@@ -1,14 +1,12 @@
 package com.davidtomas.taskyapp.features.auth.domain.useCase
 
-import com.davidtomas.taskyapp.features.auth.domain.model.EmailFormatError
-import com.davidtomas.taskyapp.features.auth.domain.model.LoginInputValidationError
-import com.davidtomas.taskyapp.features.auth.domain.model.MissingMandatoryField
+import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationError.EmailValidatorError
 
 class ValidateEmailUseCase {
-    operator fun invoke(email: String): LoginInputValidationError? =
+    operator fun invoke(email: String): EmailValidatorError? =
         when {
-            email.isBlank() -> MissingMandatoryField
-            !email.matches(EMAIL_REGEX.toRegex()) -> EmailFormatError
+            email.isBlank() -> EmailValidatorError.Missing
+            !email.matches(EMAIL_REGEX.toRegex()) -> EmailValidatorError.Format
             else -> null
         }
     companion object {

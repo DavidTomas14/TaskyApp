@@ -14,7 +14,7 @@ fun LoginRoot(
         state = viewModel.state,
         onAction = { action ->
             when (action) {
-                is NavigateToRegister -> {
+                is LoginAction.NavigateToRegister -> {
                     navController.navigate(Route.REGISTER)
                 }
                 else -> viewModel.onAction(action)

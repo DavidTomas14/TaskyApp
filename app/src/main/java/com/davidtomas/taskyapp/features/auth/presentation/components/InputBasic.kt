@@ -13,20 +13,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import com.davidtomas.taskyapp.core.domain.util.EMPTY_STRING
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
 fun BasicInput(
-    value: String,
-    onValueChanged: (String) -> Unit,
+    inputText: String,
+    onInputTextChanged: (String) -> Unit,
     label: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    errorMessage: String = String.EMPTY_STRING,
+    onInputFocusChanged: ((Boolean) -> Unit)? = null,
+    errorMessage: String? = null,
+    isInputChecked: Boolean = false,
     leadingIcon: ImageVector? = null
 ) {
     val spacing = LocalSpacing.current
@@ -50,11 +52,14 @@ fun BasicInput(
                 top = spacing.spaceLarge,
                 end = spacing.spaceLarge
             )
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                onInputFocusChanged?.let { it(focusState.isFocused) }
+            },
         colors = colors,
-        value = value,
-        onValueChange = { onValueChanged(it) },
-        isError = errorMessage.isNotEmpty(),
+        value = inputText,
+        onValueChange = { onInputTextChanged(it) },
+        isError = !errorMessage.isNullOrBlank(),
         keyboardOptions = keyboardOptions,
         label = {
             Text(
@@ -71,7 +76,7 @@ fun BasicInput(
             }
         } else null,
         supportingText = {
-            if (errorMessage.isNotEmpty()) {
+            if (!errorMessage.isNullOrBlank()) {
                 Text(
                     color = MaterialTheme.colorScheme.error,
                     text = errorMessage
@@ -79,7 +84,7 @@ fun BasicInput(
             }
         },
         trailingIcon = {
-            if (errorMessage.isEmpty() && value.isNotEmpty())
+            if (errorMessage.isNullOrBlank() && isInputChecked)
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
                     tint = successColor,
@@ -98,14 +103,14 @@ fun InputBasicPreview() {
     TaskyAppTheme {
         Column {
             BasicInput(
-                value = "",
-                onValueChanged = {},
+                inputText = "",
+                onInputTextChanged = {},
                 errorMessage = "Error",
                 label = "Email"
             )
             BasicInput(
-                value = "dtalonso@gmail.com",
-                onValueChanged = {},
+                inputText = "dtalonso@gmail.com",
+                onInputTextChanged = {},
                 label = "Email"
             )
         }

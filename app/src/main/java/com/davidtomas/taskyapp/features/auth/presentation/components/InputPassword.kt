@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -23,18 +24,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.davidtomas.taskyapp.R
-import com.davidtomas.taskyapp.core.domain.util.EMPTY_STRING
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.Shapes
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
 fun InputPassword(
-    value: String,
-    onValueChanged: (String) -> Unit,
+    passwordText: String,
+    onPasswordChanged: (String) -> Unit,
     isVisible: Boolean = false,
     onVisibilityIconClick: () -> Unit = {},
-    errorMessage: String = String.EMPTY_STRING,
+    errorMessage: String? = null,
+    onPasswordFocusChanged: ((Boolean) -> Unit)? = null,
 ) {
     val spacing = LocalSpacing.current
     val colors = TextFieldDefaults.colors(
@@ -56,13 +57,16 @@ fun InputPassword(
                 top = spacing.spaceLarge,
                 end = spacing.spaceLarge
             )
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                onPasswordFocusChanged?.let { it(focusState.isFocused) }
+            },
         colors = colors,
-        value = value,
-        onValueChange = { onValueChanged(it) },
-        isError = errorMessage.isNotEmpty(),
+        value = passwordText,
+        onValueChange = { onPasswordChanged(it) },
+        isError = !errorMessage.isNullOrBlank(),
         supportingText = {
-            if (errorMessage.isNotEmpty()) {
+            if (!errorMessage.isNullOrBlank()) {
                 Text(
                     color = MaterialTheme.colorScheme.error,
                     text = errorMessage
@@ -103,20 +107,20 @@ fun CustomTextFieldPreview() {
         }
         Column {
             InputPassword(
-                value = "Password",
-                onValueChanged = {},
+                passwordText = "Password",
+                onPasswordChanged = {},
                 isVisible = isVisible,
                 onVisibilityIconClick = { isVisible = !isVisible },
             )
             InputPassword(
-                value = "1234aBc.",
-                onValueChanged = {},
+                passwordText = "1234aBc.",
+                onPasswordChanged = {},
                 isVisible = true
 
             )
             InputPassword(
-                value = "Password",
-                onValueChanged = {},
+                passwordText = "Password",
+                onPasswordChanged = {},
                 errorMessage = "Error",
                 isVisible = isVisible,
                 onVisibilityIconClick = { isVisible = !isVisible }

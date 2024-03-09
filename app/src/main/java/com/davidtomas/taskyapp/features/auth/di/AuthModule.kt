@@ -1,9 +1,11 @@
 package com.davidtomas.taskyapp.features.auth.di
 
 import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateEmailUseCase
-import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateLoginInputsUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidatePasswordUseCase
+import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateRegistrationFieldsUseCase
+import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateUserNameUseCase
 import com.davidtomas.taskyapp.features.auth.presentation.login.LoginViewModel
+import com.davidtomas.taskyapp.features.auth.presentation.register.RegisterViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -17,9 +19,11 @@ val authModule = module {
 private fun Module.domainModule() {
     factoryOf(::ValidateEmailUseCase)
     factoryOf(::ValidatePasswordUseCase)
-    factoryOf(::ValidateLoginInputsUseCase)
+    factoryOf(::ValidateUserNameUseCase)
+    factoryOf(::ValidateRegistrationFieldsUseCase)
 }
 
 private fun Module.presentationModule() {
     viewModelOf(::LoginViewModel)
+    viewModelOf(::RegisterViewModel)
 }

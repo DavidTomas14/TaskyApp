@@ -3,7 +3,11 @@
     <string name="btn_text_log_in">Log in</string>
     <string name="btn_text_register">Get Register</string>
     <string name="error_email_wrong_format">The format of the email is wrong</string>
+    <string name="error_mandatory_field">This field is mandatory</string>
+    <string name="error_password_length">Password should be of at least 9 characters</string>
     <string name="error_password_wrong_format">The format of the password is wrong</string>
+    <string name="error_username_length">Username should be between 4 and 50 characters</string>
+    <string name="error_username_wrong_format">The format of the user name is wrong</string>
     <string name="label_name">Username</string>
     <string name="label_email">Email address</string>
     <string name="title_register">Create your Account</string>
