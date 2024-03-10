@@ -31,10 +31,16 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                     route = Route.AUTH
                 ) {
                     composable(route = Route.LOGIN) {
-                        LoginRoot(navController = navController)
+                        LoginRoot(
+                            snackbarHostState = snackbarHostState,
+                            navController = navController
+                        )
                     }
                     composable(route = Route.REGISTER) {
-                        RegisterRoot(navController = navController)
+                        RegisterRoot(
+                            snackbarHostState = snackbarHostState,
+                            navController = navController
+                        )
                     }
                     composable(route = Route.AGENDA) {
                         AgendaScreen()

@@ -4,20 +4,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.domain.util.Error
 import com.davidtomas.taskyapp.core.presentation.util.UiText
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationError
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationErrors
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationType
+import com.davidtomas.taskyapp.features.auth.domain.useCase.RegisterUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateRegistrationFieldsUseCase
+import com.davidtomas.taskyapp.features.auth.presentation._common.mapper.toStringResource
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 class RegisterViewModel(
-    private val validateRegistrationFieldsUseCase: ValidateRegistrationFieldsUseCase
+    private val validateRegistrationFieldsUseCase: ValidateRegistrationFieldsUseCase,
+    private val registerUseCase: RegisterUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(RegisterState())
         private set
+
+    private val _uiEvent = Channel<RegisterUiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     fun onAction(action: RegisterAction) {
         when (action) {
@@ -34,7 +44,7 @@ class RegisterViewModel(
             }
 
             is RegisterAction.OnUserNameChanged -> {
-                state = state.copy(userName = action.userName)
+                state = state.copy(fullName = action.userName)
             }
 
             is RegisterAction.OnEmailFocusChanged -> {
@@ -49,7 +59,7 @@ class RegisterViewModel(
                 if (action.isFocus) {
                     state = state.copy(userNameErrMsg = null)
                 } else {
-                    validateInputs(InputValidationType.UserNameInputValidationType(state.userName))
+                    validateInputs(InputValidationType.UserNameInputValidationType(state.fullName))
                 }
             }
 
@@ -62,7 +72,7 @@ class RegisterViewModel(
             is RegisterAction.OnRegisterButtonClicked -> {
                 validateInputs(
                     InputValidationType.AllFieldsRegisterValidationType(
-                        state.userName,
+                        state.fullName,
                         state.email,
                         state.password
                     )
@@ -79,11 +89,10 @@ class RegisterViewModel(
         validateRegistrationFieldsUseCase(inputValidationType).fold(
             onError = {
                 onValidationError(it, inputValidationType)
-            },
-            onSuccess = {
-                onValidationSuccess(inputValidationType)
             }
-        )
+        ) {
+            onValidationSuccess(inputValidationType)
+        }
     }
 
     private fun onValidationSuccess(inputValidationType: InputValidationType) {
@@ -98,6 +107,7 @@ class RegisterViewModel(
 
             else -> {
                 cleanErrors()
+                register()
             }
         }
     }
@@ -158,6 +168,36 @@ class RegisterViewModel(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun register() {
+        viewModelScope.launch {
+            registerUseCase(
+                RegisterUseCase.RegisterParams(
+                    fullName = state.fullName,
+                    email = state.email,
+                    password = state.password
+                )
+            ).fold(
+                onError = { dataError ->
+                    _uiEvent.send(
+                        RegisterUiEvent.ShowSnackBar(
+                            UiText.StringResource(
+                                resId = dataError.toStringResource()
+                            )
+                        )
+                    )
+                }
+            ) {
+                _uiEvent.send(
+                    RegisterUiEvent.ShowSnackBar(
+                        UiText.StringResource(
+                            R.string.register_success
+                        )
+                    )
+                )
             }
         }
     }
