@@ -8,7 +8,7 @@ import com.davidtomas.taskyapp.features.auth.domain.model.AuthModel
 class LoginUseCase(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(loginParams: LoginParams): Result<AuthModel, DataError> {
+    suspend operator fun invoke(loginParams: LoginParams): Result<AuthModel, DataError.Network> {
         return authRepository.login(loginParams)
     }
 

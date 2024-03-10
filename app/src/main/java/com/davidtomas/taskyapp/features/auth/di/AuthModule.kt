@@ -5,6 +5,9 @@ import com.davidtomas.taskyapp.features.auth.data.local.TokenManager
 import com.davidtomas.taskyapp.features.auth.data.remote.AuthRepositoryImpl
 import com.davidtomas.taskyapp.features.auth.data.remote.api.AuthService
 import com.davidtomas.taskyapp.features.auth.data.remote.api.AuthServiceImpl
+import com.davidtomas.taskyapp.features.auth.domain.AuthRepository
+import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
+import com.davidtomas.taskyapp.features.auth.domain.useCase.RegisterUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateEmailUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidatePasswordUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateRegistrationFieldsUseCase
@@ -31,7 +34,7 @@ private fun Module.dataModule() {
     }
     singleOf(::AuthServiceImpl) bind AuthService::class
     singleOf(::TokenManager)
-    singleOf(::AuthRepositoryImpl)
+    singleOf(::AuthRepositoryImpl) bind AuthRepository::class
 }
 
 private fun Module.domainModule() {
@@ -39,6 +42,8 @@ private fun Module.domainModule() {
     factoryOf(::ValidatePasswordUseCase)
     factoryOf(::ValidateUserNameUseCase)
     factoryOf(::ValidateRegistrationFieldsUseCase)
+    factoryOf(::LoginUseCase)
+    factoryOf(::RegisterUseCase)
 }
 
 private fun Module.presentationModule() {

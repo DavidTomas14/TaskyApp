@@ -18,19 +18,24 @@ class MainActivityViewModel(
     val isAuthChecked = _isAuthChecked.asStateFlow()
 
     init {
-        authenticate()
+        viewModelScope.launch {
+            authenticate()
+        }
     }
 
     private fun authenticate() {
         viewModelScope.launch {
             authenticateUseCase().fold(
                 onError = {
-                    println(it)
+                    _isAuthenticated.value = false
+                    Any()
                 },
                 onSuccess = {
-                    println(it)
+                    _isAuthenticated.value = true
+                    Any()
                 }
             )
+            _isAuthChecked.value = true
         }
     }
 }
