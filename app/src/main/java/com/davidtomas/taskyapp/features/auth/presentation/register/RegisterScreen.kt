@@ -27,8 +27,8 @@ import com.davidtomas.taskyapp.core.presentation.components.Header
 import com.davidtomas.taskyapp.core.presentation.components.IconD
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
-import com.davidtomas.taskyapp.features.auth.presentation.components.BasicInput
-import com.davidtomas.taskyapp.features.auth.presentation.components.InputPassword
+import com.davidtomas.taskyapp.features.auth.presentation._common.components.BasicInput
+import com.davidtomas.taskyapp.features.auth.presentation._common.components.InputPassword
 
 @Composable
 fun RegisterScreen(
@@ -64,7 +64,7 @@ fun RegisterScreen(
                     )
                     .fillMaxWidth()
                     .background(Color.White),
-                userName = state.userName,
+                userName = state.fullName,
                 onUserNameChanged = { userName ->
                     onAction(RegisterAction.OnUserNameChanged(userName))
                 },

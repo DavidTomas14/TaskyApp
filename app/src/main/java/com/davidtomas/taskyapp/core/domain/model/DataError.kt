@@ -7,11 +7,12 @@ sealed interface DataError : Error {
         UNAUTHORIZED,
         NO_INTERNET,
         SERVER_ERROR,
+        CANCELLATION,
         SERIALIZATION,
+        BAD_REQUEST,
         UNKNOWN
     }
 
-    data class CustomNetworkError(val message: String) : DataError
     enum class Local : DataError {
         DISK_FULL
     }

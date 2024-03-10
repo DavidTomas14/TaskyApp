@@ -7,7 +7,7 @@ import com.davidtomas.taskyapp.features.auth.domain.AuthRepository
 class RegisterUseCase(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(registerParams: RegisterParams): Result<Unit, DataError> {
+    suspend operator fun invoke(registerParams: RegisterParams): Result<Unit, DataError.Network> {
         return authRepository.register(registerParams)
     }
 

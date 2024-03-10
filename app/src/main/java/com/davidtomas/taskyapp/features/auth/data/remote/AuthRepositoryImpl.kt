@@ -14,7 +14,7 @@ class AuthRepositoryImpl(
     private val authService: AuthService,
     private val tokenManager: TokenManager
 ) : AuthRepository {
-    override suspend fun login(loginParams: LoginUseCase.LoginParams): Result<AuthModel, DataError> {
+    override suspend fun login(loginParams: LoginUseCase.LoginParams): Result<AuthModel, DataError.Network> {
         return when (val result = authService.login(loginParams)) {
             is Result.Error -> result
             is Result.Success -> {
@@ -26,7 +26,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError> {
+    override suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError.Network> {
         return authService.register(registerParams)
     }
 

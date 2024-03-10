@@ -4,7 +4,7 @@ import com.davidtomas.taskyapp.core.domain.util.EMPTY_STRING
 import com.davidtomas.taskyapp.core.presentation.util.UiText
 
 data class RegisterState(
-    val userName: String = String.EMPTY_STRING,
+    val fullName: String = String.EMPTY_STRING,
     val userNameErrMsg: UiText? = null,
     val email: String = String.EMPTY_STRING,
     val emailErrMsg: UiText? = null,

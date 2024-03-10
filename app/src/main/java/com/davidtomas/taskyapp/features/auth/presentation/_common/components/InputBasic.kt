@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.auth.presentation.components
+package com.davidtomas.taskyapp.features.auth.presentation._common.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

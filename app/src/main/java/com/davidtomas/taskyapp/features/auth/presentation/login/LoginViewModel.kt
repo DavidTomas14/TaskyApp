@@ -5,7 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidtomas.taskyapp.R
+import com.davidtomas.taskyapp.core.presentation.util.UiText
 import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
+import com.davidtomas.taskyapp.features.auth.presentation._common.mapper.toStringResource
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -14,6 +19,9 @@ class LoginViewModel(
 
     var state by mutableStateOf(LoginState())
         private set
+
+    private val _uiEvent = Channel<LoginUiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     fun onAction(action: LoginAction) {
         when (action) {
@@ -29,6 +37,10 @@ class LoginViewModel(
                 state = state.copy(password = action.password)
             }
 
+            is LoginAction.OnLoginButtonClick -> {
+                login()
+            }
+
             else -> Unit
         }
     }
@@ -41,13 +53,24 @@ class LoginViewModel(
                     password = state.password
                 )
             ).fold(
-                onError = {
-                    println(it)
-                },
-                onSuccess = {
-                    println(it)
+                onError = { dataError ->
+                    _uiEvent.send(
+                        LoginUiEvent.ShowSnackBar(
+                            UiText.StringResource(
+                                resId = dataError.toStringResource()
+                            )
+                        )
+                    )
                 }
-            )
+            ) {
+                _uiEvent.send(
+                    LoginUiEvent.ShowSnackBar(
+                        UiText.StringResource(
+                            R.string.login_success
+                        )
+                    )
+                )
+            }
         }
     }
 }

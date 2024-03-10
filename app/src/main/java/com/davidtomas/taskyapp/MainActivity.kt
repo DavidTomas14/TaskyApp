@@ -6,7 +6,6 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -16,10 +15,11 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.davidtomas.taskyapp.core.presentation.navigation.TaskyNavHost
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<MainActivityViewModel>()
+    private val viewModel: MainActivityViewModel by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initSplashScreen()

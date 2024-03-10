@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
-import com.davidtomas.taskyapp.features.auth.presentation.components.BasicInput
-import com.davidtomas.taskyapp.features.auth.presentation.components.InputPassword
+import com.davidtomas.taskyapp.features.auth.presentation._common.components.BasicInput
+import com.davidtomas.taskyapp.features.auth.presentation._common.components.InputPassword
 
 @Composable
 fun LoginScreen(
@@ -69,6 +69,9 @@ fun LoginScreen(
                 isPasswordVisible = state.isPasswordVisible,
                 onVisibilityIconClicked = {
                     onAction(LoginAction.OnChangePasswordVisibility)
+                },
+                onLoginButtonClicked = {
+                    onAction(LoginAction.OnLoginButtonClick)
                 }
             )
         }
@@ -76,7 +79,7 @@ fun LoginScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = spacing.spaceLarge),
-            onLoginClicked = {
+            onGoToRegister = {
                 onAction(LoginAction.NavigateToRegister)
             }
         )
@@ -109,6 +112,7 @@ fun Form(
     onPasswordChanged: (String) -> Unit,
     isPasswordVisible: Boolean,
     onVisibilityIconClicked: () -> Unit,
+    onLoginButtonClicked: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     Column(
@@ -133,7 +137,9 @@ fun Form(
                     end = spacing.spaceLarge
                 )
                 .fillMaxWidth(),
-            onClick = {},
+            onClick = {
+                onLoginButtonClicked()
+            },
         ) {
             Text(text = stringResource(id = R.string.btn_text_log_in))
         }
@@ -143,7 +149,7 @@ fun Form(
 @Composable
 fun Footer(
     modifier: Modifier,
-    onLoginClicked: () -> Unit
+    onGoToRegister: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     Row(
@@ -160,7 +166,7 @@ fun Footer(
             text = stringResource(id = R.string.txt_sign_up),
             modifier = Modifier
                 .clickable {
-                    onLoginClicked()
+                    onGoToRegister()
                 }
                 .padding(start = spacing.spaceTiny)
         )
