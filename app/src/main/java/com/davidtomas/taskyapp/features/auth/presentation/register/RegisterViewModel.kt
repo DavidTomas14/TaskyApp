@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.davidtomas.taskyapp.R
-import com.davidtomas.taskyapp.core.domain.model.Failure
+import com.davidtomas.taskyapp.core.domain.util.Error
 import com.davidtomas.taskyapp.core.presentation.util.UiText
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationError
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationErrors
@@ -102,7 +102,7 @@ class RegisterViewModel(
         }
     }
 
-    private fun onValidationError(failure: Failure, inputValidationType: InputValidationType) {
+    private fun onValidationError(failure: Error?, inputValidationType: InputValidationType) {
         val validationsErrors = (failure as InputValidationErrors).validationErrors
         when (inputValidationType) {
             is InputValidationType.EmailInputValidationType ->

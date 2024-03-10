@@ -30,7 +30,7 @@ import com.davidtomas.taskyapp.features.auth.presentation.components.InputPasswo
 @Composable
 fun LoginScreen(
     state: LoginState,
-    onAction: (LoginAction) -> Unit
+    onAction: (LoginAction) -> Unit,
 ) {
     val spacing = LocalSpacing.current
     Box(
