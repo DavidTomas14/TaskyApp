@@ -4,6 +4,7 @@
     <string name="btn_text_register">Get Register</string>
     <string name="error_email_wrong_format">The format of the email is wrong</string>
     <string name="error_mandatory_field">This field is mandatory</string>
+    <string name="error_fields_must_be_filled">All fields must be filled</string>
     <string name="error_password_length">Password should be of at least 9 characters</string>
     <string name="error_password_wrong_format">The format of the password is wrong</string>
     <string name="error_username_length">Username should be between 4 and 50 characters</string>
