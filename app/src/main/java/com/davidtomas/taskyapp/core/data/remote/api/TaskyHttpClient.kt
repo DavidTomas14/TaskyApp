@@ -2,8 +2,8 @@ package com.davidtomas.taskyapp.core.data.remote.api
 
 import android.util.Log
 import com.davidtomas.taskyapp.BuildConfig
-import com.davidtomas.taskyapp.core.domain.util.EMPTY_STRING
-import com.davidtomas.taskyapp.features.auth.data.local.TokenManager
+import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
+import com.davidtomas.taskyapp.features.auth.data.local.TokenDataStore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.auth.Auth
@@ -28,7 +28,7 @@ object TaskyHttpClient {
     private const val LOG_TAG = "KtorClient"
     private const val BASE_URL = "https://tasky.pl-coding.com/"
 
-    fun create(tokenManager: TokenManager) = HttpClient(Android) {
+    fun create(tokenDataStore: TokenDataStore) = HttpClient(Android) {
         expectSuccess = true
         defaultRequest {
             url(BASE_URL)
@@ -61,7 +61,7 @@ object TaskyHttpClient {
         install(Auth) {
             bearer {
                 loadTokens {
-                    tokenManager.getToken().first()
+                    tokenDataStore.getToken().first()
                         ?.let { BearerTokens(it, String.EMPTY_STRING) }
                 }
             }

@@ -1,7 +1,7 @@
 package com.davidtomas.taskyapp.features.auth.data.remote.api
 
+import com.davidtomas.taskyapp.core.domain._util.Result
 import com.davidtomas.taskyapp.core.domain.model.DataError
-import com.davidtomas.taskyapp.core.domain.util.Result
 import com.davidtomas.taskyapp.features.auth.data.remote.mapper.toAuthModel
 import com.davidtomas.taskyapp.features.auth.data.remote.mapper.toLoginRequest
 import com.davidtomas.taskyapp.features.auth.data.remote.mapper.toRegisterRequest

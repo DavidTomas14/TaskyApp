@@ -1,6 +1,6 @@
 package com.davidtomas.taskyapp.features.auth.presentation.register
 
-import com.davidtomas.taskyapp.core.domain.util.EMPTY_STRING
+import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.core.presentation.util.UiText
 
 data class RegisterState(

@@ -61,16 +61,17 @@ class LoginViewModel(
                             )
                         )
                     )
-                }
-            ) {
-                _uiEvent.send(
-                    LoginUiEvent.ShowSnackBar(
-                        UiText.StringResource(
-                            R.string.login_success
+                },
+                onSuccess = {
+                    _uiEvent.send(
+                        LoginUiEvent.ShowSnackBar(
+                            UiText.StringResource(
+                                R.string.login_success
+                            )
                         )
                     )
-                )
-            }
+                }
+            )
         }
     }
 }
