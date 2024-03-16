@@ -1,9 +1,9 @@
 package com.davidtomas.taskyapp.features.auth.data.remote
 
+import com.davidtomas.taskyapp.core.domain._util.Result
+import com.davidtomas.taskyapp.core.domain._util.map
 import com.davidtomas.taskyapp.core.domain.model.DataError
-import com.davidtomas.taskyapp.core.domain.util.Result
-import com.davidtomas.taskyapp.core.domain.util.map
-import com.davidtomas.taskyapp.features.auth.data.local.TokenManager
+import com.davidtomas.taskyapp.features.auth.data.local.TokenDataStore
 import com.davidtomas.taskyapp.features.auth.data.remote.api.AuthService
 import com.davidtomas.taskyapp.features.auth.domain.AuthRepository
 import com.davidtomas.taskyapp.features.auth.domain.model.AuthModel
@@ -12,14 +12,14 @@ import com.davidtomas.taskyapp.features.auth.domain.useCase.RegisterUseCase
 
 class AuthRepositoryImpl(
     private val authService: AuthService,
-    private val tokenManager: TokenManager
+    private val tokenDataStore: TokenDataStore
 ) : AuthRepository {
     override suspend fun login(loginParams: LoginUseCase.LoginParams): Result<AuthModel, DataError.Network> {
         return when (val result = authService.login(loginParams)) {
             is Result.Error -> result
             is Result.Success -> {
                 result.map {
-                    tokenManager.saveToken(it.token)
+                    tokenDataStore.saveToken(it.token)
                 }
                 result
             }

@@ -1,6 +1,6 @@
 package com.davidtomas.taskyapp.features.auth.domain.model
 
-import com.davidtomas.taskyapp.core.domain.util.Error
+import com.davidtomas.taskyapp.core.domain._util.Error
 
 sealed interface InputValidationError : Error {
     sealed interface EmailValidatorError : InputValidationError {

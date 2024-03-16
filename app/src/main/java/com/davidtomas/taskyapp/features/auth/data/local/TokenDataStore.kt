@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "data_store")
 
-class TokenManager(
+class TokenDataStore(
     private val context: Context
 ) {
     fun getToken(): Flow<String?> {

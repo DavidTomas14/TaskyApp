@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.core.domain.util
+package com.davidtomas.taskyapp.core.domain._util
 
 typealias RootError = Error
 
@@ -15,6 +15,18 @@ sealed class Result<out D, out E : RootError> {
             is Success -> onSuccess(data)
         }
 }
+
+fun <D, E : RootError> Result<D, E>.isSuccess(): Boolean =
+    when (this) {
+        is Result.Error -> false
+        is Result.Success -> true
+    }
+
+fun <D, E : RootError> Result<D, E>.isError(): Boolean =
+    when (this) {
+        is Result.Error -> true
+        is Result.Success -> false
+    }
 
 fun <D, E : RootError> Result<D, E>.asEmptyDataResult(): EmptyDataResult =
     when (this) {

@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.davidtomas.taskyapp.core.domain.util.EMPTY_STRING
+import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 
 @Composable
