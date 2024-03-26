@@ -111,7 +111,7 @@ fun RegisterHeader(
         modifier = modifier,
     ) {
         Header(
-            leadingIcon = {
+            leadingComposable = {
                 IconD(
                     modifier = Modifier.clickable { onBackIconClick() },
                     painter = painterResource(id = R.drawable.ic_arrow_back),

@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.davidtomas.taskyapp.features.agenda.presentation.AgendaScreen
+import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaScreen
 import com.davidtomas.taskyapp.features.auth.presentation.login.LoginRoot
 import com.davidtomas.taskyapp.features.auth.presentation.register.RegisterRoot
 
