@@ -6,7 +6,7 @@ import com.davidtomas.taskyapp.features.auth.domain.model.AuthModel
 import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
 
 fun LoginResponse.toAuthModel() =
-    AuthModel(token = token, userId = userId, fullName = fullName)
+    AuthModel(token = token.orEmpty(), userId = userId.orEmpty(), fullName = fullName.orEmpty())
 
 fun LoginUseCase.LoginParams.toLoginRequest() =
     LoginRequest(email = email, password = password)

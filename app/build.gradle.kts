@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.junit.get5())
 }
 
 android {
@@ -21,6 +22,7 @@ android {
         versionName = BuildVersion.Environment.appVersionName
 
         testInstrumentationRunner = BuildVersion.TestEnvironment.instrumentationRunner
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -56,6 +58,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/INDEX.LIST"
         }
     }
 }
@@ -81,20 +84,25 @@ dependencies {
     implementation(libs.bundles.androidx)
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
-    testImplementation(libs.junit)
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.bundles.testing.android)
-    debugImplementation(libs.bundles.compose.debug)
     // Splash
     implementation(libs.splash.api)
     // Navigation
     implementation(libs.compose.navigation)
     // Koin
+    implementation(platform(libs.koin.bom))
     implementation(libs.bundles.koin)
+    implementation(libs.bundles.koin.test)
     // Ktor Client
     implementation(libs.bundles.ktor)
     // Data Store
     implementation(libs.bundles.datastore)
+    // Testing
+    testImplementation(libs.bundles.testing)
+    testRuntimeOnly(libs.junit.get5().engine)
+    // Android testing
+    androidTestImplementation(libs.bundles.testing.android)
+    androidTestImplementation(platform(libs.compose.bom))
+    debugImplementation(libs.bundles.compose.debug)
     // Constraint Layout
     implementation(libs.androidx.constraintlayout.compose)
 }

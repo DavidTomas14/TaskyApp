@@ -24,9 +24,9 @@ fun LoginRoot(
                         message = event.message.asString(context),
                         duration = SnackbarDuration.Short
                     )
-                    navController.navigate(Route.AGENDA)
                 }
-                else -> Unit
+
+                is LoginUiEvent.Navigate -> navController.navigate(Route.AGENDA)
             }
         }
     }

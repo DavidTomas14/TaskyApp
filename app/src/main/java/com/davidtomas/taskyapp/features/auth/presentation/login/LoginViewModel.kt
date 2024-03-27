@@ -38,12 +38,26 @@ class LoginViewModel(
             }
 
             is LoginAction.OnLoginButtonClick -> {
-                login()
+                if (areFieldsFilled()) {
+                    login()
+                } else {
+                    viewModelScope.launch {
+                        _uiEvent.send(
+                            LoginUiEvent.ShowSnackBar(
+                                UiText.StringResource(
+                                    resId = R.string.error_fields_must_be_filled
+                                )
+                            )
+                        )
+                    }
+                }
             }
 
             else -> Unit
         }
     }
+
+    private fun areFieldsFilled() = state.email.isNotBlank() && state.password.isNotBlank()
 
     private fun login() {
         viewModelScope.launch {
@@ -70,6 +84,7 @@ class LoginViewModel(
                             )
                         )
                     )
+                    _uiEvent.send(LoginUiEvent.Navigate)
                 }
             )
         }
