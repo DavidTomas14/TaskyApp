@@ -56,38 +56,37 @@ fun CardItem2(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row {
-                    Icon(
-                        painter = painterResource(
-                            id = if (isChecked)
-                                R.drawable.ic_circle_checked
-                            else R.drawable.ic_circle_no_check
+                Icon(
+                    painter = painterResource(
+                        id = if (isChecked)
+                            R.drawable.ic_circle_checked
+                        else R.drawable.ic_circle_no_check
+                    ),
+                    modifier = Modifier
+                        .clickable { onBulletClick() }
+                        .padding(end = 8.dp),
+                    contentDescription = "More Actions",
+                    tint = onPrimaryColor
+                )
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                ) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            textDecoration =
+                            if (isChecked)
+                                TextDecoration.LineThrough
+                            else TextDecoration.None
                         ),
-                        modifier = Modifier
-                            .clickable { onBulletClick() }
-                            .padding(end = 8.dp),
-                        contentDescription = "More Actions",
-                        tint = onPrimaryColor
+                        color = onPrimaryColor
                     )
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(15.dp)
-                    ) {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                textDecoration =
-                                if (isChecked)
-                                    TextDecoration.LineThrough
-                                else TextDecoration.None
-                            ),
-                            color = onPrimaryColor
-                        )
-                        Text(
-                            text = description,
-                            color = onPrimaryColor.copy(0.8f),
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                    }
+                    Text(
+                        text = description,
+                        color = onPrimaryColor.copy(0.8f),
+                        style = MaterialTheme.typography.titleSmall
+                    )
                 }
                 Icon(
                     painter = painterResource(id = R.drawable.ic_more_actions),
