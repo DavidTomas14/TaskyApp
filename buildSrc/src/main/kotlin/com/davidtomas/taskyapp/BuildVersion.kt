@@ -18,6 +18,8 @@ object BuildVersion {
 
     object TestEnvironment {
         const val instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        //const val instrumentationRunner = "com.davidtomas.taskyapp.InstrumentationTestRunner"
         const val instrumentationRunnerArgs = "de.mannodermaus.junit5.AndroidJUnit5Builder"
     }
 }
