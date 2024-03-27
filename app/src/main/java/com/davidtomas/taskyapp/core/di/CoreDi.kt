@@ -2,7 +2,7 @@ package com.davidtomas.taskyapp.core.di
 
 import com.davidtomas.taskyapp.MainActivityViewModel
 import com.davidtomas.taskyapp.core.domain.useCase.AuthenticateUseCase
-import com.davidtomas.taskyapp.features.auth.data.local.TokenManager
+import com.davidtomas.taskyapp.features.auth.data.local.TokenDataStore
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -15,7 +15,7 @@ val coreModule = module {
 }
 
 private fun Module.dataModule() {
-    singleOf(::TokenManager)
+    singleOf(::TokenDataStore)
 }
 
 private fun Module.domainModule() {

@@ -95,4 +95,6 @@ dependencies {
     implementation(libs.bundles.ktor)
     // Data Store
     implementation(libs.bundles.datastore)
+    // Constraint Layout
+    implementation(libs.androidx.constraintlayout.compose)
 }

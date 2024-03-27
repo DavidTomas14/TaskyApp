@@ -47,3 +47,5 @@ val neutralVariant50 = Color(0xFF73787B)
 val neutralVariant60 = Color(0xFF8D9195)
 val neutralVariant80 = Color(0xFFC3C7CB)
 val neutralVariant90 = Color(0xFFDFE3E7)
+
+val calendarDaysColor = Color(0xFFFDEFA8)
