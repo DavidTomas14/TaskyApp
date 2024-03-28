@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.realm)
     alias(libs.plugins.junit.get5())
 }
 
@@ -45,15 +46,15 @@ android {
         sourceCompatibility = BuildVersion.Environment.javaVersion
         targetCompatibility = BuildVersion.Environment.javaVersion
     }
-    kotlinOptions {
-        jvmTarget = BuildVersion.Environment.jvmTarget
+    kotlin {
+        jvmToolchain(BuildVersion.Environment.jvmTarget)
     }
     buildFeatures {
         compose = true
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
     packaging {
         resources {
@@ -96,6 +97,8 @@ dependencies {
     implementation(libs.bundles.ktor)
     // Data Store
     implementation(libs.bundles.datastore)
+    // Realm
+    implementation(libs.bundles.realm)
     // Testing
     testImplementation(libs.bundles.testing)
     testRuntimeOnly(libs.junit.get5().engine)

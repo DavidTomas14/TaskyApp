@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.davidtomas.taskyapp.core.presentation.navigation.Route
+import com.davidtomas.taskyapp.navigation.Route
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -34,9 +34,10 @@ fun LoginRoot(
         state = viewModel.state,
         onAction = { action ->
             when (action) {
-                is LoginAction.NavigateToRegister -> {
+                is LoginAction.NavigateToRegisterButtonClick -> {
                     navController.navigate(Route.REGISTER)
                 }
+
                 else -> viewModel.onAction(action)
             }
         }

@@ -4,4 +4,5 @@ plugins {
     alias(libs.plugins.android.kotlin) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.realm) apply false
 }

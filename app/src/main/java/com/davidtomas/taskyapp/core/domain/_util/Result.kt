@@ -33,4 +33,6 @@ inline fun <D, E : RootError, M> Result<D, E>.map(map: (D) -> M): Result<M, E> {
     }
 }
 
+inline fun <D, E : RootError> Result<D, E>.getOrNull(): D? = (this as? Result.Success)?.data
+
 typealias EmptyDataResult = Result<Unit, Error>

@@ -5,12 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,15 +23,19 @@ import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.core.presentation.components.Header
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
+import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.CardItem2
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.CalendarDayItem
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.InitialsIcon
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.MonthSelector
-import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.Needle
 import java.time.DayOfWeek
 
 @Composable
-fun AgendaScreen() {
+fun AgendaScreen(
+    state: AgendaState,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,77 +79,47 @@ fun AgendaScreen() {
                 contentPadding = PaddingValues(vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                item {
-                    CardItem2(
-                        title = "ProjectX",
-                        description = "Just Work",
-                        date = "Mar 5, 10:00",
-                        isChecked = true,
-                        onCardClick = { /*TODO*/ },
-                        onBulletClick = { /*TODO*/ },
-                        onOptionsClick = { /*TODO*/ }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                item {
-                    CardItem2(
-                        title = "ProjectX",
-                        description = "Just Work",
-                        date = "Mar 5, 10:00",
-                        isChecked = true,
-                        primaryColor = MaterialTheme.colorScheme.inversePrimary,
-                        onCardClick = { /*TODO*/ },
-                        onBulletClick = { /*TODO*/ },
-                        onOptionsClick = { /*TODO*/ }
-                    )
-                    Needle(modifier = Modifier.padding(3.dp))
-                }
-                item {
-                    CardItem2(
-                        title = "ProjectX",
-                        description = "Just Work",
-                        date = "Mar 5, 10:00",
-                        isChecked = true,
-                        primaryColor = MaterialTheme.colorScheme.tertiary,
-                        onCardClick = { /*TODO*/ },
-                        onBulletClick = { /*TODO*/ },
-                        onOptionsClick = { /*TODO*/ }
-                    )
-                }
-                item {
-                    CardItem2(
-                        title = "ProjectX",
-                        description = "Just Work",
-                        date = "Mar 5, 10:00",
-                        isChecked = true,
-                        onCardClick = { /*TODO*/ },
-                        onBulletClick = { /*TODO*/ },
-                        onOptionsClick = { /*TODO*/ }
-                    )
-                }
-                item {
-                    CardItem2(
-                        title = "ProjectX",
-                        description = "Just Work",
-                        date = "Mar 5, 10:00",
-                        isChecked = true,
-                        primaryColor = MaterialTheme.colorScheme.inversePrimary,
-                        onCardClick = { /*TODO*/ },
-                        onBulletClick = { /*TODO*/ },
-                        onOptionsClick = { /*TODO*/ }
-                    )
-                }
-                item {
-                    CardItem2(
-                        title = "ProjectX",
-                        description = "Just Work",
-                        date = "Mar 5, 10:00",
-                        isChecked = true,
-                        primaryColor = MaterialTheme.colorScheme.tertiary,
-                        onCardClick = { /*TODO*/ },
-                        onBulletClick = { /*TODO*/ },
-                        onOptionsClick = { /*TODO*/ }
-                    )
+                items(state.agendaItems) { agendaItem ->
+                    with(agendaItem) {
+                        when (this) {
+                            is EventModel -> {
+                                CardItem2(
+                                    title = title,
+                                    description = description,
+                                    date = date.toString(),
+                                    isChecked = true,
+                                    onCardClick = { /*TODO*/ },
+                                    onBulletClick = { /*TODO*/ },
+                                    onOptionsClick = { /*TODO*/ })
+                            }
+
+                            is ReminderModel -> {
+                                CardItem2(
+                                    title = title,
+                                    description = description,
+                                    date = date.toString(),
+                                    isChecked = false,
+                                    primaryColor = MaterialTheme.colorScheme.tertiary,
+                                    onCardClick = { /*TODO*/ },
+                                    onBulletClick = { /*TODO*/ },
+                                    onOptionsClick = { /*TODO*/ }
+                                )
+                            }
+
+                            is TaskModel -> {
+                                CardItem2(
+                                    title = title,
+                                    description = description,
+                                    date = date.toString(),
+                                    isChecked = false,
+                                    primaryColor = MaterialTheme.colorScheme.inversePrimary,
+                                    onCardClick = { /*TODO*/ },
+                                    onBulletClick = { /*TODO*/ },
+                                    onOptionsClick = { /*TODO*/ }
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -157,6 +130,8 @@ fun AgendaScreen() {
 @Composable
 fun AgendaScreenPreview() {
     TaskyAppTheme {
-        AgendaScreen()
+        AgendaScreen(
+            state = AgendaState(),
+        )
     }
 }

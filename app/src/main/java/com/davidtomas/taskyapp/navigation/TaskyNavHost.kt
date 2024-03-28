@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.core.presentation.navigation
+package com.davidtomas.taskyapp.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaScreen
+import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaRoot
 import com.davidtomas.taskyapp.features.auth.presentation.login.LoginRoot
 import com.davidtomas.taskyapp.features.auth.presentation.register.RegisterRoot
 
@@ -43,7 +43,7 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                         )
                     }
                     composable(route = Route.AGENDA) {
-                        AgendaScreen()
+                        AgendaRoot()
                     }
                 }
             }

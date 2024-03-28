@@ -18,7 +18,6 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.http.path
 
-@Suppress("SwallowedException", "TooGenericExceptionCaught")
 class AuthServiceImpl(
     val client: HttpClient,
 ) : AuthService {
