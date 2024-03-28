@@ -1,8 +1,8 @@
-package com.davidtomas.taskyapp
+package com.davidtomas.taskyapp.navigation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.davidtomas.taskyapp.core.domain.useCase.AuthenticateUseCase
+import com.davidtomas.taskyapp.features.auth.domain.useCase.AuthenticateUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

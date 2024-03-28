@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.core.domain.useCase
+package com.davidtomas.taskyapp.features.auth.domain.useCase
 
 import com.davidtomas.taskyapp.core.domain._util.Result
 import com.davidtomas.taskyapp.core.domain.model.DataError

@@ -12,8 +12,8 @@ object BuildVersion {
         const val applicationId = "com.davidtomas.taskyapp"
         const val appVersionCode = majorVersion * 1000 + minorVersion * 100 + bugfixVersion
         const val appVersionName = "${majorVersion}.${minorVersion}.$bugfixVersion"
-        val javaVersion = JavaVersion.VERSION_17
-        const val jvmTarget = "17"
+        val javaVersion = JavaVersion.VERSION_18
+        const val jvmTarget = 18
     }
 
     object TestEnvironment {

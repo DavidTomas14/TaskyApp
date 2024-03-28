@@ -80,7 +80,7 @@ fun LoginScreen(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = spacing.spaceLarge),
             onGoToRegister = {
-                onAction(LoginAction.NavigateToRegister)
+                onAction(LoginAction.NavigateToRegisterButtonClick)
             }
         )
     }

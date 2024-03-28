@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.core.presentation.navigation
+package com.davidtomas.taskyapp.navigation
 
 object Route {
     const val AUTH = "auth"
