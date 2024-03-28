@@ -11,6 +11,7 @@ import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlin.coroutines.cancellation.CancellationException
 
 class ReminderLocalSourceImpl(
     private val realmDb: Realm
@@ -31,7 +32,8 @@ class ReminderLocalSourceImpl(
                 }
             Result.Success(events)
         } catch (e: Exception) {
-            Result.Error(DataError.Local.DISK_FULL)
+            if (e is CancellationException) throw e
+            Result.Error(DataError.Local.OPERATION_FAILED)
         }
     }
 
