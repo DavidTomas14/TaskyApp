@@ -26,8 +26,8 @@ import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
-import com.davidtomas.taskyapp.features.agenda.presentation._common.components.CardItem2
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.CalendarDayItem
+import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.CardItem2
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.InitialsIcon
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.MonthSelector
 import java.time.DayOfWeek
@@ -35,6 +35,7 @@ import java.time.DayOfWeek
 @Composable
 fun AgendaScreen(
     state: AgendaState,
+    onAction: (AgendaAction) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -79,46 +80,63 @@ fun AgendaScreen(
                 contentPadding = PaddingValues(vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(state.agendaItems) { agendaItem ->
-                    with(agendaItem) {
-                        when (this) {
-                            is EventModel -> {
-                                CardItem2(
-                                    title = title,
-                                    description = description,
-                                    date = date.toString(),
-                                    isChecked = true,
-                                    onCardClick = { /*TODO*/ },
-                                    onBulletClick = { /*TODO*/ },
-                                    onOptionsClick = { /*TODO*/ })
-                            }
+                items(state.agendaItems) { agendaItems ->
+                    with(agendaItems) {
+                        CardItem2(
+                            title = title,
+                            description = description,
+                            date = date.toString(),
+                            isDone = when (this) {
+                                is TaskModel -> {
+                                    isDone
+                                }
 
-                            is ReminderModel -> {
-                                CardItem2(
-                                    title = title,
-                                    description = description,
-                                    date = date.toString(),
-                                    isChecked = false,
-                                    primaryColor = MaterialTheme.colorScheme.tertiary,
-                                    onCardClick = { /*TODO*/ },
-                                    onBulletClick = { /*TODO*/ },
-                                    onOptionsClick = { /*TODO*/ }
-                                )
-                            }
+                                else -> false
+                            },
+                            isDropDownMenuShown =
+                            state.agendaItemWithOpenedOptions != null && state.agendaItemWithOpenedOptions.id == id,
+                            onDismissDropDownMenu = {
+                                onAction(AgendaAction.OnDismissedOptionsDropdown)
+                            },
+                            primaryColor = when (this) {
+                                is EventModel -> {
+                                    MaterialTheme.colorScheme.primary
+                                }
 
-                            is TaskModel -> {
-                                CardItem2(
-                                    title = title,
-                                    description = description,
-                                    date = date.toString(),
-                                    isChecked = false,
-                                    primaryColor = MaterialTheme.colorScheme.inversePrimary,
-                                    onCardClick = { /*TODO*/ },
-                                    onBulletClick = { /*TODO*/ },
-                                    onOptionsClick = { /*TODO*/ }
-                                )
+                                is ReminderModel -> {
+                                    MaterialTheme.colorScheme.inversePrimary
+                                }
+
+                                is TaskModel -> {
+                                    MaterialTheme.colorScheme.tertiary
+                                }
+
+                                else -> Color.Unspecified
+                            },
+                            onCardClick = {
+                                onAction(AgendaAction.OnAgendaItemClicked(agendaModel = this))
+                            },
+                            onBulletClick = {
+                                if (this is TaskModel) {
+                                    onAction(AgendaAction.OnDoneBulletClicked(taskModel = this))
+                                }
+                            },
+                            onOptionsClick = {
+                                onAction(AgendaAction.OnAgendaItemOptionsClicked(this))
+                            },
+                            onOpenOptionClick = {
+                                onAction(AgendaAction.OnOpenAgendaItemClicked(agendaModel = this))
+                                onAction(AgendaAction.OnDismissedOptionsDropdown)
+                            },
+                            onEditOptionClick = {
+                                onAction(AgendaAction.OnEditAgendaItemClicked(agendaModel = this))
+                                onAction(AgendaAction.OnDismissedOptionsDropdown)
+                            },
+                            onDeleteOptionClick = {
+                                onAction(AgendaAction.OnDeleteAgendaItemClicked(agendaModel = this))
+                                onAction(AgendaAction.OnDismissedOptionsDropdown)
                             }
-                        }
+                        )
                     }
                 }
             }
@@ -132,6 +150,7 @@ fun AgendaScreenPreview() {
     TaskyAppTheme {
         AgendaScreen(
             state = AgendaState(),
+            onAction = {}
         )
     }
 }

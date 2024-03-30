@@ -1,7 +1,8 @@
-package com.davidtomas.taskyapp.features.agenda.presentation._common.components
+package com.davidtomas.taskyapp.features.agenda.presentation.agenda.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,13 +31,18 @@ fun CardItem2(
     title: String,
     description: String,
     date: String,
-    isChecked: Boolean,
+    isDone: Boolean,
+    isDropDownMenuShown: Boolean,
+    onDismissDropDownMenu: () -> Unit,
     onCardClick: () -> Unit,
     onBulletClick: () -> Unit,
     onOptionsClick: () -> Unit,
     primaryColor: Color = MaterialTheme.colorScheme.primary,
     onPrimaryColor: Color = MaterialTheme.colorScheme.onPrimary,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenOptionClick: () -> Unit,
+    onEditOptionClick: () -> Unit,
+    onDeleteOptionClick: () -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -58,7 +64,7 @@ fun CardItem2(
             ) {
                 Icon(
                     painter = painterResource(
-                        id = if (isChecked)
+                        id = if (isDone)
                             R.drawable.ic_circle_checked
                         else R.drawable.ic_circle_no_check
                     ),
@@ -76,7 +82,7 @@ fun CardItem2(
                         text = title,
                         style = MaterialTheme.typography.titleMedium.copy(
                             textDecoration =
-                            if (isChecked)
+                            if (isDone)
                                 TextDecoration.LineThrough
                             else TextDecoration.None
                         ),
@@ -88,13 +94,36 @@ fun CardItem2(
                         style = MaterialTheme.typography.titleSmall
                     )
                 }
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_more_actions),
-                    modifier = Modifier
-                        .clickable { onOptionsClick() },
-                    contentDescription = "More Actions",
-                    tint = onPrimaryColor
-                )
+                Box() {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_more_actions),
+                        modifier = Modifier
+                            .clickable { onOptionsClick() },
+                        contentDescription = "More Actions",
+                        tint = onPrimaryColor
+                    )
+                    DropDownAgendaItemOptions(
+                        isShown = isDropDownMenuShown,
+                        onDismissRequest = onDismissDropDownMenu,
+                        dropDownItems = listOf(
+                            DropDownItems(
+                                text = "Open",
+                                leadingIcon = R.drawable.ic_open_action,
+                                onClick = onOpenOptionClick
+                            ),
+                            DropDownItems(
+                                text = "Edit",
+                                leadingIcon = R.drawable.ic_edit_action,
+                                onClick = onEditOptionClick
+                            ),
+                            DropDownItems(
+                                text = "Delete",
+                                leadingIcon = R.drawable.ic_delete_action,
+                                onClick = onDeleteOptionClick
+                            )
+                        )
+                    )
+                }
             }
             Text(
                 modifier = Modifier.padding(top = 40.dp),
@@ -107,25 +136,6 @@ fun CardItem2(
     }
 }
 
-object CardColorsDefaults2 {
-    class CardColors(
-        val cardColor: Color,
-        val onPrimaryColor: Color,
-        val secondaryColor: Color
-    )
-
-    @Composable
-    fun buttonColors(
-        cardColor: Color = MaterialTheme.colorScheme.primary,
-        onPrimaryColor: Color = MaterialTheme.colorScheme.onPrimary,
-        secondaryColor: Color = MaterialTheme.colorScheme.onTertiary,
-    ) = CardColors(
-        cardColor = cardColor,
-        onPrimaryColor = onPrimaryColor,
-        secondaryColor = secondaryColor
-    )
-}
-
 @Preview
 @Composable
 fun CardItem2Preview() {
@@ -135,21 +145,30 @@ fun CardItem2Preview() {
                 title = "Project X",
                 description = "Just Work",
                 date = "Mar 5, 10:00",
-                isChecked = false,
+                isDone = false,
+                isDropDownMenuShown = true,
+                onDismissDropDownMenu = {},
                 onCardClick = { /*TODO*/ },
                 onBulletClick = { /*TODO*/ },
-                onOptionsClick = { /*TODO*/ }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+                onOptionsClick = { /*TODO*/ },
+                onOpenOptionClick = {},
+                onEditOptionClick = {}
+            ) {}
+            Spacer(modifier = Modifier.height(300.dp))
             CardItem2(
                 title = "Project X",
                 description = "Just Work",
                 date = "Mar 5, 10:00",
-                isChecked = true,
+                isDone = true,
+                isDropDownMenuShown = false,
+                onDismissDropDownMenu = {},
                 onCardClick = { /*TODO*/ },
                 onBulletClick = { /*TODO*/ },
-                onOptionsClick = { /*TODO*/ }
-            )
+                onOptionsClick = { /*TODO*/ },
+                onOpenOptionClick = {},
+                onEditOptionClick = {}
+            ) {}
+            Spacer(modifier = Modifier.height(300.dp))
         }
     }
 }

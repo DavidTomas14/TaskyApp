@@ -21,7 +21,7 @@ val ktorSuccessClient = HttpClient(MockEngine) {
     engine {
         addHandler { request ->
             when (request.url.encodedPath) {
-                AuthRoutes.LOGIN_ROUTE -> {
+                AuthPaths.LOGIN_ROUTE -> {
                     respond(
                         LoginSuccessJson,
                         HttpStatusCode.OK,
@@ -29,7 +29,7 @@ val ktorSuccessClient = HttpClient(MockEngine) {
                     )
                 }
 
-                AuthRoutes.REGISTER_ROUTE -> {
+                AuthPaths.REGISTER_ROUTE -> {
                     respond(
                         ByteReadChannel.Empty,
                         HttpStatusCode.OK,
@@ -37,7 +37,7 @@ val ktorSuccessClient = HttpClient(MockEngine) {
                     )
                 }
 
-                AuthRoutes.AUTHENTICATE_ROUTE -> {
+                AuthPaths.AUTHENTICATE_ROUTE -> {
                     respond(
                         ByteReadChannel.Empty,
                         HttpStatusCode.OK,
@@ -75,7 +75,7 @@ fun ktorErrorClientWithSpecificError(statusCode: HttpStatusCode) =
         engine {
             addHandler { request ->
                 when (request.url.encodedPath) {
-                    AuthRoutes.LOGIN_ROUTE -> {
+                    AuthPaths.LOGIN_ROUTE -> {
                         respond(
                             CommonErrorJson,
                             statusCode,
@@ -83,7 +83,7 @@ fun ktorErrorClientWithSpecificError(statusCode: HttpStatusCode) =
                         )
                     }
 
-                    AuthRoutes.REGISTER_ROUTE -> {
+                    AuthPaths.REGISTER_ROUTE -> {
                         respond(
                             CommonErrorJson,
                             statusCode,

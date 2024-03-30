@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation._common.components
+package com.davidtomas.taskyapp.features.agenda.presentation.agenda.components
 
 import android.widget.Toast
 import androidx.compose.material3.DropdownMenu

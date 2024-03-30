@@ -1,7 +1,5 @@
 package com.davidtomas.taskyapp.features.agenda.data.task.local.source
 
-import com.davidtomas.taskyapp.core.domain._util.Result
-import com.davidtomas.taskyapp.core.domain.model.DataError
 import com.davidtomas.taskyapp.features.agenda.data.task.local.entity.TaskEntity
 import com.davidtomas.taskyapp.features.agenda.data.task.local.mapper.toTaskEntity
 import com.davidtomas.taskyapp.features.agenda.data.task.local.mapper.toTaskModel
@@ -11,7 +9,6 @@ import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlin.coroutines.cancellation.CancellationException
 
 class TaskLocalSourceImpl(
     private val realmDb: Realm
@@ -22,20 +19,12 @@ class TaskLocalSourceImpl(
         }
     }
 
-    override suspend fun getTasks(): Result<Flow<List<TaskModel>>, DataError> {
-        return try {
-            val events = realmDb
-                .query<TaskEntity>()
-                .asFlow()
-                .map { results ->
-                    results.list.toList().map { it.toTaskModel() }
-                }
-            Result.Success(events)
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            Result.Error(DataError.Local.OPERATION_FAILED)
+    override suspend fun getTasks(): Flow<List<TaskModel>> = realmDb
+        .query<TaskEntity>()
+        .asFlow()
+        .map { results ->
+            results.list.toList().map { it.toTaskModel() }
         }
-    }
 
     override suspend fun deleteTask(event: TaskModel) {
         realmDb.write {
