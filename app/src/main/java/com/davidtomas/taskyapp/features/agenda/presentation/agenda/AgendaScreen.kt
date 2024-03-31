@@ -90,7 +90,8 @@ fun AgendaScreen(
                                     isChecked = true,
                                     onCardClick = { /*TODO*/ },
                                     onBulletClick = { /*TODO*/ },
-                                    onOptionsClick = { /*TODO*/ })
+                                    onOptionsClick = { /*TODO*/ }
+                                )
                             }
 
                             is ReminderModel -> {
