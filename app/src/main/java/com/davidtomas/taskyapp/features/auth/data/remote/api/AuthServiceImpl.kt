@@ -23,7 +23,7 @@ class AuthServiceImpl(
 ) : AuthService {
     override suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError.Network> =
         client.safeRequest<Unit> {
-            url { path(AuthRoutes.REGISTER_ROUTE) }
+            url { path(AuthPaths.REGISTER_ROUTE) }
             method = HttpMethod.Post
             contentType(ContentType.Application.Json)
             setBody(registerParams.toRegisterRequest())
@@ -31,7 +31,7 @@ class AuthServiceImpl(
 
     override suspend fun login(loginParams: LoginUseCase.LoginParams): Result<AuthModel, DataError.Network> =
         client.safeRequest<LoginResponse> {
-            url { path(AuthRoutes.LOGIN_ROUTE) }
+            url { path(AuthPaths.LOGIN_ROUTE) }
             method = HttpMethod.Post
             contentType(ContentType.Application.Json)
             setBody(loginParams.toLoginRequest())
@@ -41,7 +41,7 @@ class AuthServiceImpl(
 
     override suspend fun authenticate(): Result<Unit, DataError> =
         client.safeRequest<Unit> {
-            url { path(AuthRoutes.AUTHENTICATE_ROUTE) }
+            url { path(AuthPaths.AUTHENTICATE_ROUTE) }
             method = HttpMethod.Get
         }
 }

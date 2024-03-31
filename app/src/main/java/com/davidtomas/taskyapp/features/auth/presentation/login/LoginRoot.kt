@@ -6,7 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.davidtomas.taskyapp.navigation.Route
+import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
+import com.davidtomas.taskyapp.features.auth.presentation._common.navigation.AuthRoutes
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -26,7 +27,7 @@ fun LoginRoot(
                     )
                 }
 
-                is LoginUiEvent.Navigate -> navController.navigate(Route.AGENDA)
+                is LoginUiEvent.Navigate -> navController.navigate(AgendaRoutes.AGENDA)
             }
         }
     }
@@ -35,7 +36,7 @@ fun LoginRoot(
         onAction = { action ->
             when (action) {
                 is LoginAction.NavigateToRegisterButtonClick -> {
-                    navController.navigate(Route.REGISTER)
+                    navController.navigate(AuthRoutes.REGISTER)
                 }
 
                 else -> viewModel.onAction(action)

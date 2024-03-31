@@ -1,9 +1,9 @@
 package com.davidtomas.taskyapp.features.agenda.domain.model
 
-class ReminderModel(
-    val id: String,
-    val title: String,
-    val description: String,
+data class ReminderModel(
+    override val id: String,
+    override val title: String,
+    override val description: String,
     override val date: Long,
     val remindAt: Long
-) : AgendaItem
+) : AgendaModel
