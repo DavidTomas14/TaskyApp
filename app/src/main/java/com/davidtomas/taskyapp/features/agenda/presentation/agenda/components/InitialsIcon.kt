@@ -3,7 +3,6 @@ package com.davidtomas.taskyapp.features.agenda.presentation.agenda.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -23,17 +22,16 @@ fun InitialsIcon(
 ) {
     Row(
         modifier = Modifier
-            .size(36.dp)
+            .size(32.dp)
             .clip(RoundedCornerShape(100.dp))
-            .background(MaterialTheme.colorScheme.background)
-            .padding(5.dp),
+            .background(MaterialTheme.colorScheme.background),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
             text = initials,
             color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.labelMedium,
             textAlign = TextAlign.Center
         )
     }

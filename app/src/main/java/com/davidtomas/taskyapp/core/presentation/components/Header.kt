@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
@@ -25,6 +26,8 @@ import com.davidtomas.taskyapp.coreUi.LocalSpacing
 fun Header(
     modifier: Modifier = Modifier,
     headerText: String = String.EMPTY_STRING,
+    textStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    textColor: Color = MaterialTheme.colorScheme.onPrimary,
     leadingComposable: @Composable (() -> Unit)? = {},
     trailingComposable: @Composable (() -> Unit)? = {},
 ) {
@@ -41,8 +44,8 @@ fun Header(
             modifier = Modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onPrimary,
+            style = textStyle,
+            color = textColor,
             text = headerText
         )
         trailingComposable?.let { it() }
