@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.eventDetail.components
+package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,13 +26,16 @@ fun TimeDatePicker(
     label: String,
     hour: String,
     date: String,
-    onChangeHourIconClick: () -> Unit,
-    onChangeDateIconClick: () -> Unit,
-    isEdit: Boolean = false
+    onChangeDateClick: () -> Unit,
+    isEditable: Boolean
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .clickable { onChangeDateClick() }
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -48,27 +51,25 @@ fun TimeDatePicker(
                 text = hour,
                 style = MaterialTheme.typography.titleSmall
             )
-            if (isEdit)
+            if (isEditable)
                 Icon(
                     painter = painterResource(R.drawable.ic_arrow_next),
                     modifier = Modifier
-                        .weight(1f)
-                        .clickable { onChangeHourIconClick() },
+                        .weight(1f),
                     contentDescription = "More Actions",
                 )
             Text(
                 modifier = Modifier
-                    .weight(if (isEdit) 2f else 4f),
+                    .weight(if (isEditable) 2f else 4f),
                 text = date,
                 style = MaterialTheme.typography.titleSmall,
-                textAlign = if (isEdit) TextAlign.Left else TextAlign.Center
+                textAlign = TextAlign.Center
             )
-            if (isEdit)
+            if (isEditable)
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_next),
                     modifier = Modifier
-                        .weight(1f)
-                        .clickable { onChangeDateIconClick() },
+                        .weight(1f),
                     contentDescription = "More Actions",
                 )
         }
@@ -86,35 +87,31 @@ fun TimeDatePickerPreview() {
                 label = "From",
                 hour = "8:00",
                 date = "Jun 21 2022",
-                onChangeDateIconClick = {},
-                onChangeHourIconClick = {},
-                isEdit = false
+                onChangeDateClick = {},
+                isEditable = false
             )
             TimeDatePicker(
                 label = "From",
                 hour = "8:00",
                 date = "Jun 21 2022",
-                onChangeDateIconClick = {},
-                onChangeHourIconClick = {},
-                isEdit = true
+                onChangeDateClick = {},
+                isEditable = true
             )
 
             TimeDatePicker(
                 label = "To",
                 hour = "8:00",
                 date = "Jun 21 2022",
-                onChangeDateIconClick = {},
-                onChangeHourIconClick = {},
-                isEdit = false
+                onChangeDateClick = {},
+                isEditable = false
             )
 
             TimeDatePicker(
                 label = "To",
                 hour = "8:00",
                 date = "Jun 21 2022",
-                onChangeDateIconClick = {},
-                onChangeHourIconClick = {},
-                isEdit = true
+                onChangeDateClick = {},
+                isEditable = true
             )
         }
     }
