@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.eventDetail.components
+package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +28,7 @@ fun AttendeeItem(
     fullName: String,
     onDeleteIconClicked: () -> Unit,
     isCreator: Boolean = false,
-    isEdit: Boolean = false
+    isEditable: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -53,7 +53,7 @@ fun AttendeeItem(
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onTertiary
             )
-        if (isEdit)
+        if (isEditable)
             Icon(
                 painter = painterResource(id = R.drawable.ic_delete_action),
                 modifier = Modifier
@@ -71,12 +71,13 @@ fun AttendeeItemPreview() {
             AttendeeItem(
                 fullName = "David Tomas",
                 onDeleteIconClicked = { /*TODO*/ },
-                isCreator = true
+                isCreator = true,
+                isEditable = false
             )
             AttendeeItem(
                 fullName = "David Tomas",
                 onDeleteIconClicked = { /*TODO*/ },
-                isEdit = true
+                isEditable = true
             )
         }
     }

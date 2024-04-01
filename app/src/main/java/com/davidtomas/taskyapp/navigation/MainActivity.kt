@@ -11,8 +11,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import org.koin.android.ext.android.inject
 
@@ -31,6 +34,11 @@ class MainActivity : ComponentActivity() {
                 ) {
                     TaskyNavHost(isAuthenticated = viewModel.isAuthenticated.collectAsState().value)
                 }
+                WindowCompat.getInsetsController(window, window.decorView).apply {
+                    isAppearanceLightStatusBars =
+                        true // Set to false if you want dark status bar icons
+                }
+                window.statusBarColor = Color.Green.toArgb()
             }
         }
     }

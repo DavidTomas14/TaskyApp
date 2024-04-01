@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.eventDetail.components
+package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,10 +21,10 @@ import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
-fun NotificationTimePicker(
-    text: String,
+fun DescriptionComposable(
+    description: String = "New Description",
     onNavigateToEditClick: () -> Unit,
-    isEdit: Boolean = false
+    isEditable: Boolean
 ) {
     Column {
         Row(
@@ -33,18 +32,12 @@ fun NotificationTimePicker(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_notification),
-                contentDescription = "More Actions",
-            )
             Text(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .weight(1f),
-                text = text,
-                style = MaterialTheme.typography.titleSmall
+                modifier = Modifier.weight(1f),
+                text = description,
+                style = MaterialTheme.typography.bodyLarge
             )
-            if (isEdit)
+            if (isEditable)
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_next),
                     modifier = Modifier
@@ -59,17 +52,13 @@ fun NotificationTimePicker(
 
 @Preview
 @Composable
-fun NotificationTimePickerPreview() {
+fun DescriptionComposablePreview() {
     TaskyAppTheme {
         Column {
-            NotificationTimePicker(
-                text = "30 minutes before",
-                onNavigateToEditClick = { /*TODO*/ }
-            )
-            NotificationTimePicker(
-                text = "30 minutes before",
-                onNavigateToEditClick = { /*TODO*/ },
-                isEdit = true
+            DescriptionComposable(
+                description = "Hola esto es una preview de una descripción to guapaaa",
+                onNavigateToEditClick = {},
+                isEditable = true
             )
         }
     }

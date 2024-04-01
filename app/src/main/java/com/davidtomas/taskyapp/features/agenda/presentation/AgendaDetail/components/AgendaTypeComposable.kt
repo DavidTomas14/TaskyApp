@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.eventDetail.components
+package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,16 +15,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
+import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
 
 @Composable
 fun AgendaTypeComposable(
-    title: String,
-    rectangleColor: Color,
+    agendaType: AgendaType
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -35,7 +34,13 @@ fun AgendaTypeComposable(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(2.dp))
-                .background(rectangleColor)
+                .background(
+                    when (agendaType) {
+                        AgendaType.EVENT -> MaterialTheme.colorScheme.primary
+                        AgendaType.TASK -> MaterialTheme.colorScheme.secondary
+                        AgendaType.REMINDER -> MaterialTheme.colorScheme.inversePrimary
+                    }
+                )
                 .size(28.dp)
         )
         Text(
@@ -44,7 +49,11 @@ fun AgendaTypeComposable(
                 .weight(1f),
             color = MaterialTheme.colorScheme.tertiary,
             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
-            text = title,
+            text = when (agendaType) {
+                AgendaType.EVENT -> "Event"
+                AgendaType.TASK -> "Task"
+                AgendaType.REMINDER -> "Reminder"
+            }
         )
     }
 }
@@ -54,14 +63,9 @@ fun AgendaTypeComposable(
 fun AgendaTypeComposablePreview() {
     TaskyAppTheme {
         Column {
-            AgendaTypeComposable(
-                title = "Meeting",
-                rectangleColor = Color.Blue,
-            )
-            AgendaTypeComposable(
-                title = "Meeting",
-                rectangleColor = Color.Gray,
-            )
+            AgendaTypeComposable(agendaType = AgendaType.EVENT)
+            AgendaTypeComposable(agendaType = AgendaType.TASK)
+            AgendaTypeComposable(agendaType = AgendaType.REMINDER)
         }
     }
 }

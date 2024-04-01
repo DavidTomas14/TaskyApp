@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.eventDetail.components
+package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.eventDetail.components
+package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,10 +22,10 @@ import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
-fun TitleComposable(
-    title: String,
+fun NotificationTimePicker(
+    text: String,
     onNavigateToEditClick: () -> Unit,
-    isEdit: Boolean = false
+    isEditable: Boolean
 ) {
     Column {
         Row(
@@ -34,17 +34,17 @@ fun TitleComposable(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_circle_no_check),
-                modifier = Modifier
-                    .padding(end = 8.dp),
+                painter = painterResource(R.drawable.ic_notification),
                 contentDescription = "More Actions",
             )
             Text(
-                modifier = Modifier.weight(1f),
-                text = title,
-                style = MaterialTheme.typography.titleMedium
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .weight(1f),
+                text = text,
+                style = MaterialTheme.typography.titleSmall
             )
-            if (isEdit)
+            if (isEditable)
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_next),
                     modifier = Modifier
@@ -59,17 +59,18 @@ fun TitleComposable(
 
 @Preview
 @Composable
-fun TitleComposablePreview() {
+fun NotificationTimePickerPreview() {
     TaskyAppTheme {
         Column {
-            TitleComposable(
-                title = "Meeting",
-                onNavigateToEditClick = {}
+            NotificationTimePicker(
+                text = "30 minutes before",
+                onNavigateToEditClick = { /*TODO*/ },
+                isEditable = false
             )
-            TitleComposable(
-                title = "Meeting",
-                onNavigateToEditClick = {},
-                isEdit = true
+            NotificationTimePicker(
+                text = "30 minutes before",
+                onNavigateToEditClick = { /*TODO*/ },
+                isEditable = true
             )
         }
     }
