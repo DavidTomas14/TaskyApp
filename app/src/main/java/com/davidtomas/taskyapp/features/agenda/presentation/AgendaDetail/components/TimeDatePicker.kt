@@ -26,13 +26,16 @@ fun TimeDatePicker(
     label: String,
     hour: String,
     date: String,
-    onChangeHourIconClick: () -> Unit,
-    onChangeDateIconClick: () -> Unit,
+    onChangeDateClick: () -> Unit,
     isEditable: Boolean
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .clickable { onChangeDateClick() }
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -52,8 +55,7 @@ fun TimeDatePicker(
                 Icon(
                     painter = painterResource(R.drawable.ic_arrow_next),
                     modifier = Modifier
-                        .weight(1f)
-                        .clickable { onChangeHourIconClick() },
+                        .weight(1f),
                     contentDescription = "More Actions",
                 )
             Text(
@@ -67,8 +69,7 @@ fun TimeDatePicker(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_next),
                     modifier = Modifier
-                        .weight(1f)
-                        .clickable { onChangeDateIconClick() },
+                        .weight(1f),
                     contentDescription = "More Actions",
                 )
         }
@@ -86,16 +87,14 @@ fun TimeDatePickerPreview() {
                 label = "From",
                 hour = "8:00",
                 date = "Jun 21 2022",
-                onChangeDateIconClick = {},
-                onChangeHourIconClick = {},
+                onChangeDateClick = {},
                 isEditable = false
             )
             TimeDatePicker(
                 label = "From",
                 hour = "8:00",
                 date = "Jun 21 2022",
-                onChangeDateIconClick = {},
-                onChangeHourIconClick = {},
+                onChangeDateClick = {},
                 isEditable = true
             )
 
@@ -103,8 +102,7 @@ fun TimeDatePickerPreview() {
                 label = "To",
                 hour = "8:00",
                 date = "Jun 21 2022",
-                onChangeDateIconClick = {},
-                onChangeHourIconClick = {},
+                onChangeDateClick = {},
                 isEditable = false
             )
 
@@ -112,8 +110,7 @@ fun TimeDatePickerPreview() {
                 label = "To",
                 hour = "8:00",
                 date = "Jun 21 2022",
-                onChangeDateIconClick = {},
-                onChangeHourIconClick = {},
+                onChangeDateClick = {},
                 isEditable = true
             )
         }

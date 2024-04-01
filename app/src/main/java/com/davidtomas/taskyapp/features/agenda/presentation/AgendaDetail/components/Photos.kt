@@ -37,7 +37,7 @@ import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.PhotoModel
 
 @Composable
-fun PhotosComposable(
+fun Photos(
     photos: List<PhotoModel>,
     onAddedPhoto: (String) -> Unit,
 ) {
@@ -66,16 +66,14 @@ fun PhotosComposable(
             modifier = Modifier
                 .fillMaxWidth(),
         ) {
-            val chunkedTextList = photos.chunked(5) // Break the list into chunks of 3
+            val chunkedTextList = photos.chunked(5)
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                // Iterate over the chunked list
                 for (chunk in chunkedTextList) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        // Iterate over each chunk and create a Text composable for each item
                         for (text in chunk) {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_add_icon),
@@ -90,7 +88,6 @@ fun PhotosComposable(
                                 contentScale = ContentScale.Fit
                             )
                         }
-                        // If the last row has less than 3 items, add placeholders
                         if (chunk.size < 5) {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_add_icon),
@@ -118,14 +115,13 @@ fun PhotosComposable(
             }
         }
     }
-
 }
 
 @Preview
 @Composable
 fun PhotosComposablePreview() {
     TaskyAppTheme {
-        PhotosComposable(
+        Photos(
             photos = listOf(
                 PhotoModel("", ""),
                 PhotoModel("", ""),

@@ -21,7 +21,7 @@ import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
-fun DescriptionComposable(
+fun Description(
     description: String = "New Description",
     onNavigateToEditClick: () -> Unit,
     isEditable: Boolean
@@ -55,7 +55,7 @@ fun DescriptionComposable(
 fun DescriptionComposablePreview() {
     TaskyAppTheme {
         Column {
-            DescriptionComposable(
+            Description(
                 description = "Hola esto es una preview de una descripción to guapaaa",
                 onNavigateToEditClick = {},
                 isEditable = true

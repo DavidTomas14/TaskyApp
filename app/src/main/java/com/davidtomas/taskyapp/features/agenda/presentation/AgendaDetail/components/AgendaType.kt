@@ -22,7 +22,7 @@ import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
 
 @Composable
-fun AgendaTypeComposable(
+fun AgendaType(
     agendaType: AgendaType
 ) {
     Row(
@@ -60,12 +60,12 @@ fun AgendaTypeComposable(
 
 @Preview
 @Composable
-fun AgendaTypeComposablePreview() {
+fun AgendaTypePreview() {
     TaskyAppTheme {
         Column {
-            AgendaTypeComposable(agendaType = AgendaType.EVENT)
-            AgendaTypeComposable(agendaType = AgendaType.TASK)
-            AgendaTypeComposable(agendaType = AgendaType.REMINDER)
+            AgendaType(agendaType = AgendaType.EVENT)
+            AgendaType(agendaType = AgendaType.TASK)
+            AgendaType(agendaType = AgendaType.REMINDER)
         }
     }
 }

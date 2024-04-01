@@ -23,7 +23,7 @@ import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
-fun TitleComposable(
+fun Title(
     title: String = "New Title",
     onNavigateToEditClick: () -> Unit,
     isEditable: Boolean
@@ -63,12 +63,12 @@ fun TitleComposable(
 fun TitleComposablePreview() {
     TaskyAppTheme {
         Column {
-            TitleComposable(
+            Title(
                 title = "Meeting",
                 onNavigateToEditClick = {},
                 isEditable = false
             )
-            TitleComposable(
+            Title(
                 title = "Meeting",
                 onNavigateToEditClick = {},
                 isEditable = true

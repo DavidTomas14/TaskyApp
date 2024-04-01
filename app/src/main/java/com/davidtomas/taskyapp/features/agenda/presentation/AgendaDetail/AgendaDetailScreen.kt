@@ -1,7 +1,6 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -31,17 +29,16 @@ import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.presentation.components.Header
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.AgendaTypeComposable
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.AttendeeItem
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.DescriptionComposable
+import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.AgendaType
+import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.AttendeesSection
+import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.Description
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.NotificationTimePicker
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.PhotosComposable
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.PillsSelector
+import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.Photos
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.TimeDatePicker
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.TitleComposable
+import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.Title
 
 @Composable
-fun EventDetailScreen(
+fun AgendaDetailScreen(
     agendaType: AgendaType,
     isEditable: Boolean
 ) {
@@ -85,22 +82,22 @@ fun EventDetailScreen(
                 )
                 .then(if (agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier)
         ) {
-            AgendaTypeComposable(agendaType = agendaType)
+            AgendaType(agendaType = agendaType)
             Spacer(modifier = Modifier.height(33.dp))
-            TitleComposable(
+            Title(
                 title = "Meeting",
                 onNavigateToEditClick = { /*TODO*/ },
                 isEditable = isEditable
             )
             Spacer(modifier = Modifier.height(17.dp))
-            DescriptionComposable(
+            Description(
                 description = "Esto es una prueba de una descripción. Quiero hacerla más menos larga",
                 onNavigateToEditClick = { /*TODO*/ },
                 isEditable = isEditable
             )
             Spacer(modifier = Modifier.height(17.dp))
             if (agendaType == AgendaType.EVENT) {
-                PhotosComposable(
+                Photos(
                     photos = listOf(),
                     onAddedPhoto = {},
                 )
@@ -115,8 +112,7 @@ fun EventDetailScreen(
                 },
                 hour = "08:00",
                 date = "Jul 21 2022",
-                onChangeHourIconClick = { /*TODO*/ },
-                onChangeDateIconClick = { /*TODO*/ },
+                onChangeDateClick = { /*TODO*/ },
                 isEditable = isEditable
             )
             Spacer(modifier = Modifier.height(17.dp))
@@ -125,9 +121,8 @@ fun EventDetailScreen(
                     label = "To",
                     hour = "08:00",
                     date = "Jul 21 2022",
-                    onChangeHourIconClick = { /*TODO*/ },
-                    onChangeDateIconClick = { /*TODO*/ },
-                    isEditable
+                    onChangeDateClick = { /*TODO*/ },
+                    isEditable = isEditable
                 )
             Spacer(modifier = Modifier.height(17.dp))
             NotificationTimePicker(
@@ -137,66 +132,7 @@ fun EventDetailScreen(
             )
             Spacer(modifier = Modifier.height(17.dp))
             if (agendaType == AgendaType.EVENT) {
-                Text(
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                    text = "Visitors"
-                )
-                Spacer(modifier = Modifier.height(17.dp))
-                PillsSelector(
-                    modifier = Modifier.fillMaxWidth(),
-                    onPillClicked = {}
-                )
-                Spacer(modifier = Modifier.height(17.dp))
-                Text(
-                    style = MaterialTheme.typography.titleSmall,
-                    text = "Going"
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    AttendeeItem(
-                        fullName = "Ann Allen",
-                        onDeleteIconClicked = { /*TODO*/ },
-                        isEditable = isEditable
-                    )
-                    AttendeeItem(
-                        fullName = "Wade Warren",
-                        onDeleteIconClicked = { /*TODO*/ },
-                        isEditable = isEditable
-                    )
-                    AttendeeItem(
-                        fullName = "Esther Howard",
-                        onDeleteIconClicked = { /*TODO*/ },
-                        isEditable = isEditable
-                    )
-                }
-                Spacer(modifier = Modifier.height(17.dp))
-                Text(
-                    style = MaterialTheme.typography.titleSmall,
-                    text = "Not Going"
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    AttendeeItem(
-                        fullName = "Ann Allen",
-                        onDeleteIconClicked = { /*TODO*/ },
-                        isEditable = isEditable
-                    )
-                    AttendeeItem(
-                        fullName = "Wade Warren",
-                        onDeleteIconClicked = { /*TODO*/ },
-                        isEditable = isEditable
-                    )
-                    AttendeeItem(
-                        fullName = "Esther Howard",
-                        onDeleteIconClicked = { /*TODO*/ },
-                        isEditable = isEditable
-                    )
-                }
-                Spacer(modifier = Modifier.height(25.dp))
+                AttendeesSection(isEditable)
             }
             Box(
                 modifier = if (agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier,
@@ -251,12 +187,12 @@ class AgendaTypeProvider : PreviewParameterProvider<PreviewParameters> {
 
 @Preview()
 @Composable
-fun EventDetailScreenPreview(
+fun AgendaDetailScreenPreview(
     @PreviewParameter(AgendaTypeProvider::class) previewParameters: PreviewParameters,
 ) {
     TaskyAppTheme {
         Column {
-            EventDetailScreen(
+            AgendaDetailScreen(
                 agendaType = previewParameters.agendaType,
                 isEditable = previewParameters.isEditable
             )
