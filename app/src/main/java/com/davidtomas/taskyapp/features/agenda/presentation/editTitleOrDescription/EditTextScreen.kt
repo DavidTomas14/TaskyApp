@@ -29,9 +29,9 @@ import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.EditType
 
 @Composable
-fun EditTitleOrDescriptionScreen(
-    state: EditTitleOrDescriptionState,
-    onAction: (EditTitleOrDescriptionAction) -> Unit
+fun EditTextScreen(
+    state: EditTextState,
+    onAction: (EditTextAction) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -44,7 +44,7 @@ fun EditTitleOrDescriptionScreen(
                 Icon(
                     modifier = Modifier
                         .size(12.dp)
-                        .clickable { onAction(EditTitleOrDescriptionAction.OnBackIconClicked) },
+                        .clickable { onAction(EditTextAction.OnBackIconClicked) },
                     painter = painterResource(id = R.drawable.ic_arrow_back),
                     contentDescription = null,
                 )
@@ -59,7 +59,7 @@ fun EditTitleOrDescriptionScreen(
                 Text(
                     modifier = Modifier
                         .clickable {
-                            onAction(EditTitleOrDescriptionAction.OnSaveClicked)
+                            onAction(EditTextAction.OnSaveClicked)
                         },
                     style = MaterialTheme.typography.titleSmall,
                     text = "Save",
@@ -78,7 +78,7 @@ fun EditTitleOrDescriptionScreen(
                 .fillMaxWidth()
                 .weight(1f),
             value = state.text,
-            onValueChange = { onAction(EditTitleOrDescriptionAction.OnTextChanged(it)) },
+            onValueChange = { onAction(EditTextAction.OnTextChanged(it)) },
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black,
@@ -95,11 +95,11 @@ fun EditTitleOrDescriptionScreen(
 
 @Preview
 @Composable
-fun EditTitleOrDescriptionScreenPreview() {
+fun EditTextScreenPreview() {
     var text by remember { mutableStateOf("") }
     TaskyAppTheme {
-        EditTitleOrDescriptionScreen(
-            state = EditTitleOrDescriptionState(),
+        EditTextScreen(
+            state = EditTextState(),
             onAction = {}
         )
     }

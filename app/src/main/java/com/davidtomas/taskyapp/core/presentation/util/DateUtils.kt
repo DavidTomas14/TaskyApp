@@ -20,12 +20,12 @@ fun Long?.formatToMMDDYY(): String {
 fun formatHoursAndMinutes(hours: Int, minutes: Int): String = String.format(
     Locale.getDefault(), "%02d:%02d", hours, minutes
 )
-fun ZonedDateTime.extractDateMillis() = this.toLocalDate().atStartOfDay(ZoneId.systemDefault())
+fun ZonedDateTime.extractFromStartOfTheDayOfDateMillis() = this.toLocalDate().atStartOfDay(ZoneId.systemDefault())
     .toInstant().toEpochMilli()
 
 fun ZonedDateTime.extractDayMillis() = this.toLocalTime().toSecondOfDay() * 1000
 
-fun Long.extractDateMillis() =
+fun Long.extractFromStartOfTheDayOfDateMillis() =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         LocalDate.ofInstant(
             Instant.ofEpochMilli(this),

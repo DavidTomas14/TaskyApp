@@ -6,32 +6,32 @@ import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.A
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun EditTitleOrDescriptionRoot(
+fun EditTextRoot(
     navController: NavHostController,
-    editTitleOrDescriptionViewModel: EditTitleOrDescriptionViewModel = koinViewModel(),
+    editTextViewModel: EditTextViewModel = koinViewModel(),
 ) {
-    EditTitleOrDescriptionScreen(
-        state = editTitleOrDescriptionViewModel.state,
+    EditTextScreen(
+        state = editTextViewModel.state,
         onAction = { agendaAction ->
             when (agendaAction) {
-                is EditTitleOrDescriptionAction.OnBackIconClicked -> {
+                is EditTextAction.OnBackIconClicked -> {
                     navController.navigateUp()
                 }
 
-                is EditTitleOrDescriptionAction.OnSaveClicked -> {
+                is EditTextAction.OnSaveClicked -> {
                     navController
                         .previousBackStackEntry
                         ?.savedStateHandle
-                        ?.set(AgendaRoutes.EDITED_TYPE_PARAM, editTitleOrDescriptionViewModel.state.editType.name)
+                        ?.set(AgendaRoutes.EDITED_TYPE_PARAM, editTextViewModel.state.editType.name)
 
                     navController
                         .previousBackStackEntry
                         ?.savedStateHandle
-                        ?.set(AgendaRoutes.EDITED_TEXT_PARAM, editTitleOrDescriptionViewModel.state.text)
+                        ?.set(AgendaRoutes.EDITED_TEXT_PARAM, editTextViewModel.state.text)
                     navController.popBackStack()
                 }
 
-                else -> editTitleOrDescriptionViewModel.onAction(agendaAction)
+                else -> editTextViewModel.onAction(agendaAction)
             }
         }
     )

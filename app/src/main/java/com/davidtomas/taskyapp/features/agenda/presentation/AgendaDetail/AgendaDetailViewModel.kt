@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.davidtomas.taskyapp.core.presentation.util.extractDateMillis
 import com.davidtomas.taskyapp.core.presentation.util.extractDayMillis
+import com.davidtomas.taskyapp.core.presentation.util.extractFromStartOfTheDayOfDateMillis
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
@@ -161,7 +161,7 @@ class AgendaDetailViewModel(
                 state = state.copy(
                     date = ZonedDateTime.ofInstant(
                         Instant.ofEpochMilli(
-                            state.date.extractDateMillis() +
+                            state.date.extractFromStartOfTheDayOfDateMillis() +
                                 agendaDetailAction.millisOfHour +
                                 agendaDetailAction.millisOfMinutes
                         ),
@@ -174,7 +174,7 @@ class AgendaDetailViewModel(
                 state = state.copy(
                     date = ZonedDateTime.ofInstant(
                         Instant.ofEpochMilli(
-                            agendaDetailAction.millisOfDate.extractDateMillis() +
+                            agendaDetailAction.millisOfDate.extractFromStartOfTheDayOfDateMillis() +
                                 state.date.extractDayMillis()
                         ),
                         ZoneId.systemDefault()

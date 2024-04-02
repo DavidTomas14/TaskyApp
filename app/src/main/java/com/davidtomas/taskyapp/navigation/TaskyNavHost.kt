@@ -16,7 +16,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaRoot
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailRoot
-import com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription.EditTitleOrDescriptionRoot
+import com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription.EditTextRoot
 import com.davidtomas.taskyapp.features.auth.presentation._common.navigation.AuthRoutes
 import com.davidtomas.taskyapp.features.auth.presentation.login.LoginRoot
 import com.davidtomas.taskyapp.features.auth.presentation.register.RegisterRoot
@@ -88,7 +88,7 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                             "{${AgendaRoutes.EDIT_TYPE_PARAM}}/" +
                             "{${AgendaRoutes.EDIT_TEXT_PARAM}}",
                     ) {
-                        EditTitleOrDescriptionRoot(
+                        EditTextRoot(
                             navController = navController
                         )
                     }

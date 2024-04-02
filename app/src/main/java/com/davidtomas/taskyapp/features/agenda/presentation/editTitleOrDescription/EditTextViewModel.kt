@@ -9,11 +9,11 @@ import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.features.agenda.domain.model.EditType
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
 
-class EditTitleOrDescriptionViewModel(
+class EditTextViewModel(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var state by mutableStateOf(EditTitleOrDescriptionState())
+    var state by mutableStateOf(EditTextState())
         private set
 
     private val editType =
@@ -29,11 +29,11 @@ class EditTitleOrDescriptionViewModel(
         )
     }
 
-    fun onAction(editTitleOrDescriptionAction: EditTitleOrDescriptionAction) {
-        when (editTitleOrDescriptionAction) {
+    fun onAction(editTextAction: EditTextAction) {
+        when (editTextAction) {
 
-            is EditTitleOrDescriptionAction.OnTextChanged -> {
-                state = state.copy(text = editTitleOrDescriptionAction.text)
+            is EditTextAction.OnTextChanged -> {
+                state = state.copy(text = editTextAction.text)
             }
 
             else -> Unit

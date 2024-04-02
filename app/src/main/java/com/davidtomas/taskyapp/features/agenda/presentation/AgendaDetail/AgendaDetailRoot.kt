@@ -24,7 +24,7 @@ fun AgendaDetailRoot(
         ?.getStateFlow<String?>(AgendaRoutes.EDITED_TYPE_PARAM, null)
         ?.collectAsState()
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = editedText, key2 = editedType) {
         editedText?.value?.let { editedText ->
             editedType?.value?.let { editedType ->
                 val enumEditedType = EditType.valueOf(editedType)
