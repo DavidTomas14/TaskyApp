@@ -1,5 +1,7 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +39,7 @@ import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.compone
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.TimeDatePicker
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.Title
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AgendaDetailScreen(
     agendaType: AgendaType,
@@ -110,18 +113,16 @@ fun AgendaDetailScreen(
                     AgendaType.TASK -> "At"
                     AgendaType.REMINDER -> "At"
                 },
-                hour = "08:00",
-                date = "Jul 21 2022",
-                onChangeDateClick = { /*TODO*/ },
+                onConfirmChangedDateClick = { },
+                onConfirmChangedTimeClick = {},
                 isEditable = isEditable
             )
             Spacer(modifier = Modifier.height(17.dp))
             if (agendaType == AgendaType.EVENT)
                 TimeDatePicker(
                     label = "To",
-                    hour = "08:00",
-                    date = "Jul 21 2022",
-                    onChangeDateClick = { /*TODO*/ },
+                    onConfirmChangedDateClick = {},
+                    onConfirmChangedTimeClick = {},
                     isEditable = isEditable
                 )
             Spacer(modifier = Modifier.height(17.dp))
@@ -185,6 +186,7 @@ class AgendaTypeProvider : PreviewParameterProvider<PreviewParameters> {
         )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview()
 @Composable
 fun AgendaDetailScreenPreview(
