@@ -7,6 +7,7 @@ interface TaskLocalSource {
     suspend fun saveTask(event: TaskModel)
 
     suspend fun getTasks(): Flow<List<TaskModel>>
+    suspend fun getTaskById(eventId: String): TaskModel
 
     suspend fun deleteTask(event: TaskModel)
 }

@@ -17,17 +17,6 @@ class AgendaRepositoryImpl(
     private val taskLocalSource: TaskLocalSource
 ) : AgendaRepository {
     override suspend fun observeAgenda(): Flow<List<AgendaModel>> =
-        /*coroutineScope {
-            val jobEvents = async { eventLocalSource.getEvents() }
-            val jobTasks = async { taskLocalSource.getTasks() }
-            val jobReminders = async { reminderLocalSource.getReminder() }
-            val eventsResult = jobEvents.await()
-            val tasksResult = jobTasks.await()
-            val remindersResult = jobReminders.await()
-            val eventsFlow = eventsResult.getOrNull() ?: flow { listOf<AgendaModel>() }
-            val tasksFlow = tasksResult.getOrNull() ?: flow { listOf<AgendaModel>() }
-            val remindersFlow = remindersResult.getOrNull() ?: flow { listOf<AgendaModel>() }
-            val listAgendaModel = mutableListOf<AgendaModel>()*/
         combine(
             eventLocalSource.getEvents(),
             taskLocalSource.getTasks(),

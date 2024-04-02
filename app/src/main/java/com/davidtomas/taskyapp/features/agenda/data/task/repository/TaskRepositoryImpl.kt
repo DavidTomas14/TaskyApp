@@ -9,4 +9,7 @@ class TaskRepositoryImpl(
 ) : TaskRepository {
     override suspend fun saveTask(taskModel: TaskModel) =
         taskLocalSource.saveTask(taskModel)
+
+    override suspend fun getTask(taskId: String) =
+        taskLocalSource.getTaskById(taskId)
 }

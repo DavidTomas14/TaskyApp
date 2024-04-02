@@ -26,10 +26,14 @@ class TaskLocalSourceImpl(
             results.list.toList().map { it.toTaskModel() }
         }
 
+    override suspend fun getTaskById(tasktId: String): TaskModel = realmDb
+        .query<TaskEntity>("id == $0", tasktId).find().first()
+        .toTaskModel()
+
     override suspend fun deleteTask(event: TaskModel) {
         realmDb.write {
-            val latestEvent = findLatest(event.toTaskEntity()) ?: return@write
-            delete(latestEvent)
+            val taskToDelete = query<TaskEntity>("id == $0", event.id).find().first()
+            delete(taskToDelete)
         }
     }
 }

@@ -8,5 +8,7 @@ interface ReminderLocalSource {
 
     suspend fun getReminder(): Flow<List<ReminderModel>>
 
+    suspend fun getRemindById(reminderId: String): ReminderModel
+
     suspend fun deleteReminder(event: ReminderModel)
 }

@@ -26,10 +26,14 @@ class ReminderLocalSourceImpl(
             results.list.toList().map { it.toReminderModel() }
         }
 
+    override suspend fun getRemindById(reminderId: String): ReminderModel = realmDb
+        .query<ReminderEntity>("id == $0", reminderId).find().first()
+        .toReminderModel()
+
     override suspend fun deleteReminder(event: ReminderModel) {
         realmDb.write {
-            val latestEvent = findLatest(event.toReminderEntity()) ?: return@write
-            delete(latestEvent)
+            val reminderToDelete = query<ReminderEntity>("id == $0", event.id).find().first()
+            delete(reminderToDelete)
         }
     }
 }

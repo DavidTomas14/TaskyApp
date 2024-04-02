@@ -1,6 +1,7 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -39,8 +40,8 @@ import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.compone
 
 @Composable
 fun AgendaDetailScreen(
-    agendaType: AgendaType,
-    isEditable: Boolean
+    state: AgendaDetailState,
+    onAction: (AgendaDetailAction) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -52,23 +53,29 @@ fun AgendaDetailScreen(
             modifier = Modifier,
             leadingComposable = {
                 Icon(
+                    modifier = Modifier
+                        .clickable { onAction(AgendaDetailAction.OnCloseDetailIconClick) },
                     painter = painterResource(id = R.drawable.ic_cancel),
                     contentDescription = "",
                     tint = Color.White
                 )
             },
             trailingComposable = {
-                if (isEditable)
+                if (state.isEditable)
+                    Text(
+                        modifier = Modifier
+                            .clickable { onAction(AgendaDetailAction.OnSaveClick) },
+                        text = "Save",
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                else
                     Icon(
+                        modifier = Modifier
+                            .clickable { onAction(AgendaDetailAction.OnEditIconClick) },
                         painter = painterResource(id = R.drawable.ic_edit_action),
                         contentDescription = "",
                         tint = Color.White
 
-                    )
-                else
-                    Text(
-                        text = "Save",
-                        color = MaterialTheme.colorScheme.onPrimary
                     )
             }
         )
@@ -80,23 +87,23 @@ fun AgendaDetailScreen(
                     vertical = 30.dp,
                     horizontal = 16.dp
                 )
-                .then(if (agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier)
+                .then(if (state.agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier)
         ) {
-            AgendaType(agendaType = agendaType)
+            AgendaType(agendaType = state.agendaType)
             Spacer(modifier = Modifier.height(33.dp))
             Title(
-                title = "Meeting",
+                title = state.title,
                 onNavigateToEditClick = { /*TODO*/ },
-                isEditable = isEditable
+                isEditable = state.isEditable
             )
             Spacer(modifier = Modifier.height(17.dp))
             Description(
-                description = "Esto es una prueba de una descripción. Quiero hacerla más menos larga",
+                description = state.description,
                 onNavigateToEditClick = { /*TODO*/ },
-                isEditable = isEditable
+                isEditable = state.isEditable
             )
             Spacer(modifier = Modifier.height(17.dp))
-            if (agendaType == AgendaType.EVENT) {
+            if (state.agendaType == AgendaType.EVENT) {
                 Photos(
                     photos = listOf(),
                     onAddedPhoto = {},
@@ -105,37 +112,37 @@ fun AgendaDetailScreen(
             }
             Spacer(modifier = Modifier.height(17.dp))
             TimeDatePicker(
-                label = when (agendaType) {
+                label = when (state.agendaType) {
                     AgendaType.EVENT -> "From"
                     AgendaType.TASK -> "At"
                     AgendaType.REMINDER -> "At"
                 },
-                hour = "08:00",
-                date = "Jul 21 2022",
-                onChangeDateClick = { /*TODO*/ },
-                isEditable = isEditable
+                hour = state.hour.toString(),
+                date = state.date.toString(),
+                onChangeDateClick = { },
+                isEditable = state.isEditable
             )
             Spacer(modifier = Modifier.height(17.dp))
-            if (agendaType == AgendaType.EVENT)
+            if (state.agendaType == AgendaType.EVENT)
                 TimeDatePicker(
                     label = "To",
                     hour = "08:00",
                     date = "Jul 21 2022",
                     onChangeDateClick = { /*TODO*/ },
-                    isEditable = isEditable
+                    isEditable = state.isEditable
                 )
             Spacer(modifier = Modifier.height(17.dp))
             NotificationTimePicker(
                 text = "30 minutes before",
                 onNavigateToEditClick = { /*TODO*/ },
-                isEditable = isEditable
+                isEditable = state.isEditable
             )
             Spacer(modifier = Modifier.height(17.dp))
-            if (agendaType == AgendaType.EVENT) {
-                AttendeesSection(isEditable)
+            if (state.agendaType == AgendaType.EVENT) {
+                AttendeesSection(state.isEditable)
             }
             Box(
-                modifier = if (agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier,
+                modifier = if (state.agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier,
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Button(
@@ -193,8 +200,11 @@ fun AgendaDetailScreenPreview(
     TaskyAppTheme {
         Column {
             AgendaDetailScreen(
-                agendaType = previewParameters.agendaType,
-                isEditable = previewParameters.isEditable
+                state = AgendaDetailState().copy(
+                    agendaType = previewParameters.agendaType,
+                    isEditable = previewParameters.isEditable
+                ),
+                onAction = {}
             )
         }
     }
