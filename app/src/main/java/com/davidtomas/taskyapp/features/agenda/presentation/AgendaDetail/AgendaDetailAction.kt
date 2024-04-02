@@ -10,4 +10,6 @@ sealed class AgendaDetailAction {
 
     data class OnDateChanged(val millisOfDate: Long) : AgendaDetailAction()
     data class OnNotificationOptionSelected(val millisOfNotification: Long) : AgendaDetailAction()
+    data object OnNavigateToEditTitleClick : AgendaDetailAction()
+    data object OnNavigateToEditDescriptionClick : AgendaDetailAction()
 }

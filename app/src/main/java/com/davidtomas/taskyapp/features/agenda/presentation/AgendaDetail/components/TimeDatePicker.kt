@@ -1,7 +1,5 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,7 +43,6 @@ import com.davidtomas.taskyapp.core.presentation.util.minuteToMillis
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import java.time.ZonedDateTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeDatePicker(
@@ -175,7 +172,6 @@ private fun AlertDialogTimePicker(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AlertDialogDatePicker(
@@ -218,7 +214,6 @@ private fun AlertDialogDatePicker(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable

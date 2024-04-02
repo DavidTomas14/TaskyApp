@@ -1,7 +1,5 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -42,7 +40,6 @@ import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.compone
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.TimeDatePicker
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.Title
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AgendaDetailScreen(
     state: AgendaDetailState,
@@ -111,7 +108,7 @@ fun AgendaDetailScreen(
                         state.title
                     }
                 },
-                onNavigateToEditClick = { /*TODO*/ },
+                onNavigateToEditClick = { onAction(AgendaDetailAction.OnNavigateToEditTitleClick) },
                 isEditable = state.screenMode != ScreenMode.REVIEW
             )
             Spacer(modifier = Modifier.height(17.dp))
@@ -125,7 +122,7 @@ fun AgendaDetailScreen(
                         state.title
                     }
                 },
-                onNavigateToEditClick = { /*TODO*/ },
+                onNavigateToEditClick = { onAction(AgendaDetailAction.OnNavigateToEditDescriptionClick) },
                 isEditable = state.screenMode != ScreenMode.REVIEW
             )
             Spacer(modifier = Modifier.height(17.dp))
@@ -249,7 +246,6 @@ class AgendaTypeProvider : PreviewParameterProvider<PreviewParameters> {
         )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview()
 @Composable
 fun AgendaDetailScreenPreview(

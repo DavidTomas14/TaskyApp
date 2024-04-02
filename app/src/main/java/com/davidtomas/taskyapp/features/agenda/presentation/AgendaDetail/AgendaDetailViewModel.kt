@@ -1,13 +1,12 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.core.presentation.util.extractDateMillis
 import com.davidtomas.taskyapp.core.presentation.util.extractDayMillis
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
@@ -17,14 +16,15 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
+import com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription.EditType
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 class AgendaDetailViewModel(
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
@@ -44,6 +44,22 @@ class AgendaDetailViewModel(
     private val agendaItemId = savedStateHandle.get<String>(AgendaRoutes.AGENDA_ITEM_ID_PARAM)
 
     init {
+        viewModelScope.launch {
+            savedStateHandle.getStateFlow(AgendaRoutes.EDITED_TEXT_PARAM, String.EMPTY_STRING)
+                .collectLatest {
+                    if (it.isNotEmpty()) {
+                        state = when (state.editType) {
+                            EditType.DESCRIPTION -> {
+                                state.copy(description = it)
+                            }
+
+                            EditType.TITLE -> {
+                                state.copy(title = it)
+                            }
+                        }
+                    }
+                }
+        }
         if (agendaItemId != null) {
             when (agendaType) {
                 AgendaType.REMINDER -> {
@@ -85,7 +101,6 @@ class AgendaDetailViewModel(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     fun onAction(agendaDetailAction: AgendaDetailAction) {
         when (agendaDetailAction) {
             is AgendaDetailAction.OnEditIconClick -> {
@@ -167,6 +182,20 @@ class AgendaDetailViewModel(
                 state = state.copy(
                     remindAt = agendaDetailAction.millisOfNotification
                 )
+            }
+
+            is AgendaDetailAction.OnNavigateToEditTitleClick -> {
+                viewModelScope.launch {
+                    state = state.copy(editType = EditType.TITLE)
+                    _uiEvent.send(AgendaDetailUiEvent.NavigateToEditTitle)
+                }
+            }
+
+            is AgendaDetailAction.OnNavigateToEditDescriptionClick -> {
+                viewModelScope.launch {
+                    state = state.copy(editType = EditType.DESCRIPTION)
+                    _uiEvent.send(AgendaDetailUiEvent.NavigateToEditDescription)
+                }
             }
 
             else -> Unit

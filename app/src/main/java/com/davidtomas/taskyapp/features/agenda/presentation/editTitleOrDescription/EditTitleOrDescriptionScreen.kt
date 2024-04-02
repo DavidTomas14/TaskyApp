@@ -29,11 +29,8 @@ import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
 fun EditTitleOrDescriptionScreen(
-    editType: EditType,
-    text: String,
-    onTextChanged: (String) -> Unit,
-    onSaveClick: () -> Unit,
-    onBackIconClick: () -> Unit
+    state: EditTitleOrDescriptionState,
+    onAction: (EditTitleOrDescriptionAction) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -46,12 +43,12 @@ fun EditTitleOrDescriptionScreen(
                 Icon(
                     modifier = Modifier
                         .size(12.dp)
-                        .clickable { onBackIconClick() },
+                        .clickable { onAction(EditTitleOrDescriptionAction.OnBackIconClicked) },
                     painter = painterResource(id = R.drawable.ic_arrow_back),
                     contentDescription = null,
                 )
             },
-            headerText = when (editType) {
+            headerText = when (state.editType) {
                 EditType.TITLE -> "EDIT TITLE"
                 EditType.DESCRIPTION -> "EDIT DESCRIPTION"
             },
@@ -61,7 +58,7 @@ fun EditTitleOrDescriptionScreen(
                 Text(
                     modifier = Modifier
                         .clickable {
-                            onSaveClick()
+                            onAction(EditTitleOrDescriptionAction.OnSaveClicked)
                         },
                     style = MaterialTheme.typography.titleSmall,
                     text = "Save",
@@ -79,8 +76,8 @@ fun EditTitleOrDescriptionScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            value = text,
-            onValueChange = onTextChanged,
+            value = state.text,
+            onValueChange = { onAction(EditTitleOrDescriptionAction.OnTextChanged(it)) },
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black,
@@ -105,13 +102,8 @@ fun EditTitleOrDescriptionScreenPreview() {
     var text by remember { mutableStateOf("") }
     TaskyAppTheme {
         EditTitleOrDescriptionScreen(
-            text = text,
-            onTextChanged = {
-                text = it
-            },
-            editType = EditType.TITLE,
-            onSaveClick = {},
-            onBackIconClick = {}
+            state = EditTitleOrDescriptionState(),
+            onAction = {}
         )
     }
 }

@@ -1,13 +1,12 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
+import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
+import com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription.EditType
 import org.koin.androidx.compose.koinViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AgendaDetailRoot(
     navController: NavHostController,
@@ -18,6 +17,22 @@ fun AgendaDetailRoot(
             when (event) {
                 is AgendaDetailUiEvent.NavigateUp -> {
                     navController.navigateUp()
+                }
+
+                is AgendaDetailUiEvent.NavigateToEditDescription -> {
+                    navController.navigate(
+                        "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
+                            "${EditType.DESCRIPTION.name}/" +
+                            agendaDetailViewModel.state.description
+                    )
+                }
+
+                is AgendaDetailUiEvent.NavigateToEditTitle -> {
+                    navController.navigate(
+                        "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
+                            "${EditType.TITLE.name}/" +
+                            agendaDetailViewModel.state.title
+                    )
                 }
             }
         }
