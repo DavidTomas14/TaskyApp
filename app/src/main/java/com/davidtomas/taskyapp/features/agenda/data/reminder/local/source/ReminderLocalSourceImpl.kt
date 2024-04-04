@@ -19,6 +19,10 @@ class ReminderLocalSourceImpl(
         }
     }
 
+    override suspend fun saveReminders(reminders: List<ReminderModel>) {
+        reminders.forEach { saveReminders(it) }
+    }
+
     override suspend fun getReminder(): Flow<List<ReminderModel>> = realmDb
         .query<ReminderEntity>()
         .asFlow()

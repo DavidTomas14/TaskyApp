@@ -20,6 +20,10 @@ class AgendaViewModel(
 
     init {
         viewModelScope.launch {
+            agendaRepository.fetchAgenda().fold(
+                onError = {},
+                onSuccess = {}
+            )
             agendaRepository.observeAgenda().collectLatest {
                 state = state.copy(agendaItems = it)
             }
@@ -38,7 +42,6 @@ class AgendaViewModel(
                 }
             }
 
-            AgendaAction.OnAddAddAgendaItemFabClicked -> TODO()
             is AgendaAction.OnAgendaItemOptionsClicked -> {
                 state = state.copy(
                     agendaItemWithOpenedOptions = agendaAction.agendaModel

@@ -19,6 +19,10 @@ class EventLocalSourceImpl(
         }
     }
 
+    override suspend fun saveEvents(events: List<EventModel>) {
+        events.forEach { saveEvent(it) }
+    }
+
     override suspend fun getEvents(): Flow<List<EventModel>> = realmDb
         .query<EventEntity>()
         .asFlow()

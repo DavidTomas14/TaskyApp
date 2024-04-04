@@ -13,8 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,17 +20,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.presentation.components.Header
+import com.davidtomas.taskyapp.core.presentation.util.formatToMMDDhh
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
+import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.AddItemFabWithDropdown
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.CalendarDayItem
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.CardItem2
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.InitialsIcon
@@ -48,13 +46,8 @@ fun AgendaScreen(
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /*TODO*/ }
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_add_reminder),
-                    contentDescription = " "
-                )
+            AddItemFabWithDropdown {
+                onAction(AgendaAction.OnAddAgendaItemOptionClicked(it))
             }
         },
         floatingActionButtonPosition = FabPosition.End
@@ -113,7 +106,7 @@ fun AgendaScreen(
                                     else -> title
                                 },
                                 description = description,
-                                date = date.toString(),
+                                date = date.formatToMMDDhh(),
                                 isDone = when (this) {
                                     is TaskModel -> {
                                         isDone

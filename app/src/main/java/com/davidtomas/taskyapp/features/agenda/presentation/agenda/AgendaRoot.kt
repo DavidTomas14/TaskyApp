@@ -59,6 +59,9 @@ fun AgendaRoot(
                     navigateToDetailNonEditable(agendaAction.agendaModel, navController)
                 }
 
+                is AgendaAction.OnAddAgendaItemOptionClicked -> {
+                }
+
                 else -> agendaViewModel.onAction(agendaAction)
             }
         }
