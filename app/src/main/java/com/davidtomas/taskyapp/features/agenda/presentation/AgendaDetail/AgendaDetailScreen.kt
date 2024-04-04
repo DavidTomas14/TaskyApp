@@ -3,6 +3,7 @@ package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,8 +30,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.presentation.components.Header
+import com.davidtomas.taskyapp.core.presentation.util.formatToDayHourOrMinutes
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
+import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.AgendaType
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.AttendeesSection
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.Description
@@ -42,8 +45,8 @@ import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.compone
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AgendaDetailScreen(
-    agendaType: AgendaType,
-    isEditable: Boolean
+    state: AgendaDetailState,
+    onAction: (AgendaDetailAction) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -55,24 +58,35 @@ fun AgendaDetailScreen(
             modifier = Modifier,
             leadingComposable = {
                 Icon(
+                    modifier = Modifier
+                        .clickable { onAction(AgendaDetailAction.OnCloseDetailIconClick) },
                     painter = painterResource(id = R.drawable.ic_cancel),
                     contentDescription = "",
                     tint = Color.White
                 )
             },
             trailingComposable = {
-                if (isEditable)
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_edit_action),
-                        contentDescription = "",
-                        tint = Color.White
+                when (state.screenMode) {
+                    ScreenMode.REVIEW -> {
+                        Icon(
+                            modifier = Modifier
+                                .clickable { onAction(AgendaDetailAction.OnEditIconClick) },
+                            painter = painterResource(id = R.drawable.ic_edit_action),
+                            contentDescription = "",
+                            tint = Color.White
 
-                    )
-                else
-                    Text(
-                        text = "Save",
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
+                        )
+                    }
+
+                    else -> {
+                        Text(
+                            modifier = Modifier
+                                .clickable { onAction(AgendaDetailAction.OnSaveClick) },
+                            text = "Save",
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
             }
         )
         Column(
@@ -83,23 +97,39 @@ fun AgendaDetailScreen(
                     vertical = 30.dp,
                     horizontal = 16.dp
                 )
-                .then(if (agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier)
+                .then(if (state.agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier)
         ) {
-            AgendaType(agendaType = agendaType)
+            AgendaType(agendaType = state.agendaType)
             Spacer(modifier = Modifier.height(33.dp))
             Title(
-                title = "Meeting",
+                title = when (state.screenMode) {
+                    ScreenMode.ADD -> {
+                        state.title.ifBlank { "New Title" }
+                    }
+
+                    else -> {
+                        state.title
+                    }
+                },
                 onNavigateToEditClick = { /*TODO*/ },
-                isEditable = isEditable
+                isEditable = state.screenMode != ScreenMode.REVIEW
             )
             Spacer(modifier = Modifier.height(17.dp))
             Description(
-                description = "Esto es una prueba de una descripción. Quiero hacerla más menos larga",
+                description = when (state.screenMode) {
+                    ScreenMode.ADD -> {
+                        state.title.ifBlank { "New Description" }
+                    }
+
+                    else -> {
+                        state.title
+                    }
+                },
                 onNavigateToEditClick = { /*TODO*/ },
-                isEditable = isEditable
+                isEditable = state.screenMode != ScreenMode.REVIEW
             )
             Spacer(modifier = Modifier.height(17.dp))
-            if (agendaType == AgendaType.EVENT) {
+            if (state.agendaType == AgendaType.EVENT) {
                 Photos(
                     photos = listOf(),
                     onAddedPhoto = {},
@@ -108,43 +138,64 @@ fun AgendaDetailScreen(
             }
             Spacer(modifier = Modifier.height(17.dp))
             TimeDatePicker(
-                label = when (agendaType) {
+                zonedDateTime = state.date,
+                label = when (state.agendaType) {
                     AgendaType.EVENT -> "From"
-                    AgendaType.TASK -> "At"
-                    AgendaType.REMINDER -> "At"
+                    else -> "At"
                 },
-                onConfirmChangedDateClick = { },
-                onConfirmChangedTimeClick = {},
-                isEditable = isEditable
+                isEditable = state.screenMode != ScreenMode.REVIEW,
+                onConfirmChangedDateClick = { millisOfDate ->
+                    onAction(AgendaDetailAction.OnDateChanged(millisOfDate))
+                },
+                onConfirmChangedTimeClick = { millisOfHour, millisOfMinutes ->
+                    onAction(
+                        AgendaDetailAction.OnHourMinutesChanged(millisOfHour, millisOfMinutes)
+                    )
+                },
             )
             Spacer(modifier = Modifier.height(17.dp))
-            if (agendaType == AgendaType.EVENT)
+            if (state.agendaType == AgendaType.EVENT)
                 TimeDatePicker(
+                    zonedDateTime = state.date,
                     label = "To",
-                    onConfirmChangedDateClick = {},
-                    onConfirmChangedTimeClick = {},
-                    isEditable = isEditable
+                    isEditable = state.screenMode != ScreenMode.REVIEW,
+                    onConfirmChangedDateClick = { millisOfDate ->
+                        onAction(AgendaDetailAction.OnDateChanged(millisOfDate))
+                    },
+                    onConfirmChangedTimeClick = { millisOfHour, millisOfMinutes ->
+                        onAction(
+                            AgendaDetailAction.OnHourMinutesChanged(
+                                millisOfHour, millisOfMinutes
+                            )
+                        )
+                    },
                 )
             Spacer(modifier = Modifier.height(17.dp))
             NotificationTimePicker(
-                text = "30 minutes before",
-                onNavigateToEditClick = { /*TODO*/ },
-                isEditable = isEditable
+                text = state.remindAt.formatToDayHourOrMinutes(),
+                onOptionSelected = { notificationMillis ->
+                    onAction(AgendaDetailAction.OnNotificationOptionSelected(notificationMillis))
+                },
+                isEditable = state.screenMode != ScreenMode.REVIEW
             )
             Spacer(modifier = Modifier.height(17.dp))
-            if (agendaType == AgendaType.EVENT) {
-                AttendeesSection(isEditable)
+            if (state.agendaType == AgendaType.EVENT) {
+                AttendeesSection(state.screenMode != ScreenMode.REVIEW)
             }
-            Box(
-                modifier = if (agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier,
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    onClick = { /*TODO*/ }
+            if (state.screenMode == ScreenMode.REVIEW) {
+                Box(
+                    modifier = if (state.agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier,
+                    contentAlignment = Alignment.BottomCenter
                 ) {
-                    Text(text = "Delete Item")
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        onClick = {
+                            onAction(AgendaDetailAction.OnDeleteButtonClick)
+                        }
+                    ) {
+                        Text(text = "Delete Item")
+                    }
                 }
             }
         }
@@ -153,7 +204,7 @@ fun AgendaDetailScreen(
 
 class PreviewParameters(
     val agendaType: AgendaType,
-    val isEditable: Boolean
+    val screenMode: ScreenMode
 )
 
 class AgendaTypeProvider : PreviewParameterProvider<PreviewParameters> {
@@ -161,27 +212,39 @@ class AgendaTypeProvider : PreviewParameterProvider<PreviewParameters> {
         get() = sequenceOf(
             PreviewParameters(
                 agendaType = AgendaType.REMINDER,
-                isEditable = false
+                screenMode = ScreenMode.ADD
             ),
             PreviewParameters(
                 agendaType = AgendaType.REMINDER,
-                isEditable = true
+                screenMode = ScreenMode.EDIT
+            ),
+            PreviewParameters(
+                agendaType = AgendaType.REMINDER,
+                screenMode = ScreenMode.REVIEW
             ),
             PreviewParameters(
                 agendaType = AgendaType.TASK,
-                isEditable = false
+                screenMode = ScreenMode.ADD
             ),
             PreviewParameters(
                 agendaType = AgendaType.TASK,
-                isEditable = true
+                screenMode = ScreenMode.EDIT
+            ),
+            PreviewParameters(
+                agendaType = AgendaType.TASK,
+                screenMode = ScreenMode.REVIEW
             ),
             PreviewParameters(
                 agendaType = AgendaType.EVENT,
-                isEditable = false
+                screenMode = ScreenMode.ADD
             ),
             PreviewParameters(
                 agendaType = AgendaType.EVENT,
-                isEditable = true
+                screenMode = ScreenMode.EDIT
+            ),
+            PreviewParameters(
+                agendaType = AgendaType.EVENT,
+                screenMode = ScreenMode.REVIEW
             ),
         )
 }
@@ -195,8 +258,11 @@ fun AgendaDetailScreenPreview(
     TaskyAppTheme {
         Column {
             AgendaDetailScreen(
-                agendaType = previewParameters.agendaType,
-                isEditable = previewParameters.isEditable
+                state = AgendaDetailState().copy(
+                    agendaType = previewParameters.agendaType,
+                    screenMode = previewParameters.screenMode
+                ),
+                onAction = {}
             )
         }
     }

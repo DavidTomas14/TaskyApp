@@ -26,9 +26,13 @@ class EventLocalSourceImpl(
             results.list.toList().map { it.toEventModel() }
         }
 
-    override suspend fun deleteEvent(event: EventModel) {
+    override suspend fun getEventById(eventId: String): EventModel = realmDb
+        .query<EventEntity>("id == $0", eventId).find().first()
+        .toEventModel()
+
+    override suspend fun deleteEvent(eventId: String) {
         realmDb.write {
-            val eventToDelete = query<EventEntity>("id == $0", event.id).find().first()
+            val eventToDelete = query<EventEntity>("id == $0", eventId).find().first()
             delete(eventToDelete)
         }
     }

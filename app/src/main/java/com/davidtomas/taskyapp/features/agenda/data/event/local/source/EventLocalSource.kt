@@ -8,5 +8,7 @@ interface EventLocalSource {
 
     suspend fun getEvents(): Flow<List<EventModel>>
 
-    suspend fun deleteEvent(event: EventModel)
+    suspend fun getEventById(eventId: String): EventModel
+
+    suspend fun deleteEvent(eventId: String)
 }
