@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.map
 class TaskLocalSourceImpl(
     private val realmDb: Realm
 ) : TaskLocalSource {
-    override suspend fun saveTask(event: TaskModel) {
+    override suspend fun saveTask(task: TaskModel) {
         realmDb.write {
-            copyToRealm(event.toTaskEntity(), UpdatePolicy.ALL)
+            copyToRealm(task.toTaskEntity(), UpdatePolicy.ALL)
         }
     }
 
@@ -26,10 +26,14 @@ class TaskLocalSourceImpl(
             results.list.toList().map { it.toTaskModel() }
         }
 
-    override suspend fun deleteTask(event: TaskModel) {
+    override suspend fun getTaskById(tasktId: String): TaskModel = realmDb
+        .query<TaskEntity>("id == $0", tasktId).find().first()
+        .toTaskModel()
+
+    override suspend fun deleteTask(taskId: String) {
         realmDb.write {
-            val latestEvent = findLatest(event.toTaskEntity()) ?: return@write
-            delete(latestEvent)
+            val taskToDelete = query<TaskEntity>("id == $0", taskId).find().first()
+            delete(taskToDelete)
         }
     }
 }

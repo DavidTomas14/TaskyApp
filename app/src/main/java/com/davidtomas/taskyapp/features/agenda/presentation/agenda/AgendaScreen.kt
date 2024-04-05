@@ -38,6 +38,7 @@ import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.Ca
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.InitialsIcon
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.MonthSelector
 import java.time.DayOfWeek
+import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -104,7 +105,13 @@ fun AgendaScreen(
                     items(state.agendaItems) { agendaItems ->
                         with(agendaItems) {
                             CardItem2(
-                                title = title,
+                                title = when (this) {
+                                    is TaskModel -> {
+                                        String.format(Locale.getDefault(), "Task: %s", title)
+                                    }
+
+                                    else -> title
+                                },
                                 description = description,
                                 date = date.toString(),
                                 isDone = when (this) {
@@ -131,8 +138,6 @@ fun AgendaScreen(
                                     is TaskModel -> {
                                         MaterialTheme.colorScheme.tertiary
                                     }
-
-                                    else -> Color.Unspecified
                                 },
                                 onCardClick = {
                                     onAction(AgendaAction.OnAgendaItemClicked(agendaModel = this))

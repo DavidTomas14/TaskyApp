@@ -40,15 +40,19 @@ import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.presentation.util.formatHoursAndMinutes
 import com.davidtomas.taskyapp.core.presentation.util.formatToMMDDYY
+import com.davidtomas.taskyapp.core.presentation.util.hourToMillis
+import com.davidtomas.taskyapp.core.presentation.util.minuteToMillis
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
+import java.time.ZonedDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeDatePicker(
+    zonedDateTime: ZonedDateTime,
     label: String,
     onConfirmChangedDateClick: (Long) -> Unit,
-    onConfirmChangedTimeClick: (Long) -> Unit,
+    onConfirmChangedTimeClick: (Long, Long) -> Unit,
     isEditable: Boolean
 ) {
     var isTimePickerVisible by remember {
@@ -57,8 +61,14 @@ fun TimeDatePicker(
     var isDatePickerVisible by remember {
         mutableStateOf(false)
     }
-    val timePickerState = rememberTimePickerState(is24Hour = true)
-    val datePickerState = rememberDatePickerState()
+    val timePickerState = rememberTimePickerState(
+        initialHour = zonedDateTime.hour,
+        initialMinute = zonedDateTime.minute,
+        is24Hour = true
+    )
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = zonedDateTime.toInstant().toEpochMilli()
+    )
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -66,24 +76,23 @@ fun TimeDatePicker(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(if (isEditable) 1f else 2f),
                 text = label,
                 style = MaterialTheme.typography.titleSmall
             )
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(if (isEditable) 1f else 2f),
                 text = formatHoursAndMinutes(timePickerState.hour, timePickerState.minute),
                 style = MaterialTheme.typography.titleSmall
             )
             if (isEditable) Icon(
                 painter = painterResource(R.drawable.ic_arrow_next),
                 modifier = Modifier
-                    .clickable { isTimePickerVisible = true }
-                    .weight(1f),
+                    .clickable { isTimePickerVisible = true },
                 contentDescription = "More Actions",
             )
             Text(
-                modifier = Modifier.weight(if (isEditable) 2f else 4f),
+                modifier = Modifier.weight(if (isEditable) 2f else 5f),
                 text = datePickerState.selectedDateMillis.formatToMMDDYY(),
                 style = MaterialTheme.typography.titleSmall,
                 textAlign = TextAlign.Center
@@ -91,8 +100,7 @@ fun TimeDatePicker(
             if (isEditable) Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_next),
                 modifier = Modifier
-                    .clickable { isDatePickerVisible = true }
-                    .weight(1f),
+                    .clickable { isDatePickerVisible = true },
                 contentDescription = "More Actions",
             )
         }
@@ -102,14 +110,23 @@ fun TimeDatePicker(
             AlertDialogTimePicker(
                 state = timePickerState,
                 onCancelDialog = { isTimePickerVisible = false },
-                onConfirmDialogClick = onConfirmChangedTimeClick
+                onConfirmDialogClick = {
+                    onConfirmChangedTimeClick(
+                        timePickerState.hour.hourToMillis(),
+                        timePickerState.minute.minuteToMillis()
+                    )
+                }
             )
         }
         if (isDatePickerVisible) {
             AlertDialogDatePicker(
                 state = datePickerState,
                 onCancelDialog = { isDatePickerVisible = false },
-                onConfirmDialogClick = onConfirmChangedDateClick
+                onConfirmDialogClick = {
+                    onConfirmChangedDateClick(
+                        datePickerState.selectedDateMillis ?: 0L
+                    )
+                }
             )
         }
     }
@@ -120,7 +137,7 @@ fun TimeDatePicker(
 private fun AlertDialogTimePicker(
     state: TimePickerState,
     onCancelDialog: () -> Unit,
-    onConfirmDialogClick: (Long) -> Unit
+    onConfirmDialogClick: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = { onCancelDialog() },
@@ -146,7 +163,7 @@ private fun AlertDialogTimePicker(
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(
                         onClick = {
-                            onConfirmDialogClick(((state.hour * 3600) + (state.minute * 60) * 1000).toLong())
+                            onConfirmDialogClick()
                             onCancelDialog()
                         }
                     ) {
@@ -211,9 +228,17 @@ fun TimeDatePickerPreview() {
         Column {
             TimeDatePicker(
                 label = "From",
-                onConfirmChangedTimeClick = {},
+                zonedDateTime = ZonedDateTime.now(),
+                onConfirmChangedTimeClick = { _, _ -> },
                 onConfirmChangedDateClick = {},
                 isEditable = true
+            )
+            TimeDatePicker(
+                label = "From",
+                zonedDateTime = ZonedDateTime.now(),
+                onConfirmChangedTimeClick = { _, _ -> },
+                onConfirmChangedDateClick = {},
+                isEditable = false
             )
         }
     }

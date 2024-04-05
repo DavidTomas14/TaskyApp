@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.agenda.components
+package com.davidtomas.taskyapp.features.agenda.presentation._common.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.material3.Button
@@ -17,7 +17,7 @@ import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
-fun DropDownAgendaItemOptions(
+fun DropDownOptions(
     onDismissRequest: () -> Unit,
     isShown: Boolean,
     dropDownItems: List<DropDownItems>
@@ -35,11 +35,13 @@ fun DropDownAgendaItemOptions(
                 onClick = {
                     item.onClick()
                 },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = item.leadingIcon),
-                        contentDescription = "More Actions"
-                    )
+                leadingIcon = item.leadingIcon?.let {
+                    {
+                        Icon(
+                            painter = painterResource(id = item.leadingIcon),
+                            contentDescription = "More Actions"
+                        )
+                    }
                 }
             )
         }
@@ -48,8 +50,8 @@ fun DropDownAgendaItemOptions(
 
 data class DropDownItems(
     val text: String,
-    @DrawableRes val leadingIcon: Int,
-    val onClick: () -> Unit
+    val onClick: () -> Unit,
+    @DrawableRes val leadingIcon: Int? = null
 )
 
 @Preview(showSystemUi = true)
@@ -66,7 +68,7 @@ fun DropDownAgendaItemOptionsPreview() {
         ) {
             Text(text = "Show DropDown")
         }
-        DropDownAgendaItemOptions(
+        DropDownOptions(
             isShown = isShown,
             onDismissRequest = {
                 isShown = false

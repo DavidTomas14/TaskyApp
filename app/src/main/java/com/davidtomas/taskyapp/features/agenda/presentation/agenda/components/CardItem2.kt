@@ -25,6 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownItems
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownOptions
 
 @Composable
 fun CardItem2(
@@ -107,7 +109,7 @@ fun CardItem2(
                         contentDescription = "More Actions",
                         tint = onPrimaryColor
                     )
-                    DropDownAgendaItemOptions(
+                    DropDownOptions(
                         isShown = isDropDownMenuShown,
                         onDismissRequest = onDismissDropDownMenu,
                         dropDownItems = listOf(

@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.map
 class ReminderLocalSourceImpl(
     private val realmDb: Realm
 ) : ReminderLocalSource {
-    override suspend fun saveReminder(event: ReminderModel) {
+    override suspend fun saveReminder(reminder: ReminderModel) {
         realmDb.write {
-            copyToRealm(event.toReminderEntity(), UpdatePolicy.ALL)
+            copyToRealm(reminder.toReminderEntity(), UpdatePolicy.ALL)
         }
     }
 
@@ -26,10 +26,14 @@ class ReminderLocalSourceImpl(
             results.list.toList().map { it.toReminderModel() }
         }
 
-    override suspend fun deleteReminder(event: ReminderModel) {
+    override suspend fun getRemindById(reminderId: String): ReminderModel = realmDb
+        .query<ReminderEntity>("id == $0", reminderId).find().first()
+        .toReminderModel()
+
+    override suspend fun deleteReminder(reminderId: String) {
         realmDb.write {
-            val latestEvent = findLatest(event.toReminderEntity()) ?: return@write
-            delete(latestEvent)
+            val reminderToDelete = query<ReminderEntity>("id == $0", reminderId).find().first()
+            delete(reminderToDelete)
         }
     }
 }

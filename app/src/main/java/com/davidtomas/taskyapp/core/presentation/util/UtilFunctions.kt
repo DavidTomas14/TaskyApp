@@ -1,13 +1,5 @@
 package com.davidtomas.taskyapp.core.presentation.util
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
-
 fun String.toInitials(): String {
     val words = this.split(" ").filter { it.isNotBlank() }
     return when {
@@ -17,15 +9,3 @@ fun String.toInitials(): String {
         else -> ""
     }
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun Long?.formatToMMDDYY(): String {
-    val millis = this ?: Instant.now().toEpochMilli()
-    val defaultZoneDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault())
-    return defaultZoneDateTime.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
-}
-
-fun formatHoursAndMinutes(hours: Int, minutes: Int): String = String.format(
-    Locale.getDefault(), "%02d%02d", hours, minutes
-)
