@@ -28,27 +28,27 @@ fun AgendaRoot(
                     when (agendaAction.agendaModel) {
                         is EventModel -> {
                             navController.navigate(
-                            "${AgendaRoutes.AGENDA_DETAIL}/" +
+                                "${AgendaRoutes.AGENDA_DETAIL}/" +
                                     "${AgendaType.EVENT.name}/" +
-                                    "${ScreenMode.EDIT.name}/" +
+                                    "${ScreenMode.EDIT_ADD.name}/" +
                                     agendaAction.agendaModel.id
                             )
                         }
 
                         is TaskModel -> {
                             navController.navigate(
-                            "${AgendaRoutes.AGENDA_DETAIL}/" +
+                                "${AgendaRoutes.AGENDA_DETAIL}/" +
                                     "${AgendaType.TASK.name}/" +
-                                    "${ScreenMode.EDIT.name}/" +
+                                    "${ScreenMode.EDIT_ADD.name}/" +
                                     agendaAction.agendaModel.id
                             )
                         }
 
                         is ReminderModel -> {
                             navController.navigate(
-                            "${AgendaRoutes.AGENDA_DETAIL}/" +
+                                "${AgendaRoutes.AGENDA_DETAIL}/" +
                                     "${AgendaType.REMINDER.name}/" +
-                                    "${ScreenMode.EDIT.name}/" +
+                                    "${ScreenMode.EDIT_ADD.name}/" +
                                     agendaAction.agendaModel.id
                             )
                         }
@@ -72,27 +72,27 @@ private fun navigateToDetailNonEditable(
         is EventModel -> {
             navController.navigate(
                 "${AgendaRoutes.AGENDA_DETAIL}/" +
-                        "${AgendaType.EVENT.name}/" +
-                        "${ScreenMode.REVIEW.name}/" +
-                        agendaModel.id
+                    "${AgendaType.EVENT.name}/" +
+                    "${ScreenMode.REVIEW.name}/" +
+                    agendaModel.id
             )
         }
 
         is TaskModel -> {
             navController.navigate(
                 "${AgendaRoutes.AGENDA_DETAIL}/" +
-                        "${AgendaType.TASK.name}/" +
-                        "${ScreenMode.REVIEW.name}/" +
-                        agendaModel.id
+                    "${AgendaType.TASK.name}/" +
+                    "${ScreenMode.REVIEW.name}/" +
+                    agendaModel.id
             )
         }
 
         is ReminderModel -> {
             navController.navigate(
                 "${AgendaRoutes.AGENDA_DETAIL}/" +
-                        "${AgendaType.REMINDER.name}/" +
-                        "${ScreenMode.REVIEW.name}/" +
-                        agendaModel.id
+                    "${AgendaType.REMINDER.name}/" +
+                    "${ScreenMode.REVIEW.name}/" +
+                    agendaModel.id
             )
         }
     }

@@ -2,12 +2,14 @@ package com.davidtomas.taskyapp.core.presentation.util
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun Long?.formatToMMDDYY(): String {
     val millis = this ?: Instant.now().toEpochMilli()
@@ -23,6 +25,7 @@ fun formatHoursAndMinutes(hours: Int, minutes: Int): String = String.format(
 @RequiresApi(Build.VERSION_CODES.O)
 fun ZonedDateTime.extractDateMillis() = this.toLocalDate().atStartOfDay(ZoneId.systemDefault())
     .toInstant().toEpochMilli()
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun ZonedDateTime.extractDayMillis() = this.toLocalTime().toSecondOfDay() * 1000
 
@@ -32,44 +35,36 @@ fun Long.extractDateMillis() = LocalDate.ofInstant(
     ZoneId.of("UTC")
 ).atStartOfDay(ZoneId.systemDefault())
     .toInstant().toEpochMilli()
-fun Long.formatToDayHourOrMinutes(): String =
-    when {
-        this.millisToHour() < 1 -> String.format(
+
+fun Long.formatToDayHourOrMinutes(): String {
+    val duration = Duration.ofMillis(this)
+    return when {
+        duration.toHours() < 1 -> String.format(
             Locale.getDefault(),
             "%d minutes before",
-            this.millisToMinute()
+            duration.toMinutes()
         )
 
-        this.millisToHour() == 1 -> String.format(
+        duration.toHours() == 1L -> String.format(
             Locale.getDefault(),
-            "%d hour before",
-            this.millisToHour()
+            "1 hour before",
         )
 
-        this.millisToDay() < 1 -> String.format(
+        duration.toDays() < 1 -> String.format(
             Locale.getDefault(),
             "%d hours before",
-            this.millisToHour()
+            duration.toHours()
         )
 
-        this.millisToDay() == 1 -> String.format(
+        duration.toDays() == 1L -> String.format(
             Locale.getDefault(),
-            "%d day before",
-            this.millisToDay()
+            "1 day before",
         )
 
         else -> String.format(
             Locale.getDefault(),
             "%d days before",
-            this.millisToDay()
+            duration.toDays()
         )
     }
-
-fun Long.millisToDay() = (this / (3600 * 1000 * 24)).toInt()
-
-fun Long.millisToHour() = (this / (3600 * 1000)).toInt()
-fun Long.millisToMinute() = (this / (60 * 1000)).toInt()
-
-fun Int.hourToMillis() = (this * 3600 * 1000).toLong()
-
-fun Int.minuteToMillis() = (this * 60 * 1000).toLong()
+}

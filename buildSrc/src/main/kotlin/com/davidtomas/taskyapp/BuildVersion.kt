@@ -6,7 +6,7 @@ object BuildVersion {
         private const val minorVersion = 0
         private const val bugfixVersion = 0
 
-        const val minSdkVersion = 24
+        const val minSdkVersion = 26
         const val compileSdkVersion = 34
         const val targetSdkVersion = 34
         const val applicationId = "com.davidtomas.taskyapp"
