@@ -44,7 +44,28 @@ class AgendaDetailViewModel(
     private val agendaItemId = savedStateHandle.get<String>(AgendaRoutes.AGENDA_ITEM_ID_PARAM)
 
     init {
-        if (agendaItemId != null) {
+        when (screenMode) {
+            ScreenMode.REVIEW -> {
+                populateData()
+            }
+
+            ScreenMode.EDIT_ADD -> {
+                if (agendaType != null) {
+                    populateData()
+                } else {
+                    state = state.copy(
+                        title = "New Title",
+                        description = "New Description"
+                    )
+                }
+            }
+
+            else -> Unit
+        }
+    }
+
+    private fun populateData() {
+        agendaItemId?.let {
             when (agendaType) {
                 AgendaType.REMINDER -> {
                     viewModelScope.launch {
@@ -56,7 +77,7 @@ class AgendaDetailViewModel(
                                 Instant.ofEpochMilli(reminder.date),
                                 ZoneId.systemDefault()
                             ),
-                            remindAt = reminder.remindAt,
+                            remindIn = reminder.date - reminder.remindAt,
                             agendaType = AgendaType.REMINDER,
                             screenMode = screenMode ?: ScreenMode.REVIEW
                         )
@@ -73,7 +94,7 @@ class AgendaDetailViewModel(
                                 Instant.ofEpochMilli(task.date),
                                 ZoneId.systemDefault()
                             ),
-                            remindAt = task.remindAt,
+                            remindIn = task.date - task.remindAt,
                             agendaType = AgendaType.TASK,
                             screenMode = screenMode ?: ScreenMode.REVIEW
                         )
@@ -89,19 +110,21 @@ class AgendaDetailViewModel(
     fun onAction(agendaDetailAction: AgendaDetailAction) {
         when (agendaDetailAction) {
             is AgendaDetailAction.OnEditIconClick -> {
-                state = state.copy(screenMode = ScreenMode.EDIT)
+                state = state.copy(screenMode = ScreenMode.EDIT_ADD)
             }
 
             is AgendaDetailAction.OnSaveClick -> {
                 viewModelScope.launch {
+                    val dateMillis = state.date.toInstant().toEpochMilli()
+                    val remindAt = dateMillis - state.remindIn
                     if (agendaType == AgendaType.TASK) {
                         taskRepository.saveTask(
                             TaskModel(
                                 id = agendaItemId!!,
                                 title = "Task Editado",
                                 description = state.description,
-                                date = state.date.toInstant().toEpochMilli(),
-                                remindAt = state.remindAt,
+                                date = dateMillis,
+                                remindAt = remindAt,
                                 isDone = false
                             )
                         )
@@ -111,8 +134,8 @@ class AgendaDetailViewModel(
                                 id = agendaItemId!!,
                                 title = "Reminder Editado",
                                 description = state.description,
-                                date = state.date.toInstant().toEpochMilli(),
-                                remindAt = state.remindAt,
+                                date = dateMillis,
+                                remindAt = remindAt,
                             )
                         )
                     }
@@ -165,7 +188,7 @@ class AgendaDetailViewModel(
 
             is AgendaDetailAction.OnNotificationOptionSelected -> {
                 state = state.copy(
-                    remindAt = agendaDetailAction.millisOfNotification
+                    remindIn = agendaDetailAction.millisOfNotification
                 )
             }
 

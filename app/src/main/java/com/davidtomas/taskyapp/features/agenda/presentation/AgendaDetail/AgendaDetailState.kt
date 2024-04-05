@@ -11,7 +11,7 @@ data class AgendaDetailState @RequiresApi(Build.VERSION_CODES.O) constructor(
     val title: String = String.EMPTY_STRING,
     val description: String = String.EMPTY_STRING,
     val date: ZonedDateTime = ZonedDateTime.now(),
-    val remindAt: Long = (30 * 60 * 1000L),
+    val remindIn: Long = (30 * 60 * 1000L),
     val screenMode: ScreenMode = ScreenMode.REVIEW,
     val agendaType: AgendaType = AgendaType.REMINDER,
     val showNotificationDropdown: Boolean = false

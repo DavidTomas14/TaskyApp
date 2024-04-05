@@ -102,29 +102,13 @@ fun AgendaDetailScreen(
             AgendaType(agendaType = state.agendaType)
             Spacer(modifier = Modifier.height(33.dp))
             Title(
-                title = when (state.screenMode) {
-                    ScreenMode.ADD -> {
-                        state.title.ifBlank { "New Title" }
-                    }
-
-                    else -> {
-                        state.title
-                    }
-                },
+                title = state.title,
                 onNavigateToEditClick = { /*TODO*/ },
                 isEditable = state.screenMode != ScreenMode.REVIEW
             )
             Spacer(modifier = Modifier.height(17.dp))
             Description(
-                description = when (state.screenMode) {
-                    ScreenMode.ADD -> {
-                        state.title.ifBlank { "New Description" }
-                    }
-
-                    else -> {
-                        state.title
-                    }
-                },
+                description = state.title,
                 onNavigateToEditClick = { /*TODO*/ },
                 isEditable = state.screenMode != ScreenMode.REVIEW
             )
@@ -172,7 +156,7 @@ fun AgendaDetailScreen(
                 )
             Spacer(modifier = Modifier.height(17.dp))
             NotificationTimePicker(
-                text = state.remindAt.formatToDayHourOrMinutes(),
+                text = state.remindIn.formatToDayHourOrMinutes(),
                 onOptionSelected = { notificationMillis ->
                     onAction(AgendaDetailAction.OnNotificationOptionSelected(notificationMillis))
                 },
@@ -212,11 +196,7 @@ class AgendaTypeProvider : PreviewParameterProvider<PreviewParameters> {
         get() = sequenceOf(
             PreviewParameters(
                 agendaType = AgendaType.REMINDER,
-                screenMode = ScreenMode.ADD
-            ),
-            PreviewParameters(
-                agendaType = AgendaType.REMINDER,
-                screenMode = ScreenMode.EDIT
+                screenMode = ScreenMode.EDIT_ADD
             ),
             PreviewParameters(
                 agendaType = AgendaType.REMINDER,
@@ -224,11 +204,7 @@ class AgendaTypeProvider : PreviewParameterProvider<PreviewParameters> {
             ),
             PreviewParameters(
                 agendaType = AgendaType.TASK,
-                screenMode = ScreenMode.ADD
-            ),
-            PreviewParameters(
-                agendaType = AgendaType.TASK,
-                screenMode = ScreenMode.EDIT
+                screenMode = ScreenMode.EDIT_ADD
             ),
             PreviewParameters(
                 agendaType = AgendaType.TASK,
@@ -236,11 +212,7 @@ class AgendaTypeProvider : PreviewParameterProvider<PreviewParameters> {
             ),
             PreviewParameters(
                 agendaType = AgendaType.EVENT,
-                screenMode = ScreenMode.ADD
-            ),
-            PreviewParameters(
-                agendaType = AgendaType.EVENT,
-                screenMode = ScreenMode.EDIT
+                screenMode = ScreenMode.EDIT_ADD
             ),
             PreviewParameters(
                 agendaType = AgendaType.EVENT,
