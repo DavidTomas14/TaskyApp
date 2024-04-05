@@ -17,6 +17,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderReposit
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaViewModel
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailViewModel
+import com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription.EditTitleOrDescriptionViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -42,4 +43,5 @@ private fun Module.dataModule() {
 private fun Module.presentationModule() {
     viewModelOf(::AgendaViewModel)
     viewModelOf(::AgendaDetailViewModel)
+    viewModelOf(::EditTitleOrDescriptionViewModel)
 }

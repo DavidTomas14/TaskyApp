@@ -1,7 +1,5 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,7 +22,6 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 class AgendaDetailViewModel(
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
@@ -106,7 +103,6 @@ class AgendaDetailViewModel(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     fun onAction(agendaDetailAction: AgendaDetailAction) {
         when (agendaDetailAction) {
             is AgendaDetailAction.OnEditIconClick -> {
@@ -190,6 +186,14 @@ class AgendaDetailViewModel(
                 state = state.copy(
                     remindIn = agendaDetailAction.millisOfNotification
                 )
+            }
+
+            is AgendaDetailAction.OnTitleChanged -> {
+                state = state.copy(title = agendaDetailAction.title)
+            }
+
+            is AgendaDetailAction.OnDescriptionChanged -> {
+                state = state.copy(description = agendaDetailAction.description)
             }
 
             else -> Unit
