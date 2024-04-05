@@ -40,9 +40,8 @@ import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.presentation.util.formatHoursAndMinutes
 import com.davidtomas.taskyapp.core.presentation.util.formatToMMDDYY
-import com.davidtomas.taskyapp.core.presentation.util.hourToMillis
-import com.davidtomas.taskyapp.core.presentation.util.minuteToMillis
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
+import java.time.Duration
 import java.time.ZonedDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -112,8 +111,8 @@ fun TimeDatePicker(
                 onCancelDialog = { isTimePickerVisible = false },
                 onConfirmDialogClick = {
                     onConfirmChangedTimeClick(
-                        timePickerState.hour.hourToMillis(),
-                        timePickerState.minute.minuteToMillis()
+                        Duration.ofHours(timePickerState.hour.toLong()).toMillis(),
+                        Duration.ofMinutes(timePickerState.minute.toLong()).toMillis()
                     )
                 }
             )

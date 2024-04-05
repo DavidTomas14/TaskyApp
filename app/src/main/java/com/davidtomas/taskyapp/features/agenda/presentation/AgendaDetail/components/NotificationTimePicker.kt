@@ -24,11 +24,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
-import com.davidtomas.taskyapp.core.presentation.util.hourToMillis
-import com.davidtomas.taskyapp.core.presentation.util.minuteToMillis
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownItems
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownOptions
+import java.time.Duration
 
 @Composable
 fun NotificationTimePicker(
@@ -71,42 +70,41 @@ fun NotificationTimePicker(
                             DropDownItems(
                                 text = "10 minutes before",
                                 onClick = {
-                                    onOptionSelected(10.minuteToMillis())
+                                    onOptionSelected(Duration.ofMinutes(10).toMillis())
                                     isDropdownMenuShown = false
                                 }
                             ),
                             DropDownItems(
                                 text = "30 minutes before",
                                 onClick = {
-                                    onOptionSelected(30.minuteToMillis())
+                                    onOptionSelected(Duration.ofMinutes(30).toMillis())
                                     isDropdownMenuShown = false
                                 }
                             ),
                             DropDownItems(
                                 text = "1 hour before",
                                 onClick = {
-                                    onOptionSelected(1.hourToMillis())
+                                    onOptionSelected(Duration.ofHours(1).toMillis())
                                     isDropdownMenuShown = false
                                 }
                             ),
                             DropDownItems(
                                 text = "6 hours before",
                                 onClick = {
-                                    onOptionSelected(6.hourToMillis())
+                                    onOptionSelected(Duration.ofHours(6).toMillis())
                                     isDropdownMenuShown = false
                                 }
                             ),
                             DropDownItems(
                                 text = "1 day before",
                                 onClick = {
-                                    onOptionSelected(24.hourToMillis())
+                                    onOptionSelected(Duration.ofDays(1).toMillis())
                                     isDropdownMenuShown = false
                                 }
                             ),
                         )
                     )
                 }
-
         }
         Spacer(modifier = Modifier.height(23.dp))
         HorizontalDivider()
