@@ -11,5 +11,6 @@ interface AuthService {
     suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError.Network>
 
     suspend fun login(loginParams: LoginUseCase.LoginParams): Result<AuthModel, DataError.Network>
-    suspend fun authenticate(): Result<Unit, DataError>
+    suspend fun authenticate(): Result<Unit, DataError.Network>
+    suspend fun logout(): Result<Unit, DataError.Network>
 }

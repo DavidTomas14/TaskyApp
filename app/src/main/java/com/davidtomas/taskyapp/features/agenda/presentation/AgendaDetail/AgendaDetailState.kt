@@ -2,7 +2,6 @@ package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
 import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
-import com.davidtomas.taskyapp.features.agenda.domain.model.EditType
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
 import java.time.ZonedDateTime
 
@@ -14,5 +13,4 @@ data class AgendaDetailState(
     val screenMode: ScreenMode = ScreenMode.REVIEW,
     val agendaType: AgendaType = AgendaType.REMINDER,
     val showNotificationDropdown: Boolean = false,
-    val editType: EditType = EditType.TITLE,
 )

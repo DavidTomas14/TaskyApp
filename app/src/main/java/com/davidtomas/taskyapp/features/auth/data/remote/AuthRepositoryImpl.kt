@@ -26,6 +26,10 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun logout(): Result<Unit, DataError.Network> {
+        return authService.logout()
+    }
+
     override suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError.Network> {
         return authService.register(registerParams)
     }

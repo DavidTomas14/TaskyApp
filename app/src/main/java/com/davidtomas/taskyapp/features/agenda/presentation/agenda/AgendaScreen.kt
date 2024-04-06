@@ -3,6 +3,7 @@ package com.davidtomas.taskyapp.features.agenda.presentation.agenda
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,19 +18,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.presentation.components.Header
-import com.davidtomas.taskyapp.core.presentation.util.formatToMMDDhh
+import com.davidtomas.taskyapp.core.presentation.util.formatToMMDDYY
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownItems
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownOptions
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.AddItemFabWithDropdown
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.CalendarDayItem
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.CardItem2
@@ -44,6 +52,9 @@ fun AgendaScreen(
     state: AgendaState,
     onAction: (AgendaAction) -> Unit
 ) {
+    var showLogoutDropDown by remember {
+        mutableStateOf(false)
+    }
     Scaffold(
         floatingActionButton = {
             AddItemFabWithDropdown {
@@ -66,7 +77,28 @@ fun AgendaScreen(
                     )
                 },
                 trailingComposable = {
-                    InitialsIcon(initials = "AB")
+                    Box() {
+                        InitialsIcon(
+                            initials = "AB",
+                            onIconClick = {
+                                showLogoutDropDown = true
+                            }
+                        )
+                        DropDownOptions(
+                            isShown = showLogoutDropDown,
+                            onDismissRequest = { showLogoutDropDown = false },
+                            dropDownItems = listOf(
+                                DropDownItems(
+                                    text = "Logout",
+                                    leadingIcon = R.drawable.ic_logout,
+                                    onClick = {
+                                        onAction(AgendaAction.OnInitialsIconClicked)
+                                        showLogoutDropDown = false
+                                    }
+                                )
+                            )
+                        )
+                    }
                 }
             )
             Column(

@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.util.UUID
 
 class AgendaDetailViewModel(
     private val taskRepository: TaskRepository,
@@ -47,12 +48,14 @@ class AgendaDetailViewModel(
             }
 
             ScreenMode.EDIT_ADD -> {
-                if (agendaType != null) {
+                if (agendaItemId != null) {
                     populateData()
                 } else {
                     state = state.copy(
                         title = "New Title",
-                        description = "New Description"
+                        description = "New Description",
+                        agendaType = agendaType ?: AgendaType.TASK,
+                        screenMode = screenMode
                     )
                 }
             }
@@ -116,8 +119,8 @@ class AgendaDetailViewModel(
                     if (agendaType == AgendaType.TASK) {
                         taskRepository.saveTask(
                             TaskModel(
-                                id = agendaItemId!!,
-                                title = "Task Editado",
+                                id = agendaItemId ?: UUID.randomUUID().toString(),
+                                title = state.title,
                                 description = state.description,
                                 date = dateMillis,
                                 remindAt = remindAt,
@@ -127,8 +130,8 @@ class AgendaDetailViewModel(
                     } else {
                         reminderRepository.saveReminder(
                             ReminderModel(
-                                id = agendaItemId!!,
-                                title = "Reminder Editado",
+                                id = agendaItemId ?: UUID.randomUUID().toString(),
+                                title = state.title,
                                 description = state.description,
                                 date = dateMillis,
                                 remindAt = remindAt,

@@ -39,9 +39,15 @@ class AuthServiceImpl(
             it.toAuthModel()
         }
 
-    override suspend fun authenticate(): Result<Unit, DataError> =
+    override suspend fun authenticate(): Result<Unit, DataError.Network> =
         client.safeRequest<Unit> {
             url { path(AuthPaths.AUTHENTICATE_ROUTE) }
+            method = HttpMethod.Get
+        }
+
+    override suspend fun logout(): Result<Unit, DataError.Network> =
+        client.safeRequest<Unit> {
+            url { path(AuthPaths.LOGOUT_ROUTE) }
             method = HttpMethod.Get
         }
 }

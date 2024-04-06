@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
+import com.davidtomas.taskyapp.features.auth.domain.AuthRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class AgendaViewModel(
     private val agendaRepository: AgendaRepository,
+    private val authRepository: AuthRepository,
     private val taskRepository: TaskRepository,
 ) : ViewModel() {
 
@@ -60,6 +62,15 @@ class AgendaViewModel(
             is AgendaAction.OnDeleteAgendaItemClicked -> {
                 viewModelScope.launch {
                     agendaRepository.deleteAgendaItem(agendaAction.agendaModel)
+                }
+            }
+
+            is AgendaAction.OnInitialsIconClicked -> {
+                viewModelScope.launch {
+                    authRepository.logout().fold(
+                        onError = {},
+                        onSuccess = {}
+                    )
                 }
             }
 

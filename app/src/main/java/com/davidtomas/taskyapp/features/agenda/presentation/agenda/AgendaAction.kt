@@ -15,4 +15,5 @@ sealed class AgendaAction {
     data class OnOpenAgendaItemClicked(val agendaModel: AgendaModel) : AgendaAction()
     data class OnEditAgendaItemClicked(val agendaModel: AgendaModel) : AgendaAction()
     data class OnDeleteAgendaItemClicked(val agendaModel: AgendaModel) : AgendaAction()
+    data object OnInitialsIconClicked : AgendaAction()
 }

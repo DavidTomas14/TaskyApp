@@ -11,6 +11,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownItems
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownOptions
 
 @Composable
 fun AddItemFabWithDropdown(

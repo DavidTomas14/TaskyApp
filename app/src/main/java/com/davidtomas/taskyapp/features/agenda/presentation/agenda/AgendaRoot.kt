@@ -3,7 +3,9 @@ package com.davidtomas.taskyapp.features.agenda.presentation.agenda
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaModel
-import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
+import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType.EVENT
+import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType.REMINDER
+import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType.TASK
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
@@ -29,7 +31,7 @@ fun AgendaRoot(
                         is EventModel -> {
                             navController.navigate(
                                 "${AgendaRoutes.AGENDA_DETAIL}/" +
-                                    "${AgendaType.EVENT.name}/" +
+                                    "${EVENT.name}/" +
                                     "${ScreenMode.EDIT_ADD.name}/" +
                                     agendaAction.agendaModel.id
                             )
@@ -38,7 +40,7 @@ fun AgendaRoot(
                         is TaskModel -> {
                             navController.navigate(
                                 "${AgendaRoutes.AGENDA_DETAIL}/" +
-                                    "${AgendaType.TASK.name}/" +
+                                    "${TASK.name}/" +
                                     "${ScreenMode.EDIT_ADD.name}/" +
                                     agendaAction.agendaModel.id
                             )
@@ -47,7 +49,7 @@ fun AgendaRoot(
                         is ReminderModel -> {
                             navController.navigate(
                                 "${AgendaRoutes.AGENDA_DETAIL}/" +
-                                    "${AgendaType.REMINDER.name}/" +
+                                    "${REMINDER.name}/" +
                                     "${ScreenMode.EDIT_ADD.name}/" +
                                     agendaAction.agendaModel.id
                             )
@@ -60,6 +62,12 @@ fun AgendaRoot(
                 }
 
                 is AgendaAction.OnAddAgendaItemOptionClicked -> {
+                    navController.navigate(
+                        "${AgendaRoutes.AGENDA_DETAIL}/" +
+                            "${agendaAction.agendaType.name}/" +
+                            "${ScreenMode.EDIT_ADD.name}/" +
+                            null
+                    )
                 }
 
                 else -> agendaViewModel.onAction(agendaAction)
@@ -67,6 +75,7 @@ fun AgendaRoot(
         }
     )
 }
+
 private fun navigateToDetailNonEditable(
     agendaModel: AgendaModel,
     navController: NavHostController
@@ -75,7 +84,7 @@ private fun navigateToDetailNonEditable(
         is EventModel -> {
             navController.navigate(
                 "${AgendaRoutes.AGENDA_DETAIL}/" +
-                    "${AgendaType.EVENT.name}/" +
+                    "${EVENT.name}/" +
                     "${ScreenMode.REVIEW.name}/" +
                     agendaModel.id
             )
@@ -84,7 +93,7 @@ private fun navigateToDetailNonEditable(
         is TaskModel -> {
             navController.navigate(
                 "${AgendaRoutes.AGENDA_DETAIL}/" +
-                    "${AgendaType.TASK.name}/" +
+                    "${TASK.name}/" +
                     "${ScreenMode.REVIEW.name}/" +
                     agendaModel.id
             )
@@ -93,7 +102,7 @@ private fun navigateToDetailNonEditable(
         is ReminderModel -> {
             navController.navigate(
                 "${AgendaRoutes.AGENDA_DETAIL}/" +
-                    "${AgendaType.REMINDER.name}/" +
+                    "${REMINDER.name}/" +
                     "${ScreenMode.REVIEW.name}/" +
                     agendaModel.id
             )

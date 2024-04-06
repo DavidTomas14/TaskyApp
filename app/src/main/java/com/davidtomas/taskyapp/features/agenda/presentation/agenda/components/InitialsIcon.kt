@@ -1,6 +1,7 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agenda.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -18,13 +19,15 @@ import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
 fun InitialsIcon(
-    initials: String
+    initials: String,
+    onIconClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
             .size(32.dp)
             .clip(RoundedCornerShape(100.dp))
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .then(if (onIconClick != null) Modifier.clickable { onIconClick() } else Modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -41,6 +44,6 @@ fun InitialsIcon(
 @Composable
 fun InitialsIconPreview() {
     TaskyAppTheme {
-        InitialsIcon(initials = "AB")
+        InitialsIcon(initials = "AB", onIconClick = {})
     }
 }
