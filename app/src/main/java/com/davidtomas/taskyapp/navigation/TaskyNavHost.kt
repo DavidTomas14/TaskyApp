@@ -1,8 +1,6 @@
 package com.davidtomas.taskyapp.navigation
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -18,11 +16,11 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaRoot
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailRoot
+import com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription.EditTextRoot
 import com.davidtomas.taskyapp.features.auth.presentation._common.navigation.AuthRoutes
 import com.davidtomas.taskyapp.features.auth.presentation.login.LoginRoot
 import com.davidtomas.taskyapp.features.auth.presentation.register.RegisterRoot
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun TaskyNavHost(isAuthenticated: Boolean) {
@@ -84,6 +82,15 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                         } else {
                             AgendaDetailRoot(navController = navController)
                         }
+                    }
+                    composable(
+                        route = "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
+                            "{${AgendaRoutes.EDIT_TYPE_PARAM}}/" +
+                            "{${AgendaRoutes.EDIT_TEXT_PARAM}}",
+                    ) {
+                        EditTextRoot(
+                            navController = navController
+                        )
                     }
                 }
             }

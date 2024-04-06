@@ -1,15 +1,13 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.davidtomas.taskyapp.core.presentation.util.extractDateMillis
 import com.davidtomas.taskyapp.core.presentation.util.extractDayMillis
+import com.davidtomas.taskyapp.core.presentation.util.extractFromStartOfTheDayOfDateMillis
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
@@ -24,7 +22,6 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 class AgendaDetailViewModel(
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
@@ -106,7 +103,6 @@ class AgendaDetailViewModel(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     fun onAction(agendaDetailAction: AgendaDetailAction) {
         when (agendaDetailAction) {
             is AgendaDetailAction.OnEditIconClick -> {
@@ -165,7 +161,7 @@ class AgendaDetailViewModel(
                 state = state.copy(
                     date = ZonedDateTime.ofInstant(
                         Instant.ofEpochMilli(
-                            state.date.extractDateMillis() +
+                            state.date.extractFromStartOfTheDayOfDateMillis() +
                                 agendaDetailAction.millisOfHour +
                                 agendaDetailAction.millisOfMinutes
                         ),
@@ -178,7 +174,7 @@ class AgendaDetailViewModel(
                 state = state.copy(
                     date = ZonedDateTime.ofInstant(
                         Instant.ofEpochMilli(
-                            agendaDetailAction.millisOfDate.extractDateMillis() +
+                            agendaDetailAction.millisOfDate.extractFromStartOfTheDayOfDateMillis() +
                                 state.date.extractDayMillis()
                         ),
                         ZoneId.systemDefault()
@@ -190,6 +186,14 @@ class AgendaDetailViewModel(
                 state = state.copy(
                     remindIn = agendaDetailAction.millisOfNotification
                 )
+            }
+
+            is AgendaDetailAction.OnTitleChanged -> {
+                state = state.copy(title = agendaDetailAction.title)
+            }
+
+            is AgendaDetailAction.OnDescriptionChanged -> {
+                state = state.copy(description = agendaDetailAction.description)
             }
 
             else -> Unit
