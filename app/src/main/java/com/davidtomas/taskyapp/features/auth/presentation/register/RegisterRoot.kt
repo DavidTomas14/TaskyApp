@@ -23,8 +23,6 @@ fun RegisterRoot(
                     )
                     navController.popBackStack()
                 }
-
-                else -> Unit
             }
         }
     }

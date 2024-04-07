@@ -21,7 +21,7 @@ class EventLocalSourceImpl(
 
     override suspend fun saveEvents(events: List<EventModel>) {
         realmDb.write {
-            events.forEach { copyToRealm(it.toEventEntity()) }
+            events.forEach { copyToRealm(it.toEventEntity(), UpdatePolicy.ALL) }
         }
     }
 

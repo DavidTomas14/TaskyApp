@@ -21,7 +21,7 @@ class ReminderLocalSourceImpl(
 
     override suspend fun saveReminders(reminders: List<ReminderModel>) {
         realmDb.write {
-            reminders.forEach { copyToRealm(it.toReminderEntity()) }
+            reminders.forEach { copyToRealm(it.toReminderEntity(), UpdatePolicy.ALL) }
         }
     }
 

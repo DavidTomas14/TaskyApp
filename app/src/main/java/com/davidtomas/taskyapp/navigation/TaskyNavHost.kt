@@ -28,7 +28,7 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        content = { innerPadding ->
+        content = {
             NavHost(
                 navController = navController,
                 startDestination = AuthRoutes.AUTH

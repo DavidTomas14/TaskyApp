@@ -21,7 +21,7 @@ class TaskLocalSourceImpl(
 
     override suspend fun saveTasks(tasks: List<TaskModel>) {
         realmDb.write {
-            tasks.forEach { copyToRealm(it.toTaskEntity()) }
+            tasks.forEach { copyToRealm(it.toTaskEntity(), UpdatePolicy.ALL) }
         }
     }
 
