@@ -138,7 +138,7 @@ fun AgendaScreen(
                                     else -> title
                                 },
                                 description = description,
-                                date = date.formatToMMDDhh(),
+                                date = date.formatToMMDDYY(),
                                 isDone = when (this) {
                                     is TaskModel -> {
                                         isDone

@@ -29,7 +29,7 @@ fun AddItemFabWithDropdown(
                 painter = painterResource(id = R.drawable.ic_add_icon),
                 contentDescription = ""
             )
-            DropDownAgendaItemOptions(
+            DropDownOptions(
                 isShown = isDropDownMenuShown,
                 onDismissRequest = { isDropDownMenuShown = false },
                 dropDownItems = listOf(
