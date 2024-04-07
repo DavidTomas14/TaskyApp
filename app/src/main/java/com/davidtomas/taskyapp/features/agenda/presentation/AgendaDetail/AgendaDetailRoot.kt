@@ -63,17 +63,16 @@ fun AgendaDetailRoot(
                 is AgendaDetailAction.OnNavigateToEditDescriptionClick -> {
                     navController.navigate(
                         "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
-                                "${EditType.DESCRIPTION.name}/" +
-                                URLEncoder.encode(agendaDetailViewModel.state.description, "UTF-8")
+                            "${EditType.DESCRIPTION.name}/" +
+                            URLEncoder.encode(agendaDetailViewModel.state.description.ifEmpty { null }, "UTF-8")
                     )
                 }
 
                 is AgendaDetailAction.OnNavigateToEditTitleClick -> {
                     navController.navigate(
                         "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
-                                "${EditType.TITLE.name}/" +
-                                URLEncoder.encode(agendaDetailViewModel.state.title, "UTF-8")
-
+                            "${EditType.TITLE.name}/" +
+                            URLEncoder.encode(agendaDetailViewModel.state.title.ifEmpty { null }, "UTF-8")
                     )
                 }
 
