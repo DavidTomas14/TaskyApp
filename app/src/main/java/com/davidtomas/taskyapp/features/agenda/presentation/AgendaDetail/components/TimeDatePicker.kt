@@ -218,7 +218,6 @@ private fun AlertDialogDatePicker(
 @Composable
 fun TimeDatePickerPreview() {
     TaskyAppTheme {
-        val state = rememberTimePickerState()
         Column {
             TimeDatePicker(
                 label = "From",
