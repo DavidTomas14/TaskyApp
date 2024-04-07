@@ -56,7 +56,8 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                     }
                     composable(
                         route =
-                        "${AgendaRoutes.AGENDA_DETAIL}/" + "{${AgendaRoutes.AGENDA_TYPE_PARAM}}/" +
+                        "${AgendaRoutes.AGENDA_DETAIL}/" +
+                            "{${AgendaRoutes.AGENDA_TYPE_PARAM}}/" +
                             "{${AgendaRoutes.SCREEN_MODE_PARAM}}/" +
                             "{${AgendaRoutes.AGENDA_ITEM_ID_PARAM}}",
 

@@ -19,6 +19,12 @@ class TaskLocalSourceImpl(
         }
     }
 
+    override suspend fun saveTasks(tasks: List<TaskModel>) {
+        realmDb.write {
+            tasks.forEach { copyToRealm(it.toTaskEntity()) }
+        }
+    }
+
     override suspend fun getTasks(): Flow<List<TaskModel>> = realmDb
         .query<TaskEntity>()
         .asFlow()

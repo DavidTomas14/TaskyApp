@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface ReminderLocalSource {
     suspend fun saveReminder(reminder: ReminderModel)
 
+    suspend fun saveReminders(reminders: List<ReminderModel>)
     suspend fun getReminder(): Flow<List<ReminderModel>>
 
     suspend fun getRemindById(reminderId: String): ReminderModel

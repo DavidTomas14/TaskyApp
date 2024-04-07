@@ -12,7 +12,7 @@ import io.ktor.http.contentType
 import io.ktor.http.path
 
 class AgendaServiceImpl(
-    val client: HttpClient,
+    private val client: HttpClient,
 ) : AgendaService {
     override suspend fun getAgenda(): Result<AgendaResponse, DataError.Network> =
         client.safeRequest<AgendaResponse> {

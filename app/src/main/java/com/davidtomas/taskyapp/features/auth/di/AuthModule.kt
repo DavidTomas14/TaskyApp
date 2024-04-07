@@ -30,7 +30,7 @@ val authModule = module {
 }
 
 private fun Module.dataModule() {
-    factory<HttpClient> {
+    single <HttpClient> {
         TaskyHttpClient.create(get())
     }
     singleOf(::AuthServiceImpl) bind AuthService::class

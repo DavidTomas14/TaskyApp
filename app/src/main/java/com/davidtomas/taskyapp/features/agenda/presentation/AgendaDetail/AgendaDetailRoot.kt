@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import com.davidtomas.taskyapp.features.agenda.domain.model.EditType
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
 import org.koin.androidx.compose.koinViewModel
+import java.net.URLEncoder
 
 @Composable
 fun AgendaDetailRoot(
@@ -62,16 +63,17 @@ fun AgendaDetailRoot(
                 is AgendaDetailAction.OnNavigateToEditDescriptionClick -> {
                     navController.navigate(
                         "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
-                            "${EditType.DESCRIPTION.name}/" +
-                            "agendaDetailViewModel.state.description"
+                                "${EditType.DESCRIPTION.name}/" +
+                                URLEncoder.encode(agendaDetailViewModel.state.description, "UTF-8")
                     )
                 }
 
                 is AgendaDetailAction.OnNavigateToEditTitleClick -> {
                     navController.navigate(
                         "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
-                            "${EditType.TITLE.name}/" +
-                            "agendaDetailViewModel.state.title"
+                                "${EditType.TITLE.name}/" +
+                                URLEncoder.encode(agendaDetailViewModel.state.title, "UTF-8")
+
                     )
                 }
 

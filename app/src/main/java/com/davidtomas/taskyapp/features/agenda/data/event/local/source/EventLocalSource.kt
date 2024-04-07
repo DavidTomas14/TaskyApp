@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface EventLocalSource {
     suspend fun saveEvent(event: EventModel)
+    suspend fun saveEvents(events: List<EventModel>)
 
     suspend fun getEvents(): Flow<List<EventModel>>
 

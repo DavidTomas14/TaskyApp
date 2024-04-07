@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 interface TaskLocalSource {
     suspend fun saveTask(task: TaskModel)
 
+    suspend fun saveTasks(tasks: List<TaskModel>)
+
     suspend fun getTasks(): Flow<List<TaskModel>>
     suspend fun getTaskById(taskId: String): TaskModel
 
