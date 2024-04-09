@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components
+package com.davidtomas.taskyapp.features.agenda.presentation._common.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
-import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownItems
-import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownOptions
 import java.time.Duration
 
 @Composable

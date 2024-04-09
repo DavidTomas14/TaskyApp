@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
+package com.davidtomas.taskyapp.features.agenda.presentation._common.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,19 +31,22 @@ import com.davidtomas.taskyapp.core.presentation.components.Header
 import com.davidtomas.taskyapp.core.presentation.util.formatToDayHourOrMinutes
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
+import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.AgendaType
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.AttendeesSection
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.Description
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.NotificationTimePicker
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.Photos
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.TimeDatePicker
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components.Title
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.AgendaType
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.AttendeesSection
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.Description
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.NotificationTimePicker
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.Photos
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.TimeDatePicker
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.Title
+import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailAction
+import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailState
 
 @Composable
 fun AgendaDetailScreen(
     state: AgendaDetailState,
-    onAction: (AgendaDetailAction) -> Unit
+    onAction: (AgendaDetailAction) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -109,13 +112,18 @@ fun AgendaDetailScreen(
                 onNavigateToEditClick = { onAction(AgendaDetailAction.OnNavigateToEditDescriptionClick) },
                 isEditable = state.screenMode != ScreenMode.REVIEW
             )
-            Spacer(modifier = Modifier.height(17.dp))
+
             if (state.agendaType == AgendaType.EVENT) {
                 Photos(
-                    photos = listOf(),
-                    onAddedPhoto = {},
+                    photos = state?.photos ?: emptyList(),
+                    onPhotoClicked = {
+                        onAction(AgendaDetailAction.OnPhotoClicked(it))
+                    },
+                    onAddedPhoto = {
+                        onAction(AgendaDetailAction.OnAddedPhoto(it))
+                    },
+                    isEditable = state.screenMode != ScreenMode.REVIEW
                 )
-                Spacer(modifier = Modifier.height(17.dp))
             }
             Spacer(modifier = Modifier.height(17.dp))
             TimeDatePicker(
@@ -161,7 +169,40 @@ fun AgendaDetailScreen(
             )
             Spacer(modifier = Modifier.height(17.dp))
             if (state.agendaType == AgendaType.EVENT) {
-                AttendeesSection(state.screenMode != ScreenMode.REVIEW)
+                AttendeesSection(
+                    attendeeList = listOf(
+                        AttendeeModel(
+                            email = "test@test.com",
+                            fullName = "David Tomas",
+                            eventId = "1234",
+                            isGoing = true,
+                            remindAt = 0L
+                        ),
+                        AttendeeModel(
+                            email = "test@test.com",
+                            fullName = "David Tomas",
+                            eventId = "1234",
+                            isGoing = false,
+                            remindAt = 0L
+                        ),
+                        AttendeeModel(
+                            email = "test@test.com",
+                            fullName = "David Tomas",
+                            eventId = "1234",
+                            isGoing = true,
+                            remindAt = 0L
+                        ),
+                        AttendeeModel(
+                            email = "test@test.com",
+                            fullName = "David Tomas",
+                            eventId = "1234",
+                            isGoing = false,
+                            remindAt = 0L
+                        )
+                    ),
+                    onDeleteAttendeeIconClick = {},
+                    isEditable = state.screenMode != ScreenMode.REVIEW,
+                )
             }
             if (state.screenMode == ScreenMode.REVIEW) {
                 Box(

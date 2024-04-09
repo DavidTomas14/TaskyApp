@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription
+package com.davidtomas.taskyapp.features.agenda.presentation.editText
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

@@ -14,4 +14,8 @@ sealed class AgendaDetailAction {
     data object OnNavigateToEditDescriptionClick : AgendaDetailAction()
     data class OnTitleChanged(val title: String) : AgendaDetailAction()
     data class OnDescriptionChanged(val description: String) : AgendaDetailAction()
+
+    data class OnAddedPhoto(val photoUrl: String) : AgendaDetailAction()
+
+    data class OnPhotoClicked(val photoUrl: String) : AgendaDetailAction()
 }

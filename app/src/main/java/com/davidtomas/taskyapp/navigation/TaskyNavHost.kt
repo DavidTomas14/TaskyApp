@@ -12,11 +12,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaRoot
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailRoot
-import com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription.EditTextRoot
+import com.davidtomas.taskyapp.features.agenda.presentation.editText.EditTextRoot
+import com.davidtomas.taskyapp.features.agenda.presentation.photoDetail.PhotoDetailRoot
 import com.davidtomas.taskyapp.features.auth.presentation._common.navigation.AuthRoutes
 import com.davidtomas.taskyapp.features.auth.presentation.login.LoginRoot
 import com.davidtomas.taskyapp.features.auth.presentation.register.RegisterRoot
@@ -60,7 +60,6 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                             "{${AgendaRoutes.AGENDA_TYPE_PARAM}}/" +
                             "{${AgendaRoutes.SCREEN_MODE_PARAM}}/" +
                             "{${AgendaRoutes.AGENDA_ITEM_ID_PARAM}}",
-
                         arguments = listOf(
                             navArgument(AgendaRoutes.AGENDA_ITEM_ID_PARAM) {
                                 type = NavType.StringType
@@ -74,25 +73,38 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                             }
                         )
                     ) {
-                        val agendaTypeNavArg =
-                            it.arguments?.getString(AgendaRoutes.AGENDA_TYPE_PARAM)
-                        val agendaType =
-                            agendaTypeNavArg?.let { AgendaType.valueOf(agendaTypeNavArg) }
-                        if (agendaType == AgendaType.EVENT) {
-                            AgendaDetailRoot(navController = navController)
-                        } else {
-                            AgendaDetailRoot(navController = navController)
+                        AgendaDetailRoot(navController = navController)
+                    }
+                }
+                composable(
+                    route = "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
+                        "{${AgendaRoutes.EDIT_TYPE_PARAM}}/" +
+                        "{${AgendaRoutes.EDIT_TEXT_PARAM}}",
+                    arguments = listOf(
+                        navArgument(AgendaRoutes.EDIT_TYPE_PARAM) {
+                            type = NavType.StringType
+                        },
+                        navArgument(AgendaRoutes.EDIT_TEXT_PARAM) {
+                            type = NavType.StringType
                         }
-                    }
-                    composable(
-                        route = "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
-                            "{${AgendaRoutes.EDIT_TYPE_PARAM}}/" +
-                            "{${AgendaRoutes.EDIT_TEXT_PARAM}}",
-                    ) {
-                        EditTextRoot(
-                            navController = navController
-                        )
-                    }
+                    )
+                ) {
+                    EditTextRoot(
+                        navController = navController
+                    )
+                }
+                composable(
+                    route = "${AgendaRoutes.PHOTO_DETAIL}/" +
+                        "{${AgendaRoutes.PHOTO_URL_PARAM}}",
+                    arguments = listOf(
+                        navArgument(AgendaRoutes.PHOTO_URL_PARAM) {
+                            type = NavType.StringType
+                        },
+                    )
+                ) {
+                    PhotoDetailRoot(
+                        navController = navController
+                    )
                 }
             }
         }

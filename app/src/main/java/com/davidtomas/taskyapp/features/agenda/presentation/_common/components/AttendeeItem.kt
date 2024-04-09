@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.components
+package com.davidtomas.taskyapp.features.agenda.presentation._common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

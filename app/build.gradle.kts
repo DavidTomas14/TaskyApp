@@ -108,4 +108,6 @@ dependencies {
     debugImplementation(libs.bundles.compose.debug)
     // Constraint Layout
     implementation(libs.androidx.constraintlayout.compose)
+    // Coil
+    implementation(libs.coil.compose)
 }

@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription
+package com.davidtomas.taskyapp.features.agenda.presentation.editText
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

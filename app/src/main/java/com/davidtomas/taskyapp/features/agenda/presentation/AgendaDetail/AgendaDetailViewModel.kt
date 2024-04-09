@@ -9,9 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.davidtomas.taskyapp.core.presentation.util.extractDayMillis
 import com.davidtomas.taskyapp.core.presentation.util.extractFromStartOfTheDayOfDateMillis
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
+import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.PhotoModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
+import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
@@ -23,14 +26,15 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.UUID
 
-class AgendaDetailViewModel(
+open class AgendaDetailViewModel(
+    private val eventRepository: EventRepository,
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     var state by mutableStateOf(AgendaDetailState())
-        private set
+        protected set
 
     private val _uiEvent = Channel<AgendaDetailUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -101,12 +105,31 @@ class AgendaDetailViewModel(
                     }
                 }
 
-                else -> Unit
+                AgendaType.EVENT -> {
+                    viewModelScope.launch {
+                        val event = eventRepository.getEvent(agendaItemId)
+                        state = state.copy(
+                            title = event.title,
+                            description = event.description,
+                            date = ZonedDateTime.ofInstant(
+                                Instant.ofEpochMilli(event.date),
+                                ZoneId.systemDefault()
+                            ),
+                            remindIn = event.date - event.remindAt,
+                            agendaType = AgendaType.EVENT,
+                            screenMode = screenMode ?: ScreenMode.REVIEW,
+                            photos = event.photos.map { it.url },
+                            attendees = event.attendees
+                        )
+                    }
+                }
+
+                null -> Unit
             }
         }
     }
 
-    fun onAction(agendaDetailAction: AgendaDetailAction) {
+    open fun onAction(agendaDetailAction: AgendaDetailAction) {
         when (agendaDetailAction) {
             is AgendaDetailAction.OnEditIconClick -> {
                 state = state.copy(screenMode = ScreenMode.EDIT_ADD)
@@ -116,27 +139,57 @@ class AgendaDetailViewModel(
                 viewModelScope.launch {
                     val dateMillis = state.date.toInstant().toEpochMilli()
                     val remindAt = dateMillis - state.remindIn
-                    if (agendaType == AgendaType.TASK) {
-                        taskRepository.saveTask(
-                            TaskModel(
-                                id = agendaItemId ?: UUID.randomUUID().toString(),
-                                title = state.title,
-                                description = state.description,
-                                date = dateMillis,
-                                remindAt = remindAt,
-                                isDone = false
+                    when (agendaType) {
+                        AgendaType.TASK -> {
+                            taskRepository.saveTask(
+                                TaskModel(
+                                    id = agendaItemId ?: UUID.randomUUID().toString(),
+                                    title = state.title,
+                                    description = state.description,
+                                    date = dateMillis,
+                                    remindAt = remindAt,
+                                    isDone = false
+                                )
                             )
-                        )
-                    } else {
-                        reminderRepository.saveReminder(
-                            ReminderModel(
-                                id = agendaItemId ?: UUID.randomUUID().toString(),
-                                title = state.title,
-                                description = state.description,
-                                date = dateMillis,
-                                remindAt = remindAt,
+                        }
+
+                        AgendaType.REMINDER -> {
+                            reminderRepository.saveReminder(
+                                ReminderModel(
+                                    id = agendaItemId ?: UUID.randomUUID().toString(),
+                                    title = state.title,
+                                    description = state.description,
+                                    date = dateMillis,
+                                    remindAt = remindAt,
+                                )
                             )
-                        )
+                        }
+
+                        AgendaType.EVENT -> {
+                            eventRepository.saveEvent(
+                                EventModel(
+                                    id = agendaItemId ?: UUID.randomUUID().toString(),
+                                    title = state.title,
+                                    description = state.description,
+                                    date = dateMillis,
+                                    remindAt = remindAt,
+                                    isUserEventCreator = true,
+                                    attendees = listOf(),
+                                    to = 0L,
+                                    host = "1234",
+                                    photos = state.photos?.let {
+                                        it.map { url ->
+                                            PhotoModel(
+                                                key = UUID.randomUUID().toString(),
+                                                url = url
+                                            )
+                                        }
+                                    } ?: listOf()
+                                )
+                            )
+                        }
+
+                        null -> Unit
                     }
                     state = state.copy(
                         screenMode = ScreenMode.REVIEW
@@ -146,14 +199,26 @@ class AgendaDetailViewModel(
 
             is AgendaDetailAction.OnDeleteButtonClick -> {
                 viewModelScope.launch {
-                    if (agendaType == AgendaType.TASK) {
-                        taskRepository.deleteTask(
-                            agendaItemId!!
-                        )
-                    } else {
-                        reminderRepository.deleteReminder(
-                            agendaItemId!!
-                        )
+                    when (agendaType) {
+                        AgendaType.TASK -> {
+                            taskRepository.deleteTask(
+                                agendaItemId!!
+                            )
+                        }
+
+                        AgendaType.REMINDER -> {
+                            reminderRepository.deleteReminder(
+                                agendaItemId!!
+                            )
+                        }
+
+                        AgendaType.EVENT -> {
+                            eventRepository.deleteEvent(
+                                agendaItemId!!
+                            )
+                        }
+
+                        null -> Unit
                     }
                     _uiEvent.send(AgendaDetailUiEvent.NavigateUp)
                 }
@@ -197,6 +262,12 @@ class AgendaDetailViewModel(
 
             is AgendaDetailAction.OnDescriptionChanged -> {
                 state = state.copy(description = agendaDetailAction.description)
+            }
+
+            is AgendaDetailAction.OnAddedPhoto -> {
+                state = state.copy(
+                    photos = state.photos?.plus(agendaDetailAction.photoUrl)
+                )
             }
 
             else -> Unit

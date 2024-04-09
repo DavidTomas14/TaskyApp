@@ -13,4 +13,7 @@ class EventRepositoryImpl(
 
     override suspend fun getEvent(eventId: String): EventModel =
         eventLocalSource.getEventById(eventId = eventId)
+
+    override suspend fun deleteEvent(eventId: String) =
+        eventLocalSource.deleteEvent(eventId = eventId)
 }
