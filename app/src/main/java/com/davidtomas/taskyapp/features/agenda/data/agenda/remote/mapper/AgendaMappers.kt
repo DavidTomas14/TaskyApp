@@ -38,7 +38,7 @@ fun AttendeeResponse.toAttendeeModel() = AttendeeModel(
 
 fun PhotoResponse.toPhotoModel() = PhotoModel(
     key = key,
-    url = url,
+    uri = url,
 )
 
 fun TaskResponse.toTaskModel() =

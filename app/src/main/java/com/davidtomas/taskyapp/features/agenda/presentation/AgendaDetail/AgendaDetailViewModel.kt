@@ -118,7 +118,7 @@ open class AgendaDetailViewModel(
                             remindIn = event.date - event.remindAt,
                             agendaType = AgendaType.EVENT,
                             screenMode = screenMode ?: ScreenMode.REVIEW,
-                            photos = event.photos.map { it.url },
+                            photos = event.photos.map { it.uri },
                             attendees = event.attendees
                         )
                     }
@@ -178,10 +178,10 @@ open class AgendaDetailViewModel(
                                     to = 0L,
                                     host = "1234",
                                     photos = state.photos?.let {
-                                        it.map { url ->
+                                        it.map { uri ->
                                             PhotoModel(
                                                 key = UUID.randomUUID().toString(),
-                                                url = url
+                                                uri = uri
                                             )
                                         }
                                     } ?: listOf()
@@ -266,7 +266,7 @@ open class AgendaDetailViewModel(
 
             is AgendaDetailAction.OnAddedPhoto -> {
                 state = state.copy(
-                    photos = state.photos?.plus(agendaDetailAction.photoUrl)
+                    photos = state.photos?.plus(agendaDetailAction.photoUri)
                 )
             }
 

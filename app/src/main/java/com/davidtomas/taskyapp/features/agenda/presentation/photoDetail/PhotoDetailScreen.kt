@@ -60,7 +60,7 @@ fun PhotoDetailScreen(
             }
         )
         AsyncImage(
-            model = state.photoUrl,
+            model = state.photoUri,
             contentDescription = "image description",
             modifier = Modifier
                 .alpha(0.8f)

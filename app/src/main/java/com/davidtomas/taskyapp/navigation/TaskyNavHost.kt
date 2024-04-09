@@ -95,9 +95,9 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                 }
                 composable(
                     route = "${AgendaRoutes.PHOTO_DETAIL}/" +
-                        "{${AgendaRoutes.PHOTO_URL_PARAM}}",
+                        "{${AgendaRoutes.PHOTO_URI_PARAM}}",
                     arguments = listOf(
-                        navArgument(AgendaRoutes.PHOTO_URL_PARAM) {
+                        navArgument(AgendaRoutes.PHOTO_URI_PARAM) {
                             type = NavType.StringType
                         },
                     )

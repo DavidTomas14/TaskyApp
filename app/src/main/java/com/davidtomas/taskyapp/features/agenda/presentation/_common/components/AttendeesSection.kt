@@ -41,8 +41,7 @@ fun AttendeesSection(
     var visitorsTypeSelected by remember {
         mutableStateOf(VisitorPill.ALL)
     }
-    val goingList = attendeeList.filter { it.isGoing }
-    val notGoingList = attendeeList.filter { !it.isGoing }
+    val (goingList, notGoingList) = attendeeList.partition { it.isGoing }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,

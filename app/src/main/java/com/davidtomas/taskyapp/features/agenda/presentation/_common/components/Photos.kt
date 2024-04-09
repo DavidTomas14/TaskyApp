@@ -61,10 +61,10 @@ fun Photos(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             selectedImageUri = uri
-            uri?.toString()?.let { imageUrl ->
+            uri?.toString()?.let { imageUri ->
                 val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 context.contentResolver.takePersistableUriPermission(uri, flag)
-                onAddedPhoto(imageUrl)
+                onAddedPhoto(imageUri)
             }
         }
     )
@@ -116,12 +116,12 @@ fun Photos(
                 val chunkedPhotosList = photos.chunked(5)
 
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    for (listOf5photos in chunkedPhotosList) {
+                    for (groupOfPhotos in chunkedPhotosList) {
                         Row(
                             horizontalArrangement = Arrangement.SpaceAround,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            for (photo in listOf5photos) {
+                            for (photo in groupOfPhotos) {
                                 AsyncImage(
                                     model = photo,
                                     contentDescription = "image description",
@@ -138,7 +138,7 @@ fun Photos(
                                     contentScale = ContentScale.FillBounds
                                 )
                             }
-                            if (listOf5photos.size < 5 && isEditable) {
+                            if (groupOfPhotos.size < 5 && isEditable) {
                                 Image(
                                     painter = painterResource(id = R.drawable.ic_add_icon),
                                     contentDescription = null,
@@ -158,11 +158,11 @@ fun Photos(
                                         },
                                     contentScale = ContentScale.Fit
                                 )
-                                repeat(4 - listOf5photos.size) {
+                                repeat(4 - groupOfPhotos.size) {
                                     Text(text = "", modifier = Modifier.size(60.dp))
                                 }
                             } else {
-                                repeat(5 - listOf5photos.size) {
+                                repeat(5 - groupOfPhotos.size) {
                                     Text(text = "", modifier = Modifier.size(60.dp))
                                 }
                             }

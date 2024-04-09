@@ -7,6 +7,9 @@ import com.davidtomas.taskyapp.features.agenda.data.agenda.repository.AgendaRepo
 import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLocalSourceImpl
 import com.davidtomas.taskyapp.features.agenda.data.event.repository.EventRepositoryImpl
+import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSource
+import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSourceImpl
+import com.davidtomas.taskyapp.features.agenda.data.photo.repository.PhotoRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.ReminderLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.ReminderLocalSourceImpl
 import com.davidtomas.taskyapp.features.agenda.data.reminder.repository.ReminderRepositoryImpl
@@ -15,6 +18,7 @@ import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalS
 import com.davidtomas.taskyapp.features.agenda.data.task.repository.TaskRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
+import com.davidtomas.taskyapp.features.agenda.domain.repository.PhotoRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaViewModel
@@ -23,7 +27,7 @@ import com.davidtomas.taskyapp.features.agenda.presentation.editText.EditTextVie
 import com.davidtomas.taskyapp.features.agenda.presentation.photoDetail.PhotoDetailViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -34,14 +38,16 @@ val agendaModule = module {
 
 private fun Module.dataModule() {
     single { TaskyRealmDB.create() }
-    singleOf(::AgendaRepositoryImpl) bind AgendaRepository::class
-    singleOf(::EventRepositoryImpl) bind EventRepository::class
-    singleOf(::TaskRepositoryImpl) bind TaskRepository::class
-    singleOf(::ReminderRepositoryImpl) bind ReminderRepository::class
-    singleOf(::AgendaServiceImpl) bind AgendaService::class
-    singleOf(::TaskLocalSourceImpl) bind TaskLocalSource::class
-    singleOf(::EventLocalSourceImpl) bind EventLocalSource::class
-    singleOf(::ReminderLocalSourceImpl) bind ReminderLocalSource::class
+    factoryOf(::AgendaRepositoryImpl) bind AgendaRepository::class
+    factoryOf(::AgendaServiceImpl) bind AgendaService::class
+    factoryOf(::EventRepositoryImpl) bind EventRepository::class
+    factoryOf(::EventLocalSourceImpl) bind EventLocalSource::class
+    factoryOf(::TaskRepositoryImpl) bind TaskRepository::class
+    factoryOf(::TaskLocalSourceImpl) bind TaskLocalSource::class
+    factoryOf(::ReminderRepositoryImpl) bind ReminderRepository::class
+    factoryOf(::ReminderLocalSourceImpl) bind ReminderLocalSource::class
+    factoryOf(::PhotoRepositoryImpl) bind PhotoRepository::class
+    factoryOf(::PhotoLocalSourceImpl) bind PhotoLocalSource::class
 }
 
 private fun Module.presentationModule() {

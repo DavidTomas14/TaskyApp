@@ -5,5 +5,5 @@ import io.realm.kotlin.types.RealmObject
 
 class PhotoEntity : RealmObject {
     var key: String = String.EMPTY_STRING
-    var url: String = String.EMPTY_STRING
+    var uri: String = String.EMPTY_STRING
 }

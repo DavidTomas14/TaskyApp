@@ -81,9 +81,9 @@ fun AgendaDetailRoot(
                     navController.navigate(
                         "${AgendaRoutes.PHOTO_DETAIL}/" +
                             URLEncoder.encode(
-                                agendaAction.photoUrl,
+                                agendaAction.photoUri,
                                 "UTF-8"
-                            ),
+                            )
                     )
                 }
 

@@ -14,5 +14,5 @@ object AgendaRoutes {
     const val EDITED_TEXT_PARAM = "edited_text"
     const val EDITED_TYPE_PARAM = "editedType"
     const val SCREEN_MODE_PARAM = "screenMode"
-    const val PHOTO_URL_PARAM = "photo_url"
+    const val PHOTO_URI_PARAM = "photo_uri"
 }
