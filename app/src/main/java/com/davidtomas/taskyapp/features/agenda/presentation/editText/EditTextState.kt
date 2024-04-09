@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription
+package com.davidtomas.taskyapp.features.agenda.presentation.editText
 
 import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.features.agenda.domain.model.EditType

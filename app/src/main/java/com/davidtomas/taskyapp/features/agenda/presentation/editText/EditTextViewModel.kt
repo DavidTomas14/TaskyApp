@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription
+package com.davidtomas.taskyapp.features.agenda.presentation.editText
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.features.agenda.domain.model.EditType
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
+import java.net.URLDecoder
 
 class EditTextViewModel(
     private val savedStateHandle: SavedStateHandle
@@ -25,7 +26,7 @@ class EditTextViewModel(
     init {
         state = state.copy(
             editType = editType ?: EditType.TITLE,
-            text = editText ?: String.EMPTY_STRING
+            text = URLDecoder.decode(editText ?: String.EMPTY_STRING, "UTF-8")
         )
     }
 

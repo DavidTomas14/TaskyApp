@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import com.davidtomas.taskyapp.features.agenda.domain.model.EditType
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
+import com.davidtomas.taskyapp.features.agenda.presentation._common.screen.AgendaDetailScreen
 import org.koin.androidx.compose.koinViewModel
 import java.net.URLEncoder
 
@@ -73,6 +74,16 @@ fun AgendaDetailRoot(
                         "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
                             "${EditType.TITLE.name}/" +
                             URLEncoder.encode(agendaDetailViewModel.state.title.ifEmpty { null }, "UTF-8")
+                    )
+                }
+
+                is AgendaDetailAction.OnPhotoClicked -> {
+                    navController.navigate(
+                        "${AgendaRoutes.PHOTO_DETAIL}/" +
+                            URLEncoder.encode(
+                                agendaAction.photoUri,
+                                "UTF-8"
+                            )
                     )
                 }
 

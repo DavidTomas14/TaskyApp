@@ -6,4 +6,6 @@ interface EventRepository {
     suspend fun saveEvent(eventModel: EventModel)
 
     suspend fun getEvent(eventId: String): EventModel
+
+    suspend fun deleteEvent(eventId: String)
 }

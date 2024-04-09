@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation.editTitleOrDescription
+package com.davidtomas.taskyapp.features.agenda.presentation.editText
 
 sealed class EditTextAction {
     data object OnBackIconClicked : EditTextAction()
