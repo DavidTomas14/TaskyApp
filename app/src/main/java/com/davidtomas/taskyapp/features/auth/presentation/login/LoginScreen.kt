@@ -117,6 +117,12 @@ fun Form(
     val spacing = LocalSpacing.current
     Column(
         modifier = modifier
+            .padding(
+            start = spacing.spaceLarge,
+            top = spacing.spaceLarge,
+            end = spacing.spaceLarge
+        )
+            .fillMaxWidth()
     ) {
         BasicInput(
             label = stringResource(id = R.string.label_email),
@@ -132,9 +138,7 @@ fun Form(
         Button(
             modifier = Modifier
                 .padding(
-                    start = spacing.spaceLarge,
                     top = spacing.spaceLarge,
-                    end = spacing.spaceLarge
                 )
                 .fillMaxWidth(),
             onClick = {

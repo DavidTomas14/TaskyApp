@@ -6,6 +6,8 @@ import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.api.AgendaServ
 import com.davidtomas.taskyapp.features.agenda.data.agenda.repository.AgendaRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLocalSourceImpl
+import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.AttendeeService
+import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.AttendeeServiceImpl
 import com.davidtomas.taskyapp.features.agenda.data.event.repository.EventRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSourceImpl
@@ -38,6 +40,8 @@ val agendaModule = module {
 
 private fun Module.dataModule() {
     single { TaskyRealmDB.create() }
+    factoryOf(::AttendeeServiceImpl) bind AttendeeService::class
+    factoryOf(::AttendeeServiceImpl) bind AttendeeService::class
     factoryOf(::AgendaRepositoryImpl) bind AgendaRepository::class
     factoryOf(::AgendaServiceImpl) bind AgendaService::class
     factoryOf(::EventRepositoryImpl) bind EventRepository::class

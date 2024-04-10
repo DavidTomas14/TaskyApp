@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.presentation._common.screen
+package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,17 +31,15 @@ import com.davidtomas.taskyapp.core.presentation.components.Header
 import com.davidtomas.taskyapp.core.presentation.util.formatToDayHourOrMinutes
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
-import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.AgendaType
+import com.davidtomas.taskyapp.features.agenda.presentation._common.components.AlertDialogAddVisitor
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.AttendeesSection
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.Description
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.NotificationTimePicker
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.Photos
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.TimeDatePicker
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.Title
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailAction
-import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailState
 
 @Composable
 fun AgendaDetailScreen(
@@ -127,7 +125,7 @@ fun AgendaDetailScreen(
             }
             Spacer(modifier = Modifier.height(17.dp))
             TimeDatePicker(
-                zonedDateTime = state.date,
+                zonedDateTime = state.toDate,
                 label = when (state.agendaType) {
                     AgendaType.EVENT -> "From"
                     else -> "At"
@@ -145,7 +143,7 @@ fun AgendaDetailScreen(
             Spacer(modifier = Modifier.height(17.dp))
             if (state.agendaType == AgendaType.EVENT)
                 TimeDatePicker(
-                    zonedDateTime = state.date,
+                    zonedDateTime = state.toDate,
                     label = "To",
                     isEditable = state.screenMode != ScreenMode.REVIEW,
                     onConfirmChangedDateClick = { millisOfDate ->
@@ -170,37 +168,9 @@ fun AgendaDetailScreen(
             Spacer(modifier = Modifier.height(17.dp))
             if (state.agendaType == AgendaType.EVENT) {
                 AttendeesSection(
-                    attendeeList = listOf(
-                        AttendeeModel(
-                            email = "test@test.com",
-                            fullName = "David Tomas",
-                            eventId = "1234",
-                            isGoing = true,
-                            remindAt = 0L
-                        ),
-                        AttendeeModel(
-                            email = "test@test.com",
-                            fullName = "David Tomas",
-                            eventId = "1234",
-                            isGoing = false,
-                            remindAt = 0L
-                        ),
-                        AttendeeModel(
-                            email = "test@test.com",
-                            fullName = "David Tomas",
-                            eventId = "1234",
-                            isGoing = true,
-                            remindAt = 0L
-                        ),
-                        AttendeeModel(
-                            email = "test@test.com",
-                            fullName = "David Tomas",
-                            eventId = "1234",
-                            isGoing = false,
-                            remindAt = 0L
-                        )
-                    ),
+                    attendeeList = state.attendees ?: emptyList(),
                     onDeleteAttendeeIconClick = {},
+                    onAddAttendeeButtonClick = {onAction(AgendaDetailAction.OnAddVisitorIconClick)},
                     isEditable = state.screenMode != ScreenMode.REVIEW,
                 )
             }
@@ -221,7 +191,25 @@ fun AgendaDetailScreen(
                 }
             }
         }
+        if (state.isAddVisitorDialogShown)
+            AlertDialogAddVisitor(
+                isEmailChecked = state.isEmailChecked,
+                emailErrMsg = state.addingVisitorEmailErrMsg?.asString(),
+                onEmailChanged = {
+                    onAction(AgendaDetailAction.OnEmailChanged(it))
+                },
+                onEmailInputFocusChanged = {
+                    onAction(AgendaDetailAction.OnEmailInputFocusChanged(it))
+                },
+                onAddButtonClicked = {
+                    onAction(AgendaDetailAction.OnAddVisitorButtonClicked)
+                },
+                onCloseIconClicked = {
+                    onAction(AgendaDetailAction.OnCloseAddVisitorDialogClick)
+                }
+            )
     }
+
 }
 
 class PreviewParameters(

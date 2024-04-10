@@ -73,7 +73,10 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                             }
                         )
                     ) {
-                        AgendaDetailRoot(navController = navController)
+                        AgendaDetailRoot(
+                            snackbarHostState = snackbarHostState,
+                            navController = navController
+                        )
                     }
                 }
                 composable(

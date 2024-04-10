@@ -3,6 +3,7 @@ package com.davidtomas.taskyapp.features.agenda.data.event.local.source
 import com.davidtomas.taskyapp.features.agenda.data.event.local.entity.EventEntity
 import com.davidtomas.taskyapp.features.agenda.data.event.local.mapper.toEventEntity
 import com.davidtomas.taskyapp.features.agenda.data.event.local.mapper.toEventModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
@@ -40,6 +41,16 @@ class EventLocalSourceImpl(
         realmDb.write {
             val eventToDelete = query<EventEntity>("id == $0", eventId).find().first()
             delete(eventToDelete)
+        }
+    }
+
+    override suspend fun saveAttendee(eventId: String, attendeeModel: AttendeeModel) {
+        realmDb.write {
+            val eventToUpdate = query<EventEntity>("id == $0", eventId).find().first()
+            val actualAttendeeList = eventToUpdate.toEventModel().attendees
+            val eventModified =
+                eventToUpdate.toEventModel().copy(attendees = actualAttendeeList + attendeeModel)
+            copyToRealm(eventModified.toEventEntity(), UpdatePolicy.ALL)
         }
     }
 }

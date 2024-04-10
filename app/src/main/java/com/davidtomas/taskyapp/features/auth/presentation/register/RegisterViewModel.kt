@@ -99,7 +99,7 @@ class RegisterViewModel(
         when (inputValidationType) {
             is InputValidationType.EmailInputValidationType ->
                 state =
-                    state.copy(isEmailChanged = true)
+                    state.copy(isEmailChecked = true)
 
             is InputValidationType.UserNameInputValidationType ->
                 state =
@@ -117,7 +117,7 @@ class RegisterViewModel(
         when (inputValidationType) {
             is InputValidationType.EmailInputValidationType ->
                 state =
-                    state.copy(isEmailChanged = false)
+                    state.copy(isEmailChecked = false)
 
             is InputValidationType.UserNameInputValidationType ->
                 state =

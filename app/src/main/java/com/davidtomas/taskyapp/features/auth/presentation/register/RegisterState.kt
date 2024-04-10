@@ -12,5 +12,5 @@ data class RegisterState(
     val passwordErrMsg: UiText? = null,
     val isPasswordVisible: Boolean = false,
     val isUserNameChecked: Boolean = false,
-    val isEmailChanged: Boolean = false
+    val isEmailChecked: Boolean = false
 )

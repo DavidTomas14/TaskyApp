@@ -5,7 +5,7 @@ data class EventModel(
     override val title: String,
     override val description: String,
     override val date: Long,
-    val to: Long,
+    val toDate: Long,
     val remindAt: Long,
     val host: String,
     val isUserEventCreator: Boolean,

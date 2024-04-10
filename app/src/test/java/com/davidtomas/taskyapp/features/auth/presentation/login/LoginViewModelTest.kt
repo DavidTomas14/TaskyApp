@@ -104,7 +104,7 @@ class LoginViewModelTest {
                 assertThat(eventCollected).isEqualTo(
                     LoginUiEvent.ShowSnackBar(
                         UiText.StringResource(
-                            R.string.error_bad_request
+                            R.string.error_login_bad_request
                         )
                     )
                 )

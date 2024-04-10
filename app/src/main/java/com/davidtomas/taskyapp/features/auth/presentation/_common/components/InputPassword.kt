@@ -3,7 +3,6 @@ package com.davidtomas.taskyapp.features.auth.presentation._common.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -27,7 +26,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.davidtomas.taskyapp.R
-import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.Shapes
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
@@ -35,13 +33,13 @@ import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 fun InputPassword(
     passwordText: String,
     onPasswordChanged: (String) -> Unit,
+    modifier: Modifier = Modifier,
     isVisible: Boolean = false,
     onVisibilityIconClick: () -> Unit = {},
     errorMessage: String? = null,
     onPasswordFocusChanged: ((Boolean) -> Unit)? = null,
 ) {
     val localFocusManager = LocalFocusManager.current
-    val spacing = LocalSpacing.current
     val colors = TextFieldDefaults.colors(
         focusedTextColor = MaterialTheme.colorScheme.onSurface,
         focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -55,12 +53,7 @@ fun InputPassword(
     )
     val shape = Shapes.medium
     OutlinedTextField(
-        modifier = Modifier
-            .padding(
-                start = spacing.spaceLarge,
-                top = spacing.spaceLarge,
-                end = spacing.spaceLarge
-            )
+        modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
                 onPasswordFocusChanged?.let { it(focusState.isFocused) }

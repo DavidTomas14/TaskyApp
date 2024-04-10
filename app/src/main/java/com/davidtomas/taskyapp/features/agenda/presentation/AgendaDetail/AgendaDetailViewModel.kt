@@ -6,6 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidtomas.taskyapp.R
+import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
+import com.davidtomas.taskyapp.core.domain.model.DataError
+import com.davidtomas.taskyapp.core.presentation.util.UiText
 import com.davidtomas.taskyapp.core.presentation.util.extractDayMillis
 import com.davidtomas.taskyapp.core.presentation.util.extractFromStartOfTheDayOfDateMillis
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
@@ -18,6 +22,8 @@ import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
+import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationError
+import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateEmailUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -30,7 +36,8 @@ open class AgendaDetailViewModel(
     private val eventRepository: EventRepository,
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val validateEmailUseCase: ValidateEmailUseCase,
 ) : ViewModel() {
 
     var state by mutableStateOf(AgendaDetailState())
@@ -77,7 +84,7 @@ open class AgendaDetailViewModel(
                         state = state.copy(
                             title = reminder.title,
                             description = reminder.description,
-                            date = ZonedDateTime.ofInstant(
+                            toDate = ZonedDateTime.ofInstant(
                                 Instant.ofEpochMilli(reminder.date),
                                 ZoneId.systemDefault()
                             ),
@@ -94,7 +101,7 @@ open class AgendaDetailViewModel(
                         state = state.copy(
                             title = task.title,
                             description = task.description,
-                            date = ZonedDateTime.ofInstant(
+                            toDate = ZonedDateTime.ofInstant(
                                 Instant.ofEpochMilli(task.date),
                                 ZoneId.systemDefault()
                             ),
@@ -111,7 +118,7 @@ open class AgendaDetailViewModel(
                         state = state.copy(
                             title = event.title,
                             description = event.description,
-                            date = ZonedDateTime.ofInstant(
+                            fromDate = ZonedDateTime.ofInstant(
                                 Instant.ofEpochMilli(event.date),
                                 ZoneId.systemDefault()
                             ),
@@ -119,7 +126,12 @@ open class AgendaDetailViewModel(
                             agendaType = AgendaType.EVENT,
                             screenMode = screenMode ?: ScreenMode.REVIEW,
                             photos = event.photos.map { it.uri },
-                            attendees = event.attendees
+                            attendees = event.attendees,
+                            host = event.host,
+                            toDate =  ZonedDateTime.ofInstant(
+                                Instant.ofEpochMilli(event.toDate),
+                                ZoneId.systemDefault()
+                            )
                         )
                     }
                 }
@@ -129,7 +141,7 @@ open class AgendaDetailViewModel(
         }
     }
 
-    open fun onAction(agendaDetailAction: AgendaDetailAction) {
+    fun onAction(agendaDetailAction: AgendaDetailAction) {
         when (agendaDetailAction) {
             is AgendaDetailAction.OnEditIconClick -> {
                 state = state.copy(screenMode = ScreenMode.EDIT_ADD)
@@ -137,7 +149,7 @@ open class AgendaDetailViewModel(
 
             is AgendaDetailAction.OnSaveClick -> {
                 viewModelScope.launch {
-                    val dateMillis = state.date.toInstant().toEpochMilli()
+                    val dateMillis = state.fromDate.toInstant().toEpochMilli()
                     val remindAt = dateMillis - state.remindIn
                     when (agendaType) {
                         AgendaType.TASK -> {
@@ -174,8 +186,8 @@ open class AgendaDetailViewModel(
                                     date = dateMillis,
                                     remindAt = remindAt,
                                     isUserEventCreator = true,
-                                    attendees = listOf(),
-                                    to = 0L,
+                                    attendees = state.attendees ?: listOf(),
+                                    toDate = state.toDate.toInstant().toEpochMilli(),
                                     host = "1234",
                                     photos = state.photos?.let {
                                         it.map { uri ->
@@ -227,9 +239,9 @@ open class AgendaDetailViewModel(
             is AgendaDetailAction.OnHourMinutesChanged -> {
 
                 state = state.copy(
-                    date = ZonedDateTime.ofInstant(
+                    toDate = ZonedDateTime.ofInstant(
                         Instant.ofEpochMilli(
-                            state.date.extractFromStartOfTheDayOfDateMillis() +
+                            state.toDate.extractFromStartOfTheDayOfDateMillis() +
                                 agendaDetailAction.millisOfHour +
                                 agendaDetailAction.millisOfMinutes
                         ),
@@ -240,10 +252,10 @@ open class AgendaDetailViewModel(
 
             is AgendaDetailAction.OnDateChanged -> {
                 state = state.copy(
-                    date = ZonedDateTime.ofInstant(
+                    toDate = ZonedDateTime.ofInstant(
                         Instant.ofEpochMilli(
                             agendaDetailAction.millisOfDate.extractFromStartOfTheDayOfDateMillis() +
-                                state.date.extractDayMillis()
+                                    state.toDate.extractDayMillis()
                         ),
                         ZoneId.systemDefault()
                     ),
@@ -276,7 +288,98 @@ open class AgendaDetailViewModel(
                 )
             }
 
+            is AgendaDetailAction.OnEmailChanged -> {
+                state = state.copy(
+                    addingVisitorEmail = agendaDetailAction.email
+                )
+            }
+
+            is AgendaDetailAction.OnEmailInputFocusChanged -> {
+                if (agendaDetailAction.isFocused || state.addingVisitorEmail == String.EMPTY_STRING) {
+                    state = state.copy(
+                        isEmailChecked = false,
+                        addingVisitorEmailErrMsg = null
+                    )
+                } else {
+                    validateInputs()
+                }
+            }
+
+            is AgendaDetailAction.OnAddVisitorButtonClicked -> {
+                viewModelScope.launch {
+                    eventRepository.checkAttendee(state.addingVisitorEmail).fold(
+                        onError = {
+                            val message = when (it) {
+                                DataError.Network.BAD_REQUEST -> {
+                                    UiText.StringResource(R.string.error_email_visitor_bad_request)
+                                }
+
+                                DataError.Network.NO_INTERNET -> {
+                                    UiText.StringResource(R.string.error_no_internet)
+                                }
+
+                                else -> {
+                                    UiText.StringResource(R.string.error_unknown)
+                                }
+                            }
+                            _uiEvent.send(
+                                AgendaDetailUiEvent.ShowSnackBar(
+                                    message
+                                )
+                            )
+                        },
+                        onSuccess = { attendeeModel ->
+                            if (attendeeModel == null) {
+                                _uiEvent.send(
+                                    AgendaDetailUiEvent.ShowSnackBar(
+                                        UiText.StringResource(R.string.error_visitor_does_not_exist)
+                                    )
+                                )
+                            } else {
+                                state = state.copy(
+                                    attendees = state.attendees?.plus(attendeeModel)
+                                )
+                                _uiEvent.send(
+                                    AgendaDetailUiEvent.ShowSnackBar(
+                                        UiText.StringResource(R.string.message_added_visitor)
+                                    )
+                                )
+                            }
+                        }
+                    )
+                    state = state.copy(isAddVisitorDialogShown = false)
+                }
+            }
+
+            is AgendaDetailAction.OnAddVisitorIconClick -> {
+                state = state.copy(isAddVisitorDialogShown = true)
+            }
+
+            is AgendaDetailAction.OnCloseAddVisitorDialogClick -> {
+                state = state.copy(isAddVisitorDialogShown = false)
+            }
+
             else -> Unit
+        }
+    }
+
+    private fun validateInputs() {
+        when (validateEmailUseCase(state.addingVisitorEmail)) {
+
+            InputValidationError.EmailValidatorError.Missing -> {
+                state =
+                    state.copy(addingVisitorEmailErrMsg = UiText.StringResource(R.string.error_mandatory_field))
+            }
+
+            InputValidationError.EmailValidatorError.Format -> {
+                state =
+                    state.copy(addingVisitorEmailErrMsg = UiText.StringResource(R.string.error_email_wrong_format))
+            }
+
+            else -> {
+                state =
+                    state.copy(isEmailChecked = true)
+            }
         }
     }
 }
