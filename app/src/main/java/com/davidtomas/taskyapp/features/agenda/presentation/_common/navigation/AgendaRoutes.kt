@@ -15,4 +15,5 @@ object AgendaRoutes {
     const val EDITED_TYPE_PARAM = "editedType"
     const val SCREEN_MODE_PARAM = "screenMode"
     const val PHOTO_URI_PARAM = "photo_uri"
+    const val IS_PHOTO_DELETED_PARAM = "is_photo_deleted"
 }
