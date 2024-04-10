@@ -16,4 +16,5 @@ sealed class AgendaDetailAction {
     data class OnDescriptionChanged(val description: String) : AgendaDetailAction()
     data class OnAddedPhoto(val photoUri: String) : AgendaDetailAction()
     data class OnPhotoClicked(val photoUri: String) : AgendaDetailAction()
+    class OnPhotoDeleted(val uri: String) : AgendaDetailAction()
 }

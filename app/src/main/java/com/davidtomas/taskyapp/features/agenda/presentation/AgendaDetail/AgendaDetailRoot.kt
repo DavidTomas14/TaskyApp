@@ -2,8 +2,9 @@ package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.davidtomas.taskyapp.core.presentation.util.ObserveAsEvents
 import com.davidtomas.taskyapp.features.agenda.domain.model.EditType
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
 import com.davidtomas.taskyapp.features.agenda.presentation._common.screen.AgendaDetailScreen
@@ -19,12 +20,18 @@ fun AgendaDetailRoot(
         .currentBackStackEntry
         ?.savedStateHandle
         ?.getStateFlow<String?>(AgendaRoutes.EDITED_TEXT_PARAM, null)
-        ?.collectAsState()
+        ?.collectAsStateWithLifecycle()
     val editedType = navController
         .currentBackStackEntry
         ?.savedStateHandle
         ?.getStateFlow<String?>(AgendaRoutes.EDITED_TYPE_PARAM, null)
-        ?.collectAsState()
+        ?.collectAsStateWithLifecycle()
+
+    val deletedPhoto = navController
+        .currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<String?>(AgendaRoutes.IS_PHOTO_DELETED_PARAM, null)
+        ?.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = editedText, key2 = editedType) {
         editedText?.value?.let { editedText ->
@@ -45,14 +52,20 @@ fun AgendaDetailRoot(
                 }
             }
         }
-        agendaDetailViewModel.uiEvent.collect { event ->
-            when (event) {
-                is AgendaDetailUiEvent.NavigateUp -> {
-                    navController.navigateUp()
-                }
+    }
+    LaunchedEffect(key1 = deletedPhoto) {
+        deletedPhoto?.value?.let { uri ->
+            agendaDetailViewModel.onAction(AgendaDetailAction.OnPhotoDeleted(uri))
+        }
+    }
+    ObserveAsEvents(agendaDetailViewModel.uiEvent) { event ->
+        when (event) {
+            is AgendaDetailUiEvent.NavigateUp -> {
+                navController.navigateUp()
             }
         }
     }
+
     AgendaDetailScreen(
         state = agendaDetailViewModel.state,
         onAction = { agendaAction ->

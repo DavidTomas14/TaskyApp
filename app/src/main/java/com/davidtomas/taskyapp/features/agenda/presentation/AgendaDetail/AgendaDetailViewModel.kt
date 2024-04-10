@@ -68,7 +68,7 @@ open class AgendaDetailViewModel(
         }
     }
 
-    private fun populateData() {
+    fun populateData() {
         agendaItemId?.let {
             when (agendaType) {
                 AgendaType.REMINDER -> {
@@ -267,6 +267,12 @@ open class AgendaDetailViewModel(
             is AgendaDetailAction.OnAddedPhoto -> {
                 state = state.copy(
                     photos = state.photos?.plus(agendaDetailAction.photoUri)
+                )
+            }
+
+            is AgendaDetailAction.OnPhotoDeleted -> {
+                state = state.copy(
+                    photos = state.photos?.minus(agendaDetailAction.uri)
                 )
             }
 
