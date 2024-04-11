@@ -25,8 +25,11 @@ class ReminderLocalSourceImpl(
         }
     }
 
-    override suspend fun getReminder(): Flow<List<ReminderModel>> = realmDb
-        .query<ReminderEntity>()
+    override suspend fun getReminderByDate(
+        startOfDayMillis: Long,
+        endOfDateMillis: Long
+    ): Flow<List<ReminderModel>> = realmDb
+        .query<ReminderEntity>("time > $0 && time < $1", startOfDayMillis, endOfDateMillis)
         .asFlow()
         .map { results ->
             results.list.toList().map { it.toReminderModel() }

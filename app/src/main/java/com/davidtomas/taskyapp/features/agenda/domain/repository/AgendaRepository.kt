@@ -6,7 +6,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaModel
 import kotlinx.coroutines.flow.Flow
 
 interface AgendaRepository {
-    suspend fun observeAgenda(): Flow<List<AgendaModel>>
+    suspend fun observeAgendaByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<AgendaModel>>
 
     suspend fun deleteAgendaItem(agendaModel: AgendaModel)
 

@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,11 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.presentation.components.Header
+import com.davidtomas.taskyapp.core.presentation.util.formatToMMM
 import com.davidtomas.taskyapp.core.presentation.util.formatToMMMdHHmm
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
@@ -43,7 +42,6 @@ import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.Ca
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.CardItem2
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.InitialsIcon
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.MonthSelector
-import java.time.DayOfWeek
 import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -73,7 +71,10 @@ fun AgendaScreen(
                 modifier = Modifier.padding(vertical = spacing.spaceSmall),
                 leadingComposable = {
                     MonthSelector(
-                        month = "March"
+                        month = state.dateSelected.formatToMMM(),
+                        onDateSelected = {
+                            onAction(AgendaAction.OnDateMonthPickerSelected(it))
+                        }
                     )
                 },
                 trailingComposable = {
@@ -114,15 +115,18 @@ fun AgendaScreen(
                         .padding(15.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    DayOfWeek.values().forEach {
-                        CalendarDayItem(weekDay = it.name.substring(0, 1), monthDay = "1")
+                    state.weekShown.forEach { (dayOfWeek, date) ->
+                        CalendarDayItem(
+                            weekDay = dayOfWeek.name.substring(0, 1),
+                            monthDay = date.dayOfMonth.toString(),
+                            isDaySelected = date.dayOfMonth == state.dateSelected.dayOfMonth &&
+                                date.monthValue == state.dateSelected.monthValue,
+                            onDateSelected = {
+                                onAction(AgendaAction.OnDayClicked(date))
+                            }
+                        )
                     }
                 }
-                Text(
-                    modifier = Modifier.padding(vertical = spacing.spaceSmall),
-                    text = "Today",
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                )
                 LazyColumn(
                     contentPadding = PaddingValues(vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -139,7 +143,7 @@ fun AgendaScreen(
                                 },
                                 description = description,
                                 fromDate = date.formatToMMMdHHmm(),
-                                toDate = if (this is EventModel) toDate.formatToMMMdHHmm() else null ,
+                                toDate = if (this is EventModel) toDate.formatToMMMdHHmm() else null,
                                 isDone = when (this) {
                                     is TaskModel -> {
                                         isDone

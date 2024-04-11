@@ -26,11 +26,11 @@ class AgendaRepositoryImpl(
     private val reminderLocalSource: ReminderLocalSource,
     private val taskLocalSource: TaskLocalSource
 ) : AgendaRepository {
-    override suspend fun observeAgenda(): Flow<List<AgendaModel>> =
+    override suspend fun observeAgendaByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<AgendaModel>> =
         combine(
-            eventLocalSource.getEvents(),
-            taskLocalSource.getTasks(),
-            reminderLocalSource.getReminder(),
+            eventLocalSource.getEventsByDate(startOfDayMillis, endOfDateMillis),
+            taskLocalSource.getTasksByDate(startOfDayMillis, endOfDateMillis),
+            reminderLocalSource.getReminderByDate(startOfDayMillis, endOfDateMillis),
         ) { events, tasks, reminder ->
             val listAgendaModel = mutableListOf<AgendaModel>()
             if (events.isNotEmpty()) listAgendaModel.addAll(events)

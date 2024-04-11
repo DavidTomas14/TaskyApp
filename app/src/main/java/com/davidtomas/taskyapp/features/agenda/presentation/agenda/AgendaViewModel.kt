@@ -5,14 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidtomas.taskyapp.core.presentation.util.daysOfWeekIncludingGivenDate
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
+import com.davidtomas.taskyapp.features.agenda.domain.useCase.ObserveSelectedDayAgendaUseCase
 import com.davidtomas.taskyapp.features.auth.domain.AuthRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class AgendaViewModel(
     private val agendaRepository: AgendaRepository,
+    private val observeSelectedDayAgendaUseCase: ObserveSelectedDayAgendaUseCase,
     private val authRepository: AuthRepository,
     private val taskRepository: TaskRepository,
 ) : ViewModel() {
@@ -20,13 +28,16 @@ class AgendaViewModel(
     var state by mutableStateOf(AgendaState())
         private set
 
+    private val _selectedDate = MutableStateFlow(ZonedDateTime.now())
+    private val selectedDate: StateFlow<ZonedDateTime> = _selectedDate
+
     init {
         viewModelScope.launch {
             agendaRepository.fetchAgenda().fold(
                 onError = {},
                 onSuccess = {}
             )
-            agendaRepository.observeAgenda().collectLatest {
+            observeSelectedDayAgendaUseCase(selectedDate).collectLatest {
                 state = state.copy(agendaItems = it)
             }
         }
@@ -56,9 +67,24 @@ class AgendaViewModel(
                 )
             }
 
-            is AgendaAction.OnDaySelected -> TODO()
+            is AgendaAction.OnDayClicked -> {
+                state = state.copy(
+                    dateSelected = agendaAction.dateSelected
+                )
+                _selectedDate.value = agendaAction.dateSelected
+            }
 
-            AgendaAction.OnMonthPickerClicked -> TODO()
+            is AgendaAction.OnDateMonthPickerSelected -> {
+                val dateSelected = ZonedDateTime.ofInstant(
+                    Instant.ofEpochMilli(agendaAction.millisOfDateSelected),
+                    ZoneId.systemDefault()
+                )
+                state = state.copy(
+                    dateSelected = dateSelected,
+                    weekShown = dateSelected.daysOfWeekIncludingGivenDate()
+                )
+                _selectedDate.value = dateSelected
+            }
             is AgendaAction.OnDeleteAgendaItemClicked -> {
                 viewModelScope.launch {
                     agendaRepository.deleteAgendaItem(agendaAction.agendaModel)

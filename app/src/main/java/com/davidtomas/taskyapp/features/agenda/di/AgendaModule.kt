@@ -23,6 +23,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.PhotoRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
+import com.davidtomas.taskyapp.features.agenda.domain.useCase.ObserveSelectedDayAgendaUseCase
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaViewModel
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailViewModel
 import com.davidtomas.taskyapp.features.agenda.presentation.editText.EditTextViewModel
@@ -35,7 +36,12 @@ import org.koin.dsl.module
 
 val agendaModule = module {
     dataModule()
+    domainModule()
     presentationModule()
+}
+
+private fun Module.domainModule() {
+    factoryOf(::ObserveSelectedDayAgendaUseCase)
 }
 
 private fun Module.dataModule() {

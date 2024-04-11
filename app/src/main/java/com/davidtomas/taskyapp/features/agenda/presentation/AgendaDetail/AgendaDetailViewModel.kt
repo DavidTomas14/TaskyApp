@@ -128,7 +128,7 @@ open class AgendaDetailViewModel(
                             photos = event.photos.map { it.uri },
                             attendees = event.attendees,
                             host = event.host,
-                            toDate =  ZonedDateTime.ofInstant(
+                            toDate = ZonedDateTime.ofInstant(
                                 Instant.ofEpochMilli(event.toDate),
                                 ZoneId.systemDefault()
                             )
@@ -255,7 +255,7 @@ open class AgendaDetailViewModel(
                     toDate = ZonedDateTime.ofInstant(
                         Instant.ofEpochMilli(
                             agendaDetailAction.millisOfDate.extractFromStartOfTheDayOfDateMillis() +
-                                    state.toDate.extractDayMillis()
+                                state.toDate.extractDayMillis()
                         ),
                         ZoneId.systemDefault()
                     ),

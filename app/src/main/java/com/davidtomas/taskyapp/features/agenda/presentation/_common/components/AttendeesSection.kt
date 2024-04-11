@@ -141,5 +141,5 @@ fun AttendeesSection(
             }
         }
         Spacer(modifier = Modifier.height(25.dp))
-        }
     }
+}

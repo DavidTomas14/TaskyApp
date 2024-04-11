@@ -57,9 +57,8 @@ fun BasicInput(
         onValueChange = { onInputTextChanged(it) },
         isError = !errorMessage.isNullOrBlank(),
         keyboardOptions = keyboardOptions,
-        keyboardActions = KeyboardActions{
+        keyboardActions = KeyboardActions {
             localFocusManager.clearFocus(true)
-
         },
         label = {
             Text(

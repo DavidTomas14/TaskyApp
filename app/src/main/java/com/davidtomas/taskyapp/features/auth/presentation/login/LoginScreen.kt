@@ -118,10 +118,10 @@ fun Form(
     Column(
         modifier = modifier
             .padding(
-            start = spacing.spaceLarge,
-            top = spacing.spaceLarge,
-            end = spacing.spaceLarge
-        )
+                start = spacing.spaceLarge,
+                top = spacing.spaceLarge,
+                end = spacing.spaceLarge
+            )
             .fillMaxWidth()
     ) {
         BasicInput(

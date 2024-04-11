@@ -29,5 +29,4 @@ class AttendeeServiceImpl(
         }.map {
             it.toAttendeeModel()
         }
-
 }
