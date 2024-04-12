@@ -35,6 +35,7 @@ fun RegisterScreen(
     state: RegisterState,
     onAction: (RegisterAction) -> Unit
 ) {
+    val spacing = LocalSpacing.current
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -96,7 +97,7 @@ fun RegisterScreen(
                     onAction(RegisterAction.OnRegisterButtonClicked)
                 },
                 isUserNameChecked = state.isUserNameChecked,
-                isEmailChecked = state.isEmailChanged
+                isEmailChecked = state.isEmailChecked
             )
         }
     }
@@ -152,6 +153,11 @@ fun Form(
     val spacing = LocalSpacing.current
     Column(
         modifier = modifier
+            .padding(
+                start = spacing.spaceLarge,
+                top = spacing.spaceLarge,
+                end = spacing.spaceLarge
+            )
     ) {
         BasicInput(
             label = stringResource(id = R.string.label_name),
@@ -189,9 +195,7 @@ fun Form(
         Button(
             modifier = Modifier
                 .padding(
-                    start = spacing.spaceLarge,
                     top = spacing.spaceLarge,
-                    end = spacing.spaceLarge
                 )
                 .fillMaxWidth(),
             onClick = onButtonClicked

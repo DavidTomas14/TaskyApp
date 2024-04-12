@@ -32,8 +32,8 @@ class TaskLocalSourceImpl(
             results.list.toList().map { it.toTaskModel() }
         }
 
-    override suspend fun getTaskById(tasktId: String): TaskModel = realmDb
-        .query<TaskEntity>("id == $0", tasktId).find().first()
+    override suspend fun getTaskById(taskId: String): TaskModel = realmDb
+        .query<TaskEntity>("id == $0", taskId).find().first()
         .toTaskModel()
 
     override suspend fun deleteTask(taskId: String) {

@@ -2,7 +2,7 @@ package com.davidtomas.taskyapp.features.auth.presentation._common.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
-import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 
 @Composable
@@ -25,13 +25,14 @@ fun BasicInput(
     inputText: String,
     onInputTextChanged: (String) -> Unit,
     label: String,
+    modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onInputFocusChanged: ((Boolean) -> Unit)? = null,
     errorMessage: String? = null,
     isInputChecked: Boolean = false,
     leadingIcon: ImageVector? = null
 ) {
-    val spacing = LocalSpacing.current
+    val localFocusManager = LocalFocusManager.current
     val successColor = Color(0xFF279F70)
     val colors = TextFieldDefaults.colors(
         disabledTextColor = Color.DarkGray,
@@ -46,12 +47,7 @@ fun BasicInput(
     )
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(
-                start = spacing.spaceLarge,
-                top = spacing.spaceLarge,
-                end = spacing.spaceLarge
-            )
+        modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
                 onInputFocusChanged?.let { it(focusState.isFocused) }
@@ -61,6 +57,10 @@ fun BasicInput(
         onValueChange = { onInputTextChanged(it) },
         isError = !errorMessage.isNullOrBlank(),
         keyboardOptions = keyboardOptions,
+        keyboardActions = KeyboardActions{
+            localFocusManager.clearFocus(true)
+
+        },
         label = {
             Text(
                 text = label

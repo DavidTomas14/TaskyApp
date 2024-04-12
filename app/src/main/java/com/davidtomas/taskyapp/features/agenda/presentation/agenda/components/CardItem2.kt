@@ -27,12 +27,13 @@ import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownItems
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.DropDownOptions
+import java.util.Locale
 
 @Composable
 fun CardItem2(
     title: String,
     description: String,
-    date: String,
+    fromDate: String,
     isDone: Boolean,
     isDropDownMenuShown: Boolean,
     onDismissDropDownMenu: () -> Unit,
@@ -44,6 +45,7 @@ fun CardItem2(
     onOpenOptionClick: () -> Unit,
     onEditOptionClick: () -> Unit,
     onDeleteOptionClick: () -> Unit,
+    toDate: String? = null,
     onBulletClick: (() -> Unit)? = null
 ) {
     Card(
@@ -136,7 +138,9 @@ fun CardItem2(
                 modifier = Modifier.padding(top = 40.dp),
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.bodyMedium,
-                text = date,
+                text = if (toDate !=  null)String.format(
+                    Locale.getDefault(), "%s - %s", fromDate, toDate
+                ) else fromDate,
                 color = onPrimaryColor.copy(0.8f)
             )
         }
@@ -151,7 +155,7 @@ fun CardItem2Preview() {
             CardItem2(
                 title = "Project X",
                 description = "Just Work",
-                date = "Mar 5, 10:00",
+                fromDate = "Mar 5, 10:00",
                 isDone = false,
                 isDropDownMenuShown = true,
                 onDismissDropDownMenu = {},
@@ -166,7 +170,7 @@ fun CardItem2Preview() {
             CardItem2(
                 title = "Project X",
                 description = "Just Work",
-                date = "Mar 5, 10:00",
+                fromDate = "Mar 5, 10:00",
                 isDone = true,
                 isDropDownMenuShown = false,
                 onDismissDropDownMenu = {},

@@ -2,6 +2,7 @@ package com.davidtomas.taskyapp.features.agenda.presentation._common.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 fun AttendeesSection(
     attendeeList: List<AttendeeModel>,
     isEditable: Boolean,
+    onAddAttendeeButtonClick: () -> Unit,
     onDeleteAttendeeIconClick: (AttendeeModel) -> Unit
 ) {
     var visitorsTypeSelected by remember {
@@ -63,7 +65,7 @@ fun AttendeesSection(
                     .border(
                         border = BorderStroke(2.dp, Color.Gray)
                     )
-                    .clickable {},
+                    .clickable { onAddAttendeeButtonClick() },
                 contentScale = ContentScale.Fit
             )
         }
@@ -87,14 +89,24 @@ fun AttendeesSection(
         Column(
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            goingList.forEach {
-                AttendeeItem(
-                    fullName = it.fullName,
-                    onDeleteIconClicked = {
-                        onDeleteAttendeeIconClick(it)
-                    },
-                    isEditable = isEditable
+            if (goingList.isEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    text = "Empty List"
                 )
+            } else {
+                goingList.forEach {
+                    AttendeeItem(
+                        fullName = it.fullName,
+                        onDeleteIconClicked = {
+                            onDeleteAttendeeIconClick(it)
+                        },
+                        isEditable = isEditable
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(17.dp))
@@ -108,16 +120,26 @@ fun AttendeesSection(
         Column(
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            notGoingList.forEach {
-                AttendeeItem(
-                    fullName = it.fullName,
-                    onDeleteIconClicked = {
-                        onDeleteAttendeeIconClick(it)
-                    },
-                    isEditable = isEditable
+            if (notGoingList.isEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    text = "Empty List"
                 )
+            } else {
+                notGoingList.forEach {
+                    AttendeeItem(
+                        fullName = it.fullName,
+                        onDeleteIconClicked = {
+                            onDeleteAttendeeIconClick(it)
+                        },
+                        isEditable = isEditable
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(25.dp))
+        }
     }
-}

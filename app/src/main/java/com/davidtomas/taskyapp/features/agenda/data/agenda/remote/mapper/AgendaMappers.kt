@@ -16,7 +16,7 @@ fun EventResponse.toEventModel() = EventModel(
     title = title,
     description = description,
     date = from,
-    to = to,
+    toDate = to,
     remindAt = remindAt,
     host = host,
     isUserEventCreator = isUserEventCreator,
@@ -29,6 +29,7 @@ fun EventResponse.toEventModel() = EventModel(
 )
 
 fun AttendeeResponse.toAttendeeModel() = AttendeeModel(
+    userId = userId,
     email = email,
     fullName = fullName,
     eventId = eventId,

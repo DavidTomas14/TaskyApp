@@ -7,7 +7,6 @@ sealed class AgendaDetailAction {
     data object OnDeleteButtonClick : AgendaDetailAction()
     data class OnHourMinutesChanged(val millisOfHour: Long, val millisOfMinutes: Long) :
         AgendaDetailAction()
-
     data class OnDateChanged(val millisOfDate: Long) : AgendaDetailAction()
     data class OnNotificationOptionSelected(val millisOfNotification: Long) : AgendaDetailAction()
     data object OnNavigateToEditTitleClick : AgendaDetailAction()
@@ -17,4 +16,9 @@ sealed class AgendaDetailAction {
     data class OnAddedPhoto(val photoUri: String) : AgendaDetailAction()
     data class OnPhotoClicked(val photoUri: String) : AgendaDetailAction()
     class OnPhotoDeleted(val uri: String) : AgendaDetailAction()
+    data class OnEmailChanged(val email: String) : AgendaDetailAction()
+    data class OnEmailInputFocusChanged(val isFocused: Boolean) : AgendaDetailAction()
+    data object OnAddVisitorButtonClicked : AgendaDetailAction()
+    data object OnCloseAddVisitorDialogClick : AgendaDetailAction()
+    data object OnAddVisitorIconClick : AgendaDetailAction()
 }

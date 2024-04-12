@@ -17,6 +17,13 @@ fun Long?.formatToMMDDYY(): String {
     return defaultZoneDateTime.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
 }
 
+fun Long?.formatToMMMdHHmm(): String {
+    val millis = this ?: Instant.now().toEpochMilli()
+    val defaultZoneDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault())
+    return defaultZoneDateTime.format(DateTimeFormatter.ofPattern("MMM, d HH:mm"))
+}
+
 fun formatHoursAndMinutes(hours: Int, minutes: Int): String = String.format(
     Locale.getDefault(), "%02d:%02d", hours, minutes
 )

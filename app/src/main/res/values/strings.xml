@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">TaskyApp</string>
+    <string name="btn_add_visitor">ADD</string>
     <string name="btn_text_log_in">Log in</string>
     <string name="btn_text_register">Get Register</string>
     <string name="error_email_wrong_format">The format of the email is wrong</string>
@@ -13,11 +14,14 @@
     <string name="error_server">There was a server error</string>
     <string name="error_serialization">There was a serialization error</string>
     <string name="error_unknown">An unexpected error occurred</string>
-    <string name="error_bad_request">The email or password you entered is incorrect</string>
+    <string name="error_login_bad_request">The email or password you entered is incorrect</string>
+    <string name="error_email_visitor_bad_request">You can\'t add yourself</string>
     <string name="error_unauthorized">Access is denied</string>
+    <string name="error_visitor_does_not_exist">Visitor doesn\'t Exist</string>
     <string name="label_name">Username</string>
     <string name="label_email">Email address</string>
     <string name="label_password">Password</string>
+    <string name="message_added_visitor">Visitor Added Successfully!</string>
     <string name="title_register">Create your Account</string>
     <string name="title_log_in">Introduce your Credentials</string>
     <string name="txt_dont_have_an_account">DON\'T HAVE AN ACCOUNT?</string>
