@@ -1,6 +1,7 @@
 package com.davidtomas.taskyapp.features.agenda.data.task.local.mapper
 
 import com.davidtomas.taskyapp.features.agenda.data.task.local.entity.TaskEntity
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
 
 fun TaskEntity.toTaskModel() =
@@ -13,7 +14,7 @@ fun TaskEntity.toTaskModel() =
         isDone = this.isDone
     )
 
-fun TaskModel.toTaskEntity() =
+fun TaskModel.toTaskEntity(modType: ModificationType? = null) =
     TaskEntity().apply {
         id = this@toTaskEntity.id
         title = this@toTaskEntity.title
@@ -21,4 +22,6 @@ fun TaskModel.toTaskEntity() =
         time = this@toTaskEntity.date
         remindAt = this@toTaskEntity.remindAt
         isDone = this@toTaskEntity.isDone
+        modificationType = modType?.name
+        isSynced = if (modType != null) false else null
     }

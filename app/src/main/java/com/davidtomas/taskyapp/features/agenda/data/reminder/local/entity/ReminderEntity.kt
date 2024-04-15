@@ -12,4 +12,6 @@ class ReminderEntity : RealmObject {
     var description: String = String.EMPTY_STRING
     var time: Long = 0
     var remindAt: Long = 0
+    var isSynced: Boolean? = null
+    var modificationType: String? = null
 }

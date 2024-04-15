@@ -14,6 +14,7 @@ import com.davidtomas.taskyapp.core.presentation.util.extractDayMillis
 import com.davidtomas.taskyapp.core.presentation.util.extractFromStartOfTheDayOfDateMillis
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import com.davidtomas.taskyapp.features.agenda.domain.model.PhotoModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
@@ -149,6 +150,8 @@ open class AgendaDetailViewModel(
 
             is AgendaDetailAction.OnSaveClick -> {
                 viewModelScope.launch {
+                    val modificationType =
+                        if (agendaItemId == null) ModificationType.ADD else ModificationType.EDIT
                     val dateMillis = state.fromDate.toInstant().toEpochMilli()
                     val remindAt = dateMillis - state.remindIn
                     when (agendaType) {
@@ -161,7 +164,8 @@ open class AgendaDetailViewModel(
                                     date = dateMillis,
                                     remindAt = remindAt,
                                     isDone = false
-                                )
+                                ),
+                                modificationType
                             )
                         }
 
@@ -173,7 +177,8 @@ open class AgendaDetailViewModel(
                                     description = state.description,
                                     date = dateMillis,
                                     remindAt = remindAt,
-                                )
+                                ),
+                                modificationType
                             )
                         }
 

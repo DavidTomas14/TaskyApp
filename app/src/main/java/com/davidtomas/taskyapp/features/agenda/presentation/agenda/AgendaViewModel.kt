@@ -6,7 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidtomas.taskyapp.core.presentation.util.daysOfWeekIncludingGivenDate
+import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
+import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
+import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
 import com.davidtomas.taskyapp.features.agenda.domain.useCase.ObserveSelectedDayAgendaUseCase
 import com.davidtomas.taskyapp.features.auth.domain.AuthRepository
@@ -23,6 +28,7 @@ class AgendaViewModel(
     private val observeSelectedDayAgendaUseCase: ObserveSelectedDayAgendaUseCase,
     private val authRepository: AuthRepository,
     private val taskRepository: TaskRepository,
+    private val reminderRepository: ReminderRepository,
 ) : ViewModel() {
 
     var state by mutableStateOf(AgendaState())
@@ -50,7 +56,8 @@ class AgendaViewModel(
                     taskRepository.saveTask(
                         taskModel = agendaAction.taskModel.copy(
                             isDone = !agendaAction.taskModel.isDone
-                        )
+                        ),
+                        modificationType = ModificationType.EDIT
                     )
                 }
             }
@@ -87,7 +94,11 @@ class AgendaViewModel(
             }
             is AgendaAction.OnDeleteAgendaItemClicked -> {
                 viewModelScope.launch {
-                    agendaRepository.deleteAgendaItem(agendaAction.agendaModel)
+                    when (agendaAction.agendaModel) {
+                        is EventModel -> Unit
+                        is ReminderModel -> reminderRepository.deleteReminder(agendaAction.agendaModel.id)
+                        is TaskModel -> taskRepository.deleteTask(agendaAction.agendaModel.id)
+                    }
                 }
             }
 

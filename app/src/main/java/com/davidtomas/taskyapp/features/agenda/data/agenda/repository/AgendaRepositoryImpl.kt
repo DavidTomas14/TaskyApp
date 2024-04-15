@@ -11,9 +11,6 @@ import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLoca
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.ReminderLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSource
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaModel
-import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
-import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
-import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -37,13 +34,6 @@ class AgendaRepositoryImpl(
             if (tasks.isNotEmpty()) listAgendaModel.addAll(tasks)
             if (reminder.isNotEmpty()) listAgendaModel.addAll(reminder)
             listAgendaModel.toList()
-        }
-
-    override suspend fun deleteAgendaItem(agendaModel: AgendaModel) =
-        when (agendaModel) {
-            is EventModel -> eventLocalSource.deleteEvent(agendaModel.id)
-            is ReminderModel -> reminderLocalSource.deleteReminder(agendaModel.id)
-            is TaskModel -> taskLocalSource.deleteTask(agendaModel.id)
         }
 
     override suspend fun fetchAgenda(): Result<Unit, DataError.Network> {

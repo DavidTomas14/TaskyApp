@@ -3,6 +3,7 @@ package com.davidtomas.taskyapp.features.agenda.data.reminder.local.source
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.entity.ReminderEntity
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.mapper.toReminderEntity
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.mapper.toReminderModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
@@ -13,15 +14,20 @@ import kotlinx.coroutines.flow.map
 class ReminderLocalSourceImpl(
     private val realmDb: Realm
 ) : ReminderLocalSource {
-    override suspend fun saveReminder(reminder: ReminderModel) {
+    override suspend fun saveReminder(reminder: ReminderModel, modificationType: ModificationType) {
         realmDb.write {
-            copyToRealm(reminder.toReminderEntity(), UpdatePolicy.ALL)
+            copyToRealm(reminder.toReminderEntity(modificationType), UpdatePolicy.ALL)
         }
     }
 
     override suspend fun saveReminders(reminders: List<ReminderModel>) {
         realmDb.write {
-            reminders.forEach { copyToRealm(it.toReminderEntity(), UpdatePolicy.ALL) }
+            reminders.forEach {
+                copyToRealm(
+                    it.toReminderEntity(),
+                    UpdatePolicy.ALL
+                )
+            }
         }
     }
 
@@ -39,10 +45,20 @@ class ReminderLocalSourceImpl(
         .query<ReminderEntity>("id == $0", reminderId).find().first()
         .toReminderModel()
 
-    override suspend fun deleteReminder(reminderId: String) {
+    override suspend fun deleteReminder(reminderId: String, modificationType: ModificationType?) {
         realmDb.write {
             val reminderToDelete = query<ReminderEntity>("id == $0", reminderId).find().first()
-            delete(reminderToDelete)
+            modificationType?.let {
+                copyToRealm(
+                    reminderToDelete.apply {
+                        this.modificationType = it.name
+                        this.isSynced = false
+                    },
+                    UpdatePolicy.ALL
+                )
+            } ?: run {
+                delete(reminderToDelete)
+            }
         }
     }
 }

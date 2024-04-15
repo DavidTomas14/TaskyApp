@@ -1,8 +1,8 @@
 package com.davidtomas.taskyapp.features.agenda.data.agenda.remote.mapper
 
-import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.response.AttendeeResponse
-import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.response.EventResponse
-import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.response.PhotoResponse
+import com.davidtomas.taskyapp.features.agenda.data._common.remote.response.AttendeeResponse
+import com.davidtomas.taskyapp.features.agenda.data._common.remote.response.EventResponse
+import com.davidtomas.taskyapp.features.agenda.data._common.remote.response.PhotoResponse
 import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.response.ReminderResponse
 import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.response.TaskResponse
 import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel

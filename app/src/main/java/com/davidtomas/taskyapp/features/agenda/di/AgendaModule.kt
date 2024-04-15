@@ -14,9 +14,13 @@ import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLoca
 import com.davidtomas.taskyapp.features.agenda.data.photo.repository.PhotoRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.ReminderLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.ReminderLocalSourceImpl
+import com.davidtomas.taskyapp.features.agenda.data.reminder.remote.api.ReminderService
+import com.davidtomas.taskyapp.features.agenda.data.reminder.remote.api.ReminderServiceImpl
 import com.davidtomas.taskyapp.features.agenda.data.reminder.repository.ReminderRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSourceImpl
+import com.davidtomas.taskyapp.features.agenda.data.task.remote.api.TaskService
+import com.davidtomas.taskyapp.features.agenda.data.task.remote.api.TaskServiceImpl
 import com.davidtomas.taskyapp.features.agenda.data.task.repository.TaskRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
@@ -58,6 +62,8 @@ private fun Module.dataModule() {
     factoryOf(::ReminderLocalSourceImpl) bind ReminderLocalSource::class
     factoryOf(::PhotoRepositoryImpl) bind PhotoRepository::class
     factoryOf(::PhotoLocalSourceImpl) bind PhotoLocalSource::class
+    factoryOf(::TaskServiceImpl) bind TaskService::class
+    factoryOf(::ReminderServiceImpl) bind ReminderService::class
 }
 
 private fun Module.presentationModule() {

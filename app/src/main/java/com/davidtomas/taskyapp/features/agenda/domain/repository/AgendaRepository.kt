@@ -8,7 +8,5 @@ import kotlinx.coroutines.flow.Flow
 interface AgendaRepository {
     suspend fun observeAgendaByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<AgendaModel>>
 
-    suspend fun deleteAgendaItem(agendaModel: AgendaModel)
-
     suspend fun fetchAgenda(): Result<Unit, DataError.Network>
 }

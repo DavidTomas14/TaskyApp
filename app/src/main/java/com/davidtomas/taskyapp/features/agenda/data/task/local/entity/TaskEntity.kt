@@ -13,4 +13,6 @@ class TaskEntity : RealmObject {
     var time: Long = 0
     var remindAt: Long = 0
     var isDone: Boolean = false
+    var isSynced: Boolean? = null
+    var modificationType: String? = null
 }
