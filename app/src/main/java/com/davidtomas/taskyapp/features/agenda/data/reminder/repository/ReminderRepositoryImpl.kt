@@ -19,7 +19,7 @@ class ReminderRepositoryImpl(
             else -> reminderService.createReminder(reminderModel)
         }.fold(
             onSuccess = {
-                reminderLocalSource.saveReminder(reminderModel, ModificationType.NO_MODIFICATION)
+                reminderLocalSource.saveReminder(reminderModel)
             },
             onError = {
                 reminderLocalSource.saveReminder(reminderModel, modificationType)

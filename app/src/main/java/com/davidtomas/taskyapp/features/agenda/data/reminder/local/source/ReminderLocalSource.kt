@@ -5,7 +5,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import kotlinx.coroutines.flow.Flow
 
 interface ReminderLocalSource {
-    suspend fun saveReminder(reminder: ReminderModel, modificationType: ModificationType)
+    suspend fun saveReminder(reminder: ReminderModel, modificationType: ModificationType? = null)
 
     suspend fun saveReminders(reminders: List<ReminderModel>)
     suspend fun getReminderByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<ReminderModel>>

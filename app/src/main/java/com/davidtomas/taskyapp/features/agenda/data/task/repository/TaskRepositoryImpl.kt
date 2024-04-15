@@ -16,7 +16,7 @@ class TaskRepositoryImpl(
             else -> taskService.createTask(taskModel)
         }.fold(
             onSuccess = {
-                taskLocalSource.saveTask(taskModel, ModificationType.NO_MODIFICATION)
+                taskLocalSource.saveTask(taskModel)
             },
             onError = {
                 taskLocalSource.saveTask(taskModel, modificationType)
