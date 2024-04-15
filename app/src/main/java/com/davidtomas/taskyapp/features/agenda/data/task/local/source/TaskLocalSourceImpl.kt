@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.map
 class TaskLocalSourceImpl(
     private val realmDb: Realm
 ) : TaskLocalSource {
-    override suspend fun saveTask(task: TaskModel, moodificationType: ModificationType) {
+    override suspend fun saveTask(task: TaskModel, modificationType: ModificationType?) {
         realmDb.write {
-            copyToRealm(task.toTaskEntity(modType = moodificationType), UpdatePolicy.ALL)
+            copyToRealm(task.toTaskEntity(modType = modificationType), UpdatePolicy.ALL)
         }
     }
 

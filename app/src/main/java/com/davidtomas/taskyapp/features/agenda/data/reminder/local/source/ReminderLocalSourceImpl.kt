@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.map
 class ReminderLocalSourceImpl(
     private val realmDb: Realm
 ) : ReminderLocalSource {
-    override suspend fun saveReminder(reminder: ReminderModel, modificationType: ModificationType) {
+    override suspend fun saveReminder(reminder: ReminderModel, modificationType: ModificationType?) {
         realmDb.write {
             copyToRealm(reminder.toReminderEntity(modificationType), UpdatePolicy.ALL)
         }

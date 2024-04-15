@@ -5,7 +5,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
 import kotlinx.coroutines.flow.Flow
 
 interface TaskLocalSource {
-    suspend fun saveTask(task: TaskModel, noModification: ModificationType)
+    suspend fun saveTask(task: TaskModel, modificationType: ModificationType? = null)
 
     suspend fun saveTasks(tasks: List<TaskModel>)
 
@@ -13,7 +13,7 @@ interface TaskLocalSource {
     suspend fun getTaskById(taskId: String): TaskModel
 
     suspend fun deleteTask(
-        reminderId: String,
+        taskId: String,
         modificationType: ModificationType? = null
     )
 }
