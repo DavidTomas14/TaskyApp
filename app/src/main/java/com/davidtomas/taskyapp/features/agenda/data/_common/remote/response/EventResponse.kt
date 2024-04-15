@@ -1,4 +1,4 @@
-package com.davidtomas.taskyapp.features.agenda.data.agenda.remote.response
+package com.davidtomas.taskyapp.features.agenda.data._common.remote.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

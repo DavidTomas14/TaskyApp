@@ -1,6 +1,7 @@
 package com.davidtomas.taskyapp.features.agenda.data.reminder.local.mapper
 
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.entity.ReminderEntity
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 
 fun ReminderEntity.toReminderModel() =
@@ -12,11 +13,13 @@ fun ReminderEntity.toReminderModel() =
         remindAt = this.remindAt,
     )
 
-fun ReminderModel.toReminderEntity() =
+fun ReminderModel.toReminderEntity(modType: ModificationType? = null) =
     ReminderEntity().apply {
         id = this@toReminderEntity.id
         title = this@toReminderEntity.title
         description = this@toReminderEntity.description
         time = this@toReminderEntity.date
         remindAt = this@toReminderEntity.remindAt
+        modificationType = modType?.name
+        isSynced = if (modType != null) false else null
     }
