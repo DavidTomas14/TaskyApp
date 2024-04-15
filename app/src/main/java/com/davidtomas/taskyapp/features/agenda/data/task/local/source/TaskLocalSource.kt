@@ -8,7 +8,7 @@ interface TaskLocalSource {
 
     suspend fun saveTasks(tasks: List<TaskModel>)
 
-    suspend fun getTasks(): Flow<List<TaskModel>>
+    suspend fun getTasksByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<TaskModel>>
     suspend fun getTaskById(taskId: String): TaskModel
 
     suspend fun deleteTask(taskId: String)

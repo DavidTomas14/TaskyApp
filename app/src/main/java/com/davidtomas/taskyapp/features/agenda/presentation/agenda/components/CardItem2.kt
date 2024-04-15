@@ -138,7 +138,7 @@ fun CardItem2(
                 modifier = Modifier.padding(top = 40.dp),
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.bodyMedium,
-                text = if (toDate !=  null)String.format(
+                text = if (toDate != null) String.format(
                     Locale.getDefault(), "%s - %s", fromDate, toDate
                 ) else fromDate,
                 color = onPrimaryColor.copy(0.8f)

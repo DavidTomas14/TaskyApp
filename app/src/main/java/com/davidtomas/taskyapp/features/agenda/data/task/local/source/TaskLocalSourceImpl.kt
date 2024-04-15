@@ -25,8 +25,8 @@ class TaskLocalSourceImpl(
         }
     }
 
-    override suspend fun getTasks(): Flow<List<TaskModel>> = realmDb
-        .query<TaskEntity>()
+    override suspend fun getTasksByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<TaskModel>> = realmDb
+        .query<TaskEntity>("time > $0 && time < $1", startOfDayMillis, endOfDateMillis)
         .asFlow()
         .map { results ->
             results.list.toList().map { it.toTaskModel() }

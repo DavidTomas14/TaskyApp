@@ -170,7 +170,7 @@ fun AgendaDetailScreen(
                 AttendeesSection(
                     attendeeList = state.attendees ?: emptyList(),
                     onDeleteAttendeeIconClick = {},
-                    onAddAttendeeButtonClick = {onAction(AgendaDetailAction.OnAddVisitorIconClick)},
+                    onAddAttendeeButtonClick = { onAction(AgendaDetailAction.OnAddVisitorIconClick) },
                     isEditable = state.screenMode != ScreenMode.REVIEW,
                 )
             }
@@ -209,7 +209,6 @@ fun AgendaDetailScreen(
                 }
             )
     }
-
 }
 
 class PreviewParameters(

@@ -26,8 +26,11 @@ class EventLocalSourceImpl(
         }
     }
 
-    override suspend fun getEvents(): Flow<List<EventModel>> = realmDb
-        .query<EventEntity>()
+    override suspend fun getEventsByDate(
+        startOfDayMillis: Long,
+        endOfDateMillis: Long
+    ): Flow<List<EventModel>> = realmDb
+        .query<EventEntity>("from > $0 && from < $1", startOfDayMillis, endOfDateMillis)
         .asFlow()
         .map { results ->
             results.list.toList().map { it.toEventModel() }

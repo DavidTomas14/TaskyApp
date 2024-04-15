@@ -8,7 +8,7 @@ interface EventLocalSource {
     suspend fun saveEvent(event: EventModel)
     suspend fun saveEvents(events: List<EventModel>)
 
-    suspend fun getEvents(): Flow<List<EventModel>>
+    suspend fun getEventsByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<EventModel>>
 
     suspend fun getEventById(eventId: String): EventModel
 
