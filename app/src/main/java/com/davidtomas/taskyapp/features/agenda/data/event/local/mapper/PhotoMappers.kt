@@ -5,10 +5,10 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.PhotoModel
 
 fun PhotoEntity.toPhotoModel() = PhotoModel(
     key = key,
-    uri = uri
+    imageData = imageData
 )
 
 fun PhotoModel.toPhotoEntity() = PhotoEntity().apply {
     key = this@toPhotoEntity.key
-    uri = this@toPhotoEntity.uri
+    imageData = this@toPhotoEntity.imageData
 }

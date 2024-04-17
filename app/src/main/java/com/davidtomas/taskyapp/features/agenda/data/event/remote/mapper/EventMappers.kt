@@ -1,6 +1,7 @@
 package com.davidtomas.taskyapp.features.agenda.data.event.remote.mapper
 
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.request.EventRequest
+import com.davidtomas.taskyapp.features.agenda.data.event.remote.request.UpdateEventRequest
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 
 fun EventModel.toEventRequest() = EventRequest(
@@ -13,4 +14,18 @@ fun EventModel.toEventRequest() = EventRequest(
     attendeeIds = attendees.map {
         it.userId
     }
+)
+
+fun EventModel.toUpdateEventRequest() = UpdateEventRequest(
+    id = id,
+    title = title,
+    description = description,
+    from = date,
+    to = toDate,
+    remindAt = remindAt,
+    attendeeIds = attendees.map {
+        it.userId
+    },
+    deletedPhotoKeys = emptyList(),
+    isGoing = false
 )

@@ -12,6 +12,7 @@ import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.Remind
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSource
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -39,7 +40,7 @@ class AgendaRepositoryImpl(
     override suspend fun fetchAgenda(): Result<Unit, DataError.Network> {
         return coroutineScope {
             agendaService.getAgenda().map {
-                val job1 = launch {
+                val job1 = this.launch(Dispatchers.IO) {
                     eventLocalSource.saveEvents(
                         it.eventResponses.map {
                             it.toEventModel()

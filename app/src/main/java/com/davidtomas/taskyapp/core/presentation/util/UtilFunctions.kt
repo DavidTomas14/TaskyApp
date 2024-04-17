@@ -1,5 +1,6 @@
 package com.davidtomas.taskyapp.core.presentation.util
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -8,6 +9,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 
 fun String.toInitials(): String {
     val words = this.split(" ").filter { it.isNotBlank() }
@@ -29,4 +31,17 @@ fun <T> ObserveAsEvents(flow: Flow<T>, onEvent: suspend (T) -> Unit) {
             }
         }
     }
+}
+
+fun Bitmap.convertToByteArrayMax1MB(): ByteArray {
+    val stream = ByteArrayOutputStream()
+    var quality = 100
+    do {
+        stream.reset() // Clear the buffer
+        this.compress(Bitmap.CompressFormat.JPEG, quality, stream)
+        if (stream.size() > 1 * 1024 * 1024) {
+            quality -= 10 // Decrease quality by 10%
+        }
+    } while (stream.size() > 1 * 1024 * 1024 && quality > 0)
+    return stream.toByteArray()
 }

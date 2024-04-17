@@ -4,8 +4,8 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.davidtomas.taskyapp.core.domain._util.Result
 import com.davidtomas.taskyapp.core.domain._util.isSuccess
-import com.davidtomas.taskyapp.features.auth.data.local.FakeTokenDataStoreImpl
-import com.davidtomas.taskyapp.features.auth.data.local.TokenDataStore
+import com.davidtomas.taskyapp.features.auth.data.local.FakeTaskyDataStoreImpl
+import com.davidtomas.taskyapp.features.auth.data.local.TaskyDataStore
 import com.davidtomas.taskyapp.features.auth.data.remote.api.AuthService
 import com.davidtomas.taskyapp.features.auth.data.remote.api.FakeAuthServiceImpl
 import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
@@ -19,16 +19,16 @@ import kotlin.test.assertTrue
 class AuthRepositoryImplTest {
 
     private lateinit var authRepository: AuthRepositoryImpl
-    private lateinit var tokenDataStore: TokenDataStore
+    private lateinit var taskyDataStore: TaskyDataStore
     private lateinit var authService: AuthService
 
     @BeforeEach
     fun setUp() {
-        tokenDataStore = FakeTokenDataStoreImpl()
+        taskyDataStore = FakeTaskyDataStoreImpl()
         authService = FakeAuthServiceImpl()
         authRepository = AuthRepositoryImpl(
             authService = authService,
-            tokenDataStore = tokenDataStore
+            taskyDataStore = taskyDataStore
         )
     }
 
@@ -43,7 +43,7 @@ class AuthRepositoryImplTest {
             )
             assertTrue { result.isSuccess() }
             assertThat(
-                tokenDataStore.getToken().first()
+                taskyDataStore.getToken().first()
             ).isEqualTo((result as Result.Success).data.token)
         }
 

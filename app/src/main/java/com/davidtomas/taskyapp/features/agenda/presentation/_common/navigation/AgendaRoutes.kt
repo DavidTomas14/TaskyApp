@@ -2,6 +2,7 @@ package com.davidtomas.taskyapp.features.agenda.presentation._common.navigation
 
 object AgendaRoutes {
     // ROUTES
+    const val AGENDA_GRAPH = "agenda_graph"
     const val AGENDA = "agenda"
     const val AGENDA_DETAIL = "agenda_detail"
     const val AGENDA_EDIT_TEXT = "agenda_edit_title_or_description"
@@ -14,6 +15,6 @@ object AgendaRoutes {
     const val EDITED_TEXT_PARAM = "edited_text"
     const val EDITED_TYPE_PARAM = "editedType"
     const val SCREEN_MODE_PARAM = "screenMode"
-    const val PHOTO_URI_PARAM = "photo_uri"
+    const val PHOTO_KEY_PARAM = "photo_key"
     const val IS_PHOTO_DELETED_PARAM = "is_photo_deleted"
 }

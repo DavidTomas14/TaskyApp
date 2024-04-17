@@ -11,13 +11,17 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
+import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
 import com.davidtomas.taskyapp.features.agenda.domain.useCase.ObserveSelectedDayAgendaUseCase
+import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.AgendaUiEvent
 import com.davidtomas.taskyapp.features.auth.domain.AuthRepository
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
@@ -29,10 +33,14 @@ class AgendaViewModel(
     private val authRepository: AuthRepository,
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
+    private val eventRepository: EventRepository,
 ) : ViewModel() {
 
     var state by mutableStateOf(AgendaState())
         private set
+
+    private val _uiEvent = Channel<AgendaUiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     private val _selectedDate = MutableStateFlow(ZonedDateTime.now())
     private val selectedDate: StateFlow<ZonedDateTime> = _selectedDate
@@ -95,7 +103,7 @@ class AgendaViewModel(
             is AgendaAction.OnDeleteAgendaItemClicked -> {
                 viewModelScope.launch {
                     when (agendaAction.agendaModel) {
-                        is EventModel -> Unit
+                        is EventModel -> eventRepository.deleteEvent(agendaAction.agendaModel.id)
                         is ReminderModel -> reminderRepository.deleteReminder(agendaAction.agendaModel.id)
                         is TaskModel -> taskRepository.deleteTask(agendaAction.agendaModel.id)
                     }
@@ -106,7 +114,9 @@ class AgendaViewModel(
                 viewModelScope.launch {
                     authRepository.logout().fold(
                         onError = {},
-                        onSuccess = {}
+                        onSuccess = {
+                            _uiEvent.send(AgendaUiEvent.NavigateToLogin)
+                        }
                     )
                 }
             }

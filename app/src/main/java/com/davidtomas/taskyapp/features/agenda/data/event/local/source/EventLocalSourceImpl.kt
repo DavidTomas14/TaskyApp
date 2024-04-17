@@ -5,6 +5,7 @@ import com.davidtomas.taskyapp.features.agenda.data.event.local.mapper.toEventEn
 import com.davidtomas.taskyapp.features.agenda.data.event.local.mapper.toEventModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
@@ -14,9 +15,9 @@ import kotlinx.coroutines.flow.map
 class EventLocalSourceImpl(
     private val realmDb: Realm
 ) : EventLocalSource {
-    override suspend fun saveEvent(event: EventModel) {
+    override suspend fun saveEvent(event: EventModel, modificationType: ModificationType?) {
         realmDb.write {
-            copyToRealm(event.toEventEntity(), UpdatePolicy.ALL)
+            copyToRealm(event.toEventEntity(modificationType), UpdatePolicy.ALL)
         }
     }
 
@@ -40,10 +41,19 @@ class EventLocalSourceImpl(
         .query<EventEntity>("id == $0", eventId).find().first()
         .toEventModel()
 
-    override suspend fun deleteEvent(eventId: String) {
+    override suspend fun deleteEvent(eventId: String, modificationType: ModificationType?) {
         realmDb.write {
             val eventToDelete = query<EventEntity>("id == $0", eventId).find().first()
-            delete(eventToDelete)
+            modificationType?.let {
+                copyToRealm(
+                    eventToDelete.apply {
+                        this.modificationType = it.name
+                    },
+                    UpdatePolicy.ALL
+                )
+            } ?: run {
+                delete(eventToDelete)
+            }
         }
     }
 

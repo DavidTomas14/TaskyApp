@@ -1,6 +1,6 @@
 package com.davidtomas.taskyapp.features.agenda.presentation._common.components
 
-import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -33,23 +33,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.davidtomas.taskyapp.R
-import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
+import com.davidtomas.taskyapp.core.presentation.util.convertToByteArrayMax1MB
+import com.davidtomas.taskyapp.features.agenda.domain.model.PhotoModel
 
 @Composable
 fun Photos(
-    photos: List<String>,
-    onAddedPhoto: (String) -> Unit,
-    onPhotoClicked: (String) -> Unit,
+    photos: List<PhotoModel>,
+    onAddedPhoto: (ByteArray) -> Unit,
+    onPhotoClicked: (PhotoModel) -> Unit,
     isEditable: Boolean
 ) {
     val context = LocalContext.current
@@ -62,9 +61,13 @@ fun Photos(
         onResult = { uri ->
             selectedImageUri = uri
             uri?.toString()?.let { imageUri ->
-                val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                context.contentResolver.takePersistableUriPermission(uri, flag)
-                onAddedPhoto(imageUri)
+                val bitmap = context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    BitmapFactory.decodeStream(inputStream)
+                }
+                bitmap?.let {
+                    val byteArray = it.convertToByteArrayMax1MB()
+                    onAddedPhoto(byteArray)
+                }
             }
         }
     )
@@ -122,8 +125,15 @@ fun Photos(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             for (photo in groupOfPhotos) {
-                                AsyncImage(
-                                    model = photo,
+                                Image(
+                                    painter = BitmapPainter(
+                                        BitmapFactory.decodeByteArray(
+                                            photo.imageData,
+                                            0,
+                                            photo.imageData.size
+                                        )
+                                            .asImageBitmap()
+                                    ),
                                     contentDescription = "image description",
                                     modifier = Modifier
                                         .alpha(0.8f)
@@ -203,6 +213,7 @@ fun Photos(
         Spacer(modifier = Modifier.height(17.dp))
     }
 }
+/*
 
 class ParametersProvider(
     val photos: List<String>
@@ -235,4 +246,4 @@ fun PhotosComposablePreview(
             isEditable = true
         )
     }
-}
+}*/

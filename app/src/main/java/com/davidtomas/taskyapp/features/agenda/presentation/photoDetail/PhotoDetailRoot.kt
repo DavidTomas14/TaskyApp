@@ -26,7 +26,7 @@ fun PhotoDetailRoot(
                         ?.savedStateHandle
                         ?.set(
                             AgendaRoutes.IS_PHOTO_DELETED_PARAM,
-                            photoDetailViewModel.state.photoUri
+                            photoDetailViewModel.state.photoKey
                         )
                     navController.popBackStack()
                 }

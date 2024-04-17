@@ -3,7 +3,7 @@ package com.davidtomas.taskyapp.core.data.remote.api
 import android.util.Log
 import com.davidtomas.taskyapp.BuildConfig
 import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
-import com.davidtomas.taskyapp.features.auth.data.local.TokenDataStoreImpl
+import com.davidtomas.taskyapp.features.auth.data.local.TaskyDataStore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.auth.Auth
@@ -11,6 +11,7 @@ import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -28,7 +29,7 @@ object TaskyHttpClient {
     private const val LOG_TAG = "KtorClient"
     private const val BASE_URL = "https://tasky.pl-coding.com"
 
-    fun create(tokenDataStoreImpl: TokenDataStoreImpl) = HttpClient(Android) {
+    fun create(taskyDataStore: TaskyDataStore) = HttpClient(Android) {
         expectSuccess = true
         defaultRequest {
             url(BASE_URL)
@@ -38,11 +39,7 @@ object TaskyHttpClient {
         }
         install(Logging) {
             level = LogLevel.ALL
-            logger = object : Logger {
-                override fun log(message: String) {
-                    Log.i(LOG_TAG, message)
-                }
-            }
+            logger = Logger.DEFAULT
         }
         install(ResponseObserver) {
             onResponse { response ->
@@ -61,7 +58,11 @@ object TaskyHttpClient {
         install(Auth) {
             bearer {
                 loadTokens {
-                    tokenDataStoreImpl.getToken().first()
+                    taskyDataStore.getToken().first()
+                        ?.let { BearerTokens(it, String.EMPTY_STRING) }
+                }
+                refreshTokens {
+                    taskyDataStore.getToken().first()
                         ?.let { BearerTokens(it, String.EMPTY_STRING) }
                 }
             }

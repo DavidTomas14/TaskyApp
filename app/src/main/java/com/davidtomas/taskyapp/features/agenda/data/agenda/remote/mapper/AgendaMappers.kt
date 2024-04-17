@@ -10,6 +10,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.PhotoModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
+import java.net.URL
 
 fun EventResponse.toEventModel() = EventModel(
     id = id,
@@ -39,8 +40,13 @@ fun AttendeeResponse.toAttendeeModel() = AttendeeModel(
 
 fun PhotoResponse.toPhotoModel() = PhotoModel(
     key = key,
-    uri = url,
+    imageData = getBytesFromUrl(url)
 )
+
+private fun getBytesFromUrl(url: String): ByteArray {
+    val url = URL(url)
+    return url.readBytes()
+}
 
 fun TaskResponse.toTaskModel() =
     TaskModel(

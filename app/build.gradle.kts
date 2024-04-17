@@ -110,4 +110,6 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     // Coil
     implementation(libs.coil.compose)
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
 }
