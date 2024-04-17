@@ -12,6 +12,9 @@ import com.davidtomas.taskyapp.features.auth.domain.model.AuthModel
 import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.RegisterUseCase
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
+import io.ktor.client.plugins.plugin
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
@@ -49,5 +52,9 @@ class AuthServiceImpl(
         client.safeRequest<Unit> {
             url { path(AuthPaths.LOGOUT_ROUTE) }
             method = HttpMethod.Get
+        }.also {
+            client.plugin(Auth).providers.filterIsInstance<BearerAuthProvider>()
+                .firstOrNull()
+                ?.clearToken()
         }
 }

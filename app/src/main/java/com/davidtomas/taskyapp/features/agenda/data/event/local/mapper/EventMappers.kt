@@ -2,6 +2,7 @@ package com.davidtomas.taskyapp.features.agenda.data.event.local.mapper
 
 import com.davidtomas.taskyapp.features.agenda.data.event.local.entity.EventEntity
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import io.realm.kotlin.ext.toRealmList
 
 fun EventEntity.toEventModel() = EventModel(
@@ -17,7 +18,7 @@ fun EventEntity.toEventModel() = EventModel(
     photos = photos.map { it.toPhotoModel() }
 )
 
-fun EventModel.toEventEntity() = EventEntity().apply {
+fun EventModel.toEventEntity(modType: ModificationType? = null) = EventEntity().apply {
     id = this@toEventEntity.id
     title = this@toEventEntity.title
     description = this@toEventEntity.description
@@ -28,4 +29,5 @@ fun EventModel.toEventEntity() = EventEntity().apply {
     isUserEventCreator = this@toEventEntity.isUserEventCreator
     attendees = this@toEventEntity.attendees.map { it.toAttendeeEntity() }.toRealmList()
     photos = this@toEventEntity.photos.map { it.toPhotoEntity() }.toRealmList()
+    modificationType = modType?.name
 }

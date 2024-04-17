@@ -20,6 +20,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
+import com.davidtomas.taskyapp.features.agenda.domain.repository.PhotoRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
@@ -37,6 +38,7 @@ open class AgendaDetailViewModel(
     private val eventRepository: EventRepository,
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
+    private val photoRepository: PhotoRepository,
     private val savedStateHandle: SavedStateHandle,
     private val validateEmailUseCase: ValidateEmailUseCase,
 ) : ViewModel() {
@@ -76,7 +78,7 @@ open class AgendaDetailViewModel(
         }
     }
 
-    fun populateData() {
+    private fun populateData() {
         agendaItemId?.let {
             when (agendaType) {
                 AgendaType.REMINDER -> {
@@ -126,7 +128,7 @@ open class AgendaDetailViewModel(
                             remindIn = event.date - event.remindAt,
                             agendaType = AgendaType.EVENT,
                             screenMode = screenMode ?: ScreenMode.REVIEW,
-                            photos = event.photos.map { it.uri },
+                            photos = event.photos,
                             attendees = event.attendees,
                             host = event.host,
                             toDate = ZonedDateTime.ofInstant(
@@ -194,15 +196,9 @@ open class AgendaDetailViewModel(
                                     attendees = state.attendees ?: listOf(),
                                     toDate = state.toDate.toInstant().toEpochMilli(),
                                     host = "1234",
-                                    photos = state.photos?.let {
-                                        it.map { uri ->
-                                            PhotoModel(
-                                                key = UUID.randomUUID().toString(),
-                                                uri = uri
-                                            )
-                                        }
-                                    } ?: listOf()
-                                )
+                                    photos = state.photos
+                                ),
+                                modificationType
                             )
                         }
 
@@ -283,13 +279,19 @@ open class AgendaDetailViewModel(
 
             is AgendaDetailAction.OnAddedPhoto -> {
                 state = state.copy(
-                    photos = state.photos?.plus(agendaDetailAction.photoUri)
+                    photos = state.photos.plus(
+                        PhotoModel(
+                            key = UUID.randomUUID().toString(),
+                            imageData = agendaDetailAction.imageByteArray
+                        )
+                    )
                 )
             }
 
             is AgendaDetailAction.OnPhotoDeleted -> {
                 state = state.copy(
-                    photos = state.photos?.minus(agendaDetailAction.uri)
+                    screenMode = ScreenMode.EDIT_ADD,
+                    photos = state.photos.filter { it.key != agendaDetailAction.photoKey }
                 )
             }
 
@@ -362,6 +364,16 @@ open class AgendaDetailViewModel(
 
             is AgendaDetailAction.OnCloseAddVisitorDialogClick -> {
                 state = state.copy(isAddVisitorDialogShown = false)
+            }
+
+            is AgendaDetailAction.OnPhotoClicked -> {
+                viewModelScope.launch {
+                    photoRepository.saveImageData(
+                        key = agendaDetailAction.photoModel.key,
+                        data = agendaDetailAction.photoModel.imageData
+                    )
+                    _uiEvent.send(AgendaDetailUiEvent.NavigateToPhotoDetail(agendaDetailAction.photoModel.key))
+                }
             }
 
             else -> Unit

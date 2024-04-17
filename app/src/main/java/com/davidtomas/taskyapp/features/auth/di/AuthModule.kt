@@ -1,8 +1,6 @@
 package com.davidtomas.taskyapp.features.auth.di
 
 import com.davidtomas.taskyapp.core.data.remote.api.TaskyHttpClient
-import com.davidtomas.taskyapp.features.auth.data.local.TokenDataStore
-import com.davidtomas.taskyapp.features.auth.data.local.TokenDataStoreImpl
 import com.davidtomas.taskyapp.features.auth.data.remote.AuthRepositoryImpl
 import com.davidtomas.taskyapp.features.auth.data.remote.api.AuthService
 import com.davidtomas.taskyapp.features.auth.data.remote.api.AuthServiceImpl
@@ -34,7 +32,6 @@ private fun Module.dataModule() {
         TaskyHttpClient.create(get())
     }
     singleOf(::AuthServiceImpl) bind AuthService::class
-    singleOf(::TokenDataStoreImpl) bind TokenDataStore::class
     singleOf(::AuthRepositoryImpl) bind AuthRepository::class
 }
 

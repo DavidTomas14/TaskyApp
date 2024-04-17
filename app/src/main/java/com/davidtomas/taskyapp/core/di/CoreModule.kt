@@ -1,7 +1,7 @@
 package com.davidtomas.taskyapp.core.di
 
-import com.davidtomas.taskyapp.features.auth.data.local.TokenDataStore
-import com.davidtomas.taskyapp.features.auth.data.local.TokenDataStoreImpl
+import com.davidtomas.taskyapp.features.auth.data.local.TaskyDataStore
+import com.davidtomas.taskyapp.features.auth.data.local.TaskyDataStoreImpl
 import com.davidtomas.taskyapp.features.auth.domain.useCase.AuthenticateUseCase
 import com.davidtomas.taskyapp.navigation.MainActivityViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -17,7 +17,7 @@ val coreModule = module {
 }
 
 private fun Module.dataModule() {
-    singleOf(::TokenDataStoreImpl) bind TokenDataStore::class
+    singleOf(::TaskyDataStoreImpl) bind TaskyDataStore::class
 }
 
 private fun Module.domainModule() {

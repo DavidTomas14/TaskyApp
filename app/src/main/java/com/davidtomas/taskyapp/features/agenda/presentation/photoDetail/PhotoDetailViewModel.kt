@@ -5,22 +5,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
+import androidx.lifecycle.viewModelScope
+import com.davidtomas.taskyapp.features.agenda.domain.repository.PhotoRepository
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
+import kotlinx.coroutines.launch
 
 class PhotoDetailViewModel(
+    private val photoRepository: PhotoRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     var state by mutableStateOf(PhotoDetailState())
         private set
 
-    private val photoUri =
-        savedStateHandle.get<String>(AgendaRoutes.PHOTO_URI_PARAM)
+    private val photoKey =
+        savedStateHandle.get<String>(AgendaRoutes.PHOTO_KEY_PARAM)
 
     init {
-        state = state.copy(
-            photoUri = photoUri ?: String.EMPTY_STRING
-        )
+        viewModelScope.launch {
+            if (photoKey != null) {
+                val photoImageData = photoRepository.getImageData(photoKey)
+                state = state.copy(
+                    photoKey = photoKey,
+                    photoImageData = photoImageData ?: ByteArray(100)
+                )
+            }
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
+import com.davidtomas.taskyapp.features.agenda.domain.model.PhotoModel
+
 sealed class AgendaDetailAction {
     data object OnCloseDetailIconClick : AgendaDetailAction()
     data object OnEditIconClick : AgendaDetailAction()
@@ -13,9 +15,9 @@ sealed class AgendaDetailAction {
     data object OnNavigateToEditDescriptionClick : AgendaDetailAction()
     data class OnTitleChanged(val title: String) : AgendaDetailAction()
     data class OnDescriptionChanged(val description: String) : AgendaDetailAction()
-    data class OnAddedPhoto(val photoUri: String) : AgendaDetailAction()
-    data class OnPhotoClicked(val photoUri: String) : AgendaDetailAction()
-    class OnPhotoDeleted(val uri: String) : AgendaDetailAction()
+    data class OnAddedPhoto(val imageByteArray: ByteArray) : AgendaDetailAction()
+    data class OnPhotoClicked(val photoModel: PhotoModel) : AgendaDetailAction()
+    class OnPhotoDeleted(val photoKey: String) : AgendaDetailAction()
     data class OnEmailChanged(val email: String) : AgendaDetailAction()
     data class OnEmailInputFocusChanged(val isFocused: Boolean) : AgendaDetailAction()
     data object OnAddVisitorButtonClicked : AgendaDetailAction()

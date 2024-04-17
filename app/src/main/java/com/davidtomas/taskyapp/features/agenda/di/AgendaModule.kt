@@ -8,6 +8,8 @@ import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLoca
 import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLocalSourceImpl
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.AttendeeService
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.AttendeeServiceImpl
+import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventService
+import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventServiceImpl
 import com.davidtomas.taskyapp.features.agenda.data.event.repository.EventRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSourceImpl
@@ -34,7 +36,7 @@ import com.davidtomas.taskyapp.features.agenda.presentation.editText.EditTextVie
 import com.davidtomas.taskyapp.features.agenda.presentation.photoDetail.PhotoDetailViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -45,25 +47,26 @@ val agendaModule = module {
 }
 
 private fun Module.domainModule() {
-    factoryOf(::ObserveSelectedDayAgendaUseCase)
+    singleOf(::ObserveSelectedDayAgendaUseCase)
 }
 
 private fun Module.dataModule() {
     single { TaskyRealmDB.create() }
-    factoryOf(::AttendeeServiceImpl) bind AttendeeService::class
-    factoryOf(::AttendeeServiceImpl) bind AttendeeService::class
-    factoryOf(::AgendaRepositoryImpl) bind AgendaRepository::class
-    factoryOf(::AgendaServiceImpl) bind AgendaService::class
-    factoryOf(::EventRepositoryImpl) bind EventRepository::class
-    factoryOf(::EventLocalSourceImpl) bind EventLocalSource::class
-    factoryOf(::TaskRepositoryImpl) bind TaskRepository::class
-    factoryOf(::TaskLocalSourceImpl) bind TaskLocalSource::class
-    factoryOf(::ReminderRepositoryImpl) bind ReminderRepository::class
-    factoryOf(::ReminderLocalSourceImpl) bind ReminderLocalSource::class
-    factoryOf(::PhotoRepositoryImpl) bind PhotoRepository::class
-    factoryOf(::PhotoLocalSourceImpl) bind PhotoLocalSource::class
-    factoryOf(::TaskServiceImpl) bind TaskService::class
-    factoryOf(::ReminderServiceImpl) bind ReminderService::class
+    singleOf(::AttendeeServiceImpl) bind AttendeeService::class
+    singleOf(::AttendeeServiceImpl) bind AttendeeService::class
+    singleOf(::AgendaRepositoryImpl) bind AgendaRepository::class
+    singleOf(::AgendaServiceImpl) bind AgendaService::class
+    singleOf(::EventRepositoryImpl) bind EventRepository::class
+    singleOf(::EventServiceImpl) bind EventService::class
+    singleOf(::EventLocalSourceImpl) bind EventLocalSource::class
+    singleOf(::TaskRepositoryImpl) bind TaskRepository::class
+    singleOf(::TaskLocalSourceImpl) bind TaskLocalSource::class
+    singleOf(::TaskServiceImpl) bind TaskService::class
+    singleOf(::ReminderRepositoryImpl) bind ReminderRepository::class
+    singleOf(::ReminderLocalSourceImpl) bind ReminderLocalSource::class
+    singleOf(::ReminderServiceImpl) bind ReminderService::class
+    singleOf(::PhotoRepositoryImpl) bind PhotoRepository::class
+    singleOf(::PhotoLocalSourceImpl) bind PhotoLocalSource::class
 }
 
 private fun Module.presentationModule() {

@@ -31,11 +31,11 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
         content = {
             NavHost(
                 navController = navController,
-                startDestination = AuthRoutes.AUTH
+                startDestination = if (isAuthenticated) AgendaRoutes.AGENDA_GRAPH else AuthRoutes.AUTH_GRAPH
             ) {
                 navigation(
-                    startDestination = if (isAuthenticated) AgendaRoutes.AGENDA else AuthRoutes.LOGIN,
-                    route = AuthRoutes.AUTH
+                    startDestination = AuthRoutes.LOGIN,
+                    route = AuthRoutes.AUTH_GRAPH
                 ) {
                     composable(route = AuthRoutes.LOGIN) {
                         LoginRoot(
@@ -49,6 +49,12 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                             navController = navController
                         )
                     }
+                }
+
+                navigation(
+                    startDestination = AgendaRoutes.AGENDA,
+                    route = AgendaRoutes.AGENDA_GRAPH
+                ) {
                     composable(route = AgendaRoutes.AGENDA) {
                         AgendaRoot(
                             navController = navController
@@ -78,36 +84,36 @@ internal fun TaskyNavHost(isAuthenticated: Boolean) {
                             navController = navController
                         )
                     }
-                }
-                composable(
-                    route = "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
-                        "{${AgendaRoutes.EDIT_TYPE_PARAM}}/" +
-                        "{${AgendaRoutes.EDIT_TEXT_PARAM}}",
-                    arguments = listOf(
-                        navArgument(AgendaRoutes.EDIT_TYPE_PARAM) {
-                            type = NavType.StringType
-                        },
-                        navArgument(AgendaRoutes.EDIT_TEXT_PARAM) {
-                            type = NavType.StringType
-                        }
-                    )
-                ) {
-                    EditTextRoot(
-                        navController = navController
-                    )
-                }
-                composable(
-                    route = "${AgendaRoutes.PHOTO_DETAIL}/" +
-                        "{${AgendaRoutes.PHOTO_URI_PARAM}}",
-                    arguments = listOf(
-                        navArgument(AgendaRoutes.PHOTO_URI_PARAM) {
-                            type = NavType.StringType
-                        },
-                    )
-                ) {
-                    PhotoDetailRoot(
-                        navController = navController
-                    )
+                    composable(
+                        route = "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
+                            "{${AgendaRoutes.EDIT_TYPE_PARAM}}/" +
+                            "{${AgendaRoutes.EDIT_TEXT_PARAM}}",
+                        arguments = listOf(
+                            navArgument(AgendaRoutes.EDIT_TYPE_PARAM) {
+                                type = NavType.StringType
+                            },
+                            navArgument(AgendaRoutes.EDIT_TEXT_PARAM) {
+                                type = NavType.StringType
+                            }
+                        )
+                    ) {
+                        EditTextRoot(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "${AgendaRoutes.PHOTO_DETAIL}/" +
+                            "{${AgendaRoutes.PHOTO_KEY_PARAM}}",
+                        arguments = listOf(
+                            navArgument(AgendaRoutes.PHOTO_KEY_PARAM) {
+                                type = NavType.StringType
+                            },
+                        )
+                    ) {
+                        PhotoDetailRoot(
+                            navController = navController
+                        )
+                    }
                 }
             }
         }

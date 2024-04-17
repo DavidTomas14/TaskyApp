@@ -1,6 +1,8 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.photoDetail
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,11 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.presentation.components.Header
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
@@ -59,8 +62,14 @@ fun PhotoDetailScreen(
                 )
             }
         )
-        AsyncImage(
-            model = state.photoUri,
+        Image(
+            painter = BitmapPainter(
+                BitmapFactory.decodeByteArray(
+                    state.photoImageData,
+                    0,
+                    state.photoImageData.size
+                ).asImageBitmap()
+            ),
             contentDescription = "image description",
             modifier = Modifier
                 .alpha(0.8f)

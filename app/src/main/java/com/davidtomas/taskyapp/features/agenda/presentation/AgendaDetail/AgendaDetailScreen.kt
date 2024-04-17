@@ -113,7 +113,7 @@ fun AgendaDetailScreen(
 
             if (state.agendaType == AgendaType.EVENT) {
                 Photos(
-                    photos = state.photos ?: emptyList(),
+                    photos = state.photos,
                     onPhotoClicked = {
                         onAction(AgendaDetailAction.OnPhotoClicked(it))
                     },

@@ -27,7 +27,11 @@ fun LoginRoot(
                     )
                 }
 
-                is LoginUiEvent.Navigate -> navController.navigate(AgendaRoutes.AGENDA)
+                is LoginUiEvent.Navigate -> navController.navigate(AgendaRoutes.AGENDA) {
+                    popUpTo(AuthRoutes.AUTH_GRAPH) {
+                        inclusive = true
+                    }
+                }
             }
         }
     }

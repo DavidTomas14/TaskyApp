@@ -58,8 +58,8 @@ fun AgendaDetailRoot(
         }
     }
     LaunchedEffect(key1 = deletedPhoto) {
-        deletedPhoto?.value?.let { uri ->
-            agendaDetailViewModel.onAction(AgendaDetailAction.OnPhotoDeleted(uri))
+        deletedPhoto?.value?.let { key ->
+            agendaDetailViewModel.onAction(AgendaDetailAction.OnPhotoDeleted(key))
         }
     }
     ObserveAsEvents(agendaDetailViewModel.uiEvent) { event ->
@@ -71,6 +71,12 @@ fun AgendaDetailRoot(
                 snackbarHostState.showSnackbar(
                     message = event.message.asString(context),
                     duration = SnackbarDuration.Short
+                )
+            }
+            is AgendaDetailUiEvent.NavigateToPhotoDetail -> {
+                navController.navigate(
+                    "${AgendaRoutes.PHOTO_DETAIL}/" +
+                        "${event.photoKey}"
                 )
             }
         }
@@ -97,16 +103,6 @@ fun AgendaDetailRoot(
                         "${AgendaRoutes.AGENDA_EDIT_TEXT}/" +
                             "${EditType.TITLE.name}/" +
                             URLEncoder.encode(agendaDetailViewModel.state.title.ifEmpty { null }, "UTF-8")
-                    )
-                }
-
-                is AgendaDetailAction.OnPhotoClicked -> {
-                    navController.navigate(
-                        "${AgendaRoutes.PHOTO_DETAIL}/" +
-                            URLEncoder.encode(
-                                agendaAction.photoUri,
-                                "UTF-8"
-                            )
                     )
                 }
 

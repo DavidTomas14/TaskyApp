@@ -5,5 +5,5 @@ import io.realm.kotlin.types.RealmObject
 
 class PhotoEntity : RealmObject {
     var key: String = String.EMPTY_STRING
-    var uri: String = String.EMPTY_STRING
+    var imageData: ByteArray = ByteArray(100)
 }
