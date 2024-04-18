@@ -2,7 +2,8 @@ package com.davidtomas.taskyapp.features.agenda.domain.model
 
 data class PhotoModel(
     val key: String,
-    val imageData: ByteArray
+    val imageData: ByteArray,
+    val modificationType: ModificationType?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

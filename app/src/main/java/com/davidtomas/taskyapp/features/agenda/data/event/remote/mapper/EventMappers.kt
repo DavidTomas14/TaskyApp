@@ -3,6 +3,7 @@ package com.davidtomas.taskyapp.features.agenda.data.event.remote.mapper
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.request.EventRequest
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.request.UpdateEventRequest
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 
 fun EventModel.toEventRequest() = EventRequest(
     id = id,
@@ -26,6 +27,7 @@ fun EventModel.toUpdateEventRequest() = UpdateEventRequest(
     attendeeIds = attendees.map {
         it.userId
     },
-    deletedPhotoKeys = emptyList(),
+    deletedPhotoKeys = photos.filter { it.modificationType == ModificationType.DELETE }
+        .map { it.key },
     isGoing = false
 )

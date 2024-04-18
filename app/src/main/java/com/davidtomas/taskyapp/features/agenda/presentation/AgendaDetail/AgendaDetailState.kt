@@ -1,5 +1,6 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
+import androidx.compose.runtime.Immutable
 import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.core.presentation.util.UiText
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
@@ -7,7 +8,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.PhotoModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
 import java.time.ZonedDateTime
-
+@Immutable
 data class AgendaDetailState(
     val title: String = String.EMPTY_STRING,
     val description: String = String.EMPTY_STRING,

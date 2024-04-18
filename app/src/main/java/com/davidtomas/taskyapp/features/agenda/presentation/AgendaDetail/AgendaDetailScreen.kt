@@ -31,6 +31,7 @@ import com.davidtomas.taskyapp.core.presentation.components.Header
 import com.davidtomas.taskyapp.core.presentation.util.formatToDayHourOrMinutes
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaType
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.AgendaType
 import com.davidtomas.taskyapp.features.agenda.presentation._common.components.AlertDialogAddVisitor
@@ -113,7 +114,7 @@ fun AgendaDetailScreen(
 
             if (state.agendaType == AgendaType.EVENT) {
                 Photos(
-                    photos = state.photos,
+                    photos = state.photos.filter { it.modificationType != ModificationType.DELETE },
                     onPhotoClicked = {
                         onAction(AgendaDetailAction.OnPhotoClicked(it))
                     },

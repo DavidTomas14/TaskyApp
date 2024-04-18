@@ -18,5 +18,5 @@ class EventEntity : RealmObject {
     var isUserEventCreator: Boolean = false
     var attendees: RealmList<AttendeeEntity> = realmListOf()
     var photos: RealmList<PhotoEntity> = realmListOf()
-    var modificationType: String? = null
+    var syncType: String? = null
 }

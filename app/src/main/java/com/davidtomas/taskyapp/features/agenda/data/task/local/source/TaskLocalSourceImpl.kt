@@ -36,7 +36,7 @@ class TaskLocalSourceImpl(
         .asFlow()
         .map { results ->
             results.list.toList()
-                .filter { it.modificationType?.let { it1 -> ModificationType.valueOf(it1) } != ModificationType.DELETE }
+                .filter { it.syncType?.let { it1 -> ModificationType.valueOf(it1) } != ModificationType.DELETE }
                 .map { it.toTaskModel() }
         }
 
@@ -50,8 +50,7 @@ class TaskLocalSourceImpl(
             modificationType?.let {
                 copyToRealm(
                     taskToDelete.apply {
-                        this.modificationType = it.name
-                        this.isSynced = false
+                        this.syncType = it.name
                     },
                     UpdatePolicy.ALL
                 )

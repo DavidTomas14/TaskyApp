@@ -282,17 +282,33 @@ open class AgendaDetailViewModel(
                     photos = state.photos.plus(
                         PhotoModel(
                             key = UUID.randomUUID().toString(),
-                            imageData = agendaDetailAction.imageByteArray
+                            imageData = agendaDetailAction.imageByteArray,
+                            modificationType = ModificationType.ADD
                         )
                     )
                 )
             }
 
             is AgendaDetailAction.OnPhotoDeleted -> {
-                state = state.copy(
-                    screenMode = ScreenMode.EDIT_ADD,
-                    photos = state.photos.filter { it.key != agendaDetailAction.photoKey }
-                )
+                var deletedPhoto = state.photos.first { it.key == agendaDetailAction.photoKey }
+                if (deletedPhoto.modificationType != ModificationType.ADD) {
+                    val newList = state.photos.map {
+                        if (it.key == agendaDetailAction.photoKey) {
+                            deletedPhoto.copy(modificationType = ModificationType.DELETE)
+                        } else {
+                            it
+                        }
+                    }
+                    state = state.copy(
+                        screenMode = ScreenMode.EDIT_ADD,
+                        photos = newList
+                    )
+                } else {
+                    state = state.copy(
+                        screenMode = ScreenMode.EDIT_ADD,
+                        photos = state.photos.minus(deletedPhoto)
+                    )
+                }
             }
 
             is AgendaDetailAction.OnEmailChanged -> {
