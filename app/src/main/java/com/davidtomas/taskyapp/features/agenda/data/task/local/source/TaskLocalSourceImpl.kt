@@ -69,4 +69,19 @@ class TaskLocalSourceImpl(
             }
         }
     }
+
+    override suspend fun getUnSyncedDeletedTasks(): List<String> = realmDb
+        .query<TaskEntity>("syncType == $0", ModificationType.DELETE.name).find().map {
+            it.id
+        }
+
+    override suspend fun getUnSyncedCreatedTasks(): List<TaskModel> = realmDb
+        .query<TaskEntity>("syncType == $0", ModificationType.ADD.name).find().map {
+            it.toTaskModel()
+        }
+
+    override suspend fun getUnSyncedUpdatedTasks(): List<TaskModel> = realmDb
+        .query<TaskEntity>("syncType == $0", ModificationType.EDIT.name).find().map {
+            it.toTaskModel()
+        }
 }

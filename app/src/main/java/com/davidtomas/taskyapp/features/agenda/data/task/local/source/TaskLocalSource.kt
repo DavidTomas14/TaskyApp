@@ -18,4 +18,7 @@ interface TaskLocalSource {
         taskId: String,
         modificationType: ModificationType? = null
     )
+    suspend fun getUnSyncedDeletedTasks(): List<String>
+    suspend fun getUnSyncedCreatedTasks(): List<TaskModel>
+    suspend fun getUnSyncedUpdatedTasks(): List<TaskModel>
 }

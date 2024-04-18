@@ -1,5 +1,6 @@
 package com.davidtomas.taskyapp.features.agenda.di
 
+import androidx.work.WorkManager
 import com.davidtomas.taskyapp.features.agenda.data._common.local.TaskyRealmDB
 import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.api.AgendaService
 import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.api.AgendaServiceImpl
@@ -24,12 +25,16 @@ import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.Remind
 import com.davidtomas.taskyapp.features.agenda.data.reminder.remote.api.ReminderService
 import com.davidtomas.taskyapp.features.agenda.data.reminder.remote.api.ReminderServiceImpl
 import com.davidtomas.taskyapp.features.agenda.data.reminder.repository.ReminderRepositoryImpl
+import com.davidtomas.taskyapp.features.agenda.data.sync.remote.api.SyncService
+import com.davidtomas.taskyapp.features.agenda.data.sync.repository.SyncRepository
+import com.davidtomas.taskyapp.features.agenda.data.sync.worker.ScheduleSyncAgendaSchedulerImpl
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSourceImpl
 import com.davidtomas.taskyapp.features.agenda.data.task.remote.api.TaskService
 import com.davidtomas.taskyapp.features.agenda.data.task.remote.api.TaskServiceImpl
 import com.davidtomas.taskyapp.features.agenda.data.task.repository.TaskRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.data.user.UserRepositoryImpl
+import com.davidtomas.taskyapp.features.agenda.domain.ScheduleSyncAgendaScheduler
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.LogoutRepository
@@ -42,6 +47,7 @@ import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaViewMod
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailViewModel
 import com.davidtomas.taskyapp.features.agenda.presentation.editText.EditTextViewModel
 import com.davidtomas.taskyapp.features.agenda.presentation.photoDetail.PhotoDetailViewModel
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -59,6 +65,8 @@ private fun Module.domainModule() {
 }
 
 private fun Module.dataModule() {
+    single { WorkManager.getInstance(androidApplication()) }
+    singleOf(::ScheduleSyncAgendaSchedulerImpl) bind ScheduleSyncAgendaScheduler::class
     single { TaskyRealmDB.create() }
     singleOf(::LogoutRepositoryImpl) bind LogoutRepository::class
     singleOf(::LogoutServiceImpl) bind LogoutService::class
@@ -79,6 +87,8 @@ private fun Module.dataModule() {
     singleOf(::PhotoLocalSourceImpl) bind PhotoLocalSource::class
     singleOf(::NotificationSchedulerImpl) bind NotificationScheduler::class
     singleOf(::UserRepositoryImpl) bind UserRepository::class
+    singleOf(::SyncRepository)
+    singleOf(::SyncService)
 }
 
 private fun Module.presentationModule() {

@@ -34,7 +34,9 @@ class EventLocalSourceImpl(
         .query<EventEntity>("from > $0 && from < $1", startOfDayMillis, endOfDateMillis)
         .asFlow()
         .map { results ->
-            results.list.toList().map { it.toEventModel() }
+            results.list.toList()
+                .filter { it.syncType?.let { it1 -> ModificationType.valueOf(it1) } != ModificationType.DELETE }
+                .map { it.toEventModel() }
         }
 
     override suspend fun getEvents(): List<EventModel> = realmDb
@@ -74,6 +76,27 @@ class EventLocalSourceImpl(
             val eventModified =
                 eventToUpdate.toEventModel().copy(attendees = actualAttendeeList + attendeeModel)
             copyToRealm(eventModified.toEventEntity(), UpdatePolicy.ALL)
+        }
+    }
+
+    override suspend fun getUnSyncedDeletedEvents(): List<String> = realmDb
+        .query<EventEntity>("syncType == $0", ModificationType.DELETE.name).find().map {
+            it.id
+        }
+
+    override suspend fun getUnSyncedCreatedEvents(): List<EventModel> = realmDb
+        .query<EventEntity>("syncType == $0", ModificationType.ADD.name).find().map {
+            it.toEventModel()
+        }
+
+    override suspend fun getUnSyncedUpdatedEvents(): List<EventModel> = realmDb
+        .query<EventEntity>("syncType == $0", ModificationType.EDIT.name).find().map {
+            it.toEventModel()
+        }
+
+    override suspend fun clearRealTables() {
+        realmDb.write {
+            deleteAll()
         }
     }
 
