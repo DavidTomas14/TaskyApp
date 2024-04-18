@@ -22,6 +22,5 @@ fun TaskModel.toTaskEntity(modType: ModificationType? = null) =
         time = this@toTaskEntity.date
         remindAt = this@toTaskEntity.remindAt
         isDone = this@toTaskEntity.isDone
-        modificationType = modType?.name
-        isSynced = if (modType != null) false else null
+        syncType = modType?.name
     }

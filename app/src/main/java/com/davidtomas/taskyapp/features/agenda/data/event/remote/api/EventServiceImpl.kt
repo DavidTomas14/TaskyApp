@@ -9,6 +9,7 @@ import com.davidtomas.taskyapp.features.agenda.data._common.remote.AgendaPaths
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.mapper.toEventRequest
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.mapper.toUpdateEventRequest
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
+import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
@@ -28,19 +29,20 @@ class EventServiceImpl(
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override suspend fun createEvent(event: EventModel): Result<Unit, DataError.Network> {
         val formData = formData {
-            event.photos.forEachIndexed { index, photo ->
-                append(
-                    key = "photo$index",
-                    value = photo.imageData,
-                    headers = Headers.build {
-                        append(HttpHeaders.ContentType, "image/jpeg")
-                        append(
-                            HttpHeaders.ContentDisposition,
-                            "filename=${event.photos.first().key}.jpg"
-                        )
-                    }
-                )
-            }
+            event.photos.filter { it.modificationType == ModificationType.ADD }
+                .forEachIndexed { index, photo ->
+                    append(
+                        key = "photo$index",
+                        value = photo.imageData,
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentType, "image/jpeg")
+                            append(
+                                HttpHeaders.ContentDisposition,
+                                "filename=${event.photos.first().key}.jpg"
+                            )
+                        }
+                    )
+                }
             append(
                 key = "create_event_request",
                 value = Json.encodeToString(event.toEventRequest()),
@@ -63,19 +65,20 @@ class EventServiceImpl(
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override suspend fun updateEvent(event: EventModel): Result<Unit, DataError.Network> {
         val formData = formData {
-            event.photos.forEachIndexed { index, photo ->
-                append(
-                    key = "photo$index",
-                    value = photo.imageData,
-                    headers = Headers.build {
-                        append(HttpHeaders.ContentType, "image/jpeg")
-                        append(
-                            HttpHeaders.ContentDisposition,
-                            "filename=${event.photos.first().key}.jpg"
-                        )
-                    }
-                )
-            }
+            event.photos.filter { it.modificationType == ModificationType.ADD }
+                .forEachIndexed { index, photo ->
+                    append(
+                        key = "photo$index",
+                        value = photo.imageData,
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentType, "image/jpeg")
+                            append(
+                                HttpHeaders.ContentDisposition,
+                                "filename=${event.photos.first().key}.jpg"
+                            )
+                        }
+                    )
+                }
             append(
                 key = "update_event_request",
                 value = Json.encodeToString(event.toUpdateEventRequest()),

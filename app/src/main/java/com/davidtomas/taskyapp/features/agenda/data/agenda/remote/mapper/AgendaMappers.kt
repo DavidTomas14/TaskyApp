@@ -40,7 +40,8 @@ fun AttendeeResponse.toAttendeeModel() = AttendeeModel(
 
 fun PhotoResponse.toPhotoModel() = PhotoModel(
     key = key,
-    imageData = getBytesFromUrl(url)
+    imageData = getBytesFromUrl(url),
+    modificationType = null
 )
 
 private fun getBytesFromUrl(url: String): ByteArray {

@@ -51,8 +51,7 @@ class ReminderLocalSourceImpl(
             modificationType?.let {
                 copyToRealm(
                     reminderToDelete.apply {
-                        this.modificationType = it.name
-                        this.isSynced = false
+                        this.syncType = it.name
                     },
                     UpdatePolicy.ALL
                 )

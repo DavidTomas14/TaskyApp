@@ -47,7 +47,7 @@ class EventLocalSourceImpl(
             modificationType?.let {
                 copyToRealm(
                     eventToDelete.apply {
-                        this.modificationType = it.name
+                        this.syncType = it.name
                     },
                     UpdatePolicy.ALL
                 )

@@ -28,6 +28,6 @@ fun EventModel.toEventEntity(modType: ModificationType? = null) = EventEntity().
     host = this@toEventEntity.host
     isUserEventCreator = this@toEventEntity.isUserEventCreator
     attendees = this@toEventEntity.attendees.map { it.toAttendeeEntity() }.toRealmList()
-    photos = this@toEventEntity.photos.map { it.toPhotoEntity() }.toRealmList()
-    modificationType = modType?.name
+    photos = this@toEventEntity.photos.map { it.toPhotoEntity(modType) }.toRealmList()
+    syncType = modType?.name
 }

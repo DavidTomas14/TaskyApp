@@ -20,6 +20,5 @@ fun ReminderModel.toReminderEntity(modType: ModificationType? = null) =
         description = this@toReminderEntity.description
         time = this@toReminderEntity.date
         remindAt = this@toReminderEntity.remindAt
-        modificationType = modType?.name
-        isSynced = if (modType != null) false else null
+        syncType = modType?.name
     }
