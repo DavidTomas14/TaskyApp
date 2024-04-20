@@ -12,6 +12,8 @@ interface TaskLocalSource {
     suspend fun getTasksByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<TaskModel>>
     suspend fun getTaskById(taskId: String): TaskModel
 
+    suspend fun getFutureTasks(): List<TaskModel>
+
     suspend fun deleteTask(
         taskId: String,
         modificationType: ModificationType? = null

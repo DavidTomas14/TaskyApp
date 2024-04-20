@@ -215,19 +215,43 @@ open class AgendaDetailViewModel(
                     when (agendaType) {
                         AgendaType.TASK -> {
                             taskRepository.deleteTask(
-                                agendaItemId!!
+                                TaskModel(
+                                    id = agendaItemId!!,
+                                    title = state.title,
+                                    description = state.description,
+                                    date = 0L,
+                                    remindAt = 0L,
+                                    isDone = false
+                                )
                             )
                         }
 
                         AgendaType.REMINDER -> {
                             reminderRepository.deleteReminder(
-                                agendaItemId!!
+                                ReminderModel(
+                                    id = agendaItemId!!,
+                                    title = state.title,
+                                    description = state.description,
+                                    date = 0L,
+                                    remindAt = 0L,
+                                )
                             )
                         }
 
                         AgendaType.EVENT -> {
                             eventRepository.deleteEvent(
-                                agendaItemId!!
+                                EventModel(
+                                    id = agendaItemId!!,
+                                    title = state.title,
+                                    description = state.description,
+                                    date = 0L,
+                                    remindAt = 0L,
+                                    toDate = 0L,
+                                    host = "",
+                                    isUserEventCreator = false,
+                                    attendees = emptyList(),
+                                    photos = emptyList(),
+                                )
                             )
                         }
 

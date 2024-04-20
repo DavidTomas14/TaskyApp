@@ -8,11 +8,13 @@ import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.mapper.toEvent
 import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.mapper.toReminderModel
 import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.mapper.toTaskModel
 import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLocalSource
+import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.ReminderLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSource
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -22,7 +24,8 @@ class AgendaRepositoryImpl(
     private val agendaService: AgendaService,
     private val eventLocalSource: EventLocalSource,
     private val reminderLocalSource: ReminderLocalSource,
-    private val taskLocalSource: TaskLocalSource
+    private val taskLocalSource: TaskLocalSource,
+    private val notificationScheduler: NotificationScheduler,
 ) : AgendaRepository {
     override suspend fun observeAgendaByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<AgendaModel>> =
         combine(
@@ -40,31 +43,81 @@ class AgendaRepositoryImpl(
     override suspend fun fetchAgenda(): Result<Unit, DataError.Network> {
         return coroutineScope {
             agendaService.getAgenda().map {
-                val job1 = this.launch(Dispatchers.IO) {
+
+                val saveEventsJob = launch(Dispatchers.IO) {
                     eventLocalSource.saveEvents(
                         it.eventResponses.map {
                             it.toEventModel()
                         }
                     )
                 }
-                val job2 = launch {
+                val scheduleEventsJob = launch {
+                    it.eventResponses.map {
+                        it.toEventModel()
+                    }.filter { it.remindAt > System.currentTimeMillis() }.forEach {
+                        notificationScheduler.cancelScheduledNotificationAndPendingIntent(it)
+                        notificationScheduler.scheduleNotification(it)
+                    }
+                }
+
+                val saveTasksJob = launch {
                     taskLocalSource.saveTasks(
                         it.taskResponses.map {
                             it.toTaskModel()
                         }
                     )
                 }
-                val job3 = launch {
+
+                val scheduleTasksJob = launch {
+                    it.taskResponses.map {
+                        it.toTaskModel()
+                    }.filter { it.remindAt > System.currentTimeMillis() }.forEach {
+                        notificationScheduler.cancelScheduledNotificationAndPendingIntent(it)
+                        notificationScheduler.scheduleNotification(it)
+                    }
+                }
+                val saveRemindersJob = launch {
                     reminderLocalSource.saveReminders(
                         it.reminderResponses.map {
                             it.toReminderModel()
                         }
                     )
                 }
-                job1.join()
-                job2.join()
-                job3.join()
+
+                val scheduleReminders = launch {
+                    it.reminderResponses.map {
+                        it.toReminderModel()
+                    }.filter { it.remindAt > System.currentTimeMillis() }.forEach {
+                        notificationScheduler.cancelScheduledNotificationAndPendingIntent(it)
+                        notificationScheduler.scheduleNotification(it)
+                    }
+                }
+                saveEventsJob.join()
+                scheduleEventsJob.join()
+                saveTasksJob.join()
+                scheduleTasksJob.join()
+                saveRemindersJob.join()
+                scheduleReminders.join()
             }
+        }
+    }
+
+    override suspend fun getFutureAgendaItems(): List<AgendaModel> {
+        return coroutineScope {
+            val job1 = async(Dispatchers.IO) {
+                eventLocalSource.getFutureEvents()
+            }
+            val job2 = async {
+                taskLocalSource.getFutureTasks()
+            }
+            val job3 = async {
+                reminderLocalSource.getFutureReminders()
+            }
+            val agendaModelList = mutableListOf<AgendaModel>()
+            agendaModelList.addAll(job1.await())
+            agendaModelList.addAll(job2.await())
+            agendaModelList.addAll(job3.await())
+            agendaModelList
         }
     }
 }

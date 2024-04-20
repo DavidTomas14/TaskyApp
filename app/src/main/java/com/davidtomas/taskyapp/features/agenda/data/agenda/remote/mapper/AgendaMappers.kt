@@ -10,9 +10,12 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.PhotoModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import java.net.URL
 
-fun EventResponse.toEventModel() = EventModel(
+suspend fun EventResponse.toEventModel() = EventModel(
     id = id,
     title = title,
     description = description,
@@ -38,15 +41,19 @@ fun AttendeeResponse.toAttendeeModel() = AttendeeModel(
     remindAt = remindAt,
 )
 
-fun PhotoResponse.toPhotoModel() = PhotoModel(
+suspend fun PhotoResponse.toPhotoModel() = PhotoModel(
     key = key,
     imageData = getBytesFromUrl(url),
     modificationType = null
 )
 
-private fun getBytesFromUrl(url: String): ByteArray {
-    val url = URL(url)
-    return url.readBytes()
+private suspend fun getBytesFromUrl(url: String): ByteArray =
+    coroutineScope {
+        val getBytes = async(Dispatchers.IO) {
+            val url = URL(url)
+            url.readBytes()
+        }
+        getBytes.await()
 }
 
 fun TaskResponse.toTaskModel() =

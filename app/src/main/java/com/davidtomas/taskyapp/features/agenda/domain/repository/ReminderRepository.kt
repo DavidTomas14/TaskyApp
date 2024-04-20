@@ -8,5 +8,5 @@ interface ReminderRepository {
 
     suspend fun getReminder(reminderId: String): ReminderModel
 
-    suspend fun deleteReminder(reminderId: String)
+    suspend fun deleteReminder(reminderModel: ReminderModel)
 }

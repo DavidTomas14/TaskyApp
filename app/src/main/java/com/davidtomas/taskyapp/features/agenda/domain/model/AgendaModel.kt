@@ -5,4 +5,6 @@ sealed interface AgendaModel {
     val title: String
     val description: String
     val date: Long
+    val remindAt: Long
+    val agendaType: AgendaType
 }

@@ -37,6 +37,11 @@ class EventLocalSourceImpl(
             results.list.toList().map { it.toEventModel() }
         }
 
+    override suspend fun getFutureEvents(): List<EventModel> = realmDb
+        .query<EventEntity>("from > $0", System.currentTimeMillis())
+        .find()
+        .map { it.toEventModel() }
+
     override suspend fun getEventById(eventId: String): EventModel = realmDb
         .query<EventEntity>("id == $0", eventId).find().first()
         .toEventModel()

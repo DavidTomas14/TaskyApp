@@ -103,9 +103,9 @@ class AgendaViewModel(
             is AgendaAction.OnDeleteAgendaItemClicked -> {
                 viewModelScope.launch {
                     when (agendaAction.agendaModel) {
-                        is EventModel -> eventRepository.deleteEvent(agendaAction.agendaModel.id)
-                        is ReminderModel -> reminderRepository.deleteReminder(agendaAction.agendaModel.id)
-                        is TaskModel -> taskRepository.deleteTask(agendaAction.agendaModel.id)
+                        is EventModel -> eventRepository.deleteEvent(agendaAction.agendaModel)
+                        is ReminderModel -> reminderRepository.deleteReminder(agendaAction.agendaModel)
+                        is TaskModel -> taskRepository.deleteTask(agendaAction.agendaModel)
                     }
                 }
             }

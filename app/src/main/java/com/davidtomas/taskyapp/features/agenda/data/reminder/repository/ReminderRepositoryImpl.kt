@@ -1,5 +1,6 @@
 package com.davidtomas.taskyapp.features.agenda.data.reminder.repository
 
+import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.ReminderLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.reminder.remote.api.ReminderService
 import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
@@ -8,7 +9,8 @@ import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderReposit
 
 class ReminderRepositoryImpl(
     private val reminderService: ReminderService,
-    private val reminderLocalSource: ReminderLocalSource
+    private val reminderLocalSource: ReminderLocalSource,
+    private val notificationScheduler: NotificationScheduler,
 ) : ReminderRepository {
     override suspend fun saveReminder(
         reminderModel: ReminderModel,
@@ -20,6 +22,8 @@ class ReminderRepositoryImpl(
         }.fold(
             onSuccess = {
                 reminderLocalSource.saveReminder(reminderModel)
+                notificationScheduler.cancelScheduledNotificationAndPendingIntent(reminderModel)
+                notificationScheduler.scheduleNotification(reminderModel)
             },
             onError = {
                 reminderLocalSource.saveReminder(reminderModel, modificationType)
@@ -30,14 +34,15 @@ class ReminderRepositoryImpl(
     override suspend fun getReminder(reminderId: String): ReminderModel =
         reminderLocalSource.getRemindById(reminderId = reminderId)
 
-    override suspend fun deleteReminder(reminderId: String) {
-        reminderService.deleteReminder(reminderId = reminderId)
+    override suspend fun deleteReminder(reminderModel: ReminderModel) {
+        reminderService.deleteReminder(reminderId = reminderModel.id)
             .fold(
                 onSuccess = {
-                    reminderLocalSource.deleteReminder(reminderId = reminderId)
+                    reminderLocalSource.deleteReminder(reminderId = reminderModel.id)
+                    notificationScheduler.cancelScheduledNotificationAndPendingIntent(reminderModel)
                 },
                 onError = {
-                    reminderLocalSource.deleteReminder(reminderId = reminderId, ModificationType.DELETE)
+                    reminderLocalSource.deleteReminder(reminderId = reminderModel.id, ModificationType.DELETE)
                 }
             )
     }
