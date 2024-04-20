@@ -13,6 +13,9 @@ import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventServic
 import com.davidtomas.taskyapp.features.agenda.data.event.repository.EventRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
 import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationSchedulerImpl
+import com.davidtomas.taskyapp.features.agenda.data.notifications.TaskyNotificationService
+import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
+import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationSchedulerImpl
 import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSourceImpl
 import com.davidtomas.taskyapp.features.agenda.data.photo.repository.PhotoRepositoryImpl
