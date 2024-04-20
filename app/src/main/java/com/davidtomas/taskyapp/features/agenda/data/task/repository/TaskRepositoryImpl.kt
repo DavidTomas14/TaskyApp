@@ -1,5 +1,6 @@
 package com.davidtomas.taskyapp.features.agenda.data.task.repository
 
+import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.task.remote.api.TaskService
 import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
@@ -8,7 +9,8 @@ import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
 
 class TaskRepositoryImpl(
     private val taskService: TaskService,
-    private val taskLocalSource: TaskLocalSource
+    private val taskLocalSource: TaskLocalSource,
+    private val notificationScheduler: NotificationScheduler,
 ) : TaskRepository {
     override suspend fun saveTask(taskModel: TaskModel, modificationType: ModificationType) {
         when (modificationType) {
@@ -17,6 +19,8 @@ class TaskRepositoryImpl(
         }.fold(
             onSuccess = {
                 taskLocalSource.saveTask(taskModel)
+                notificationScheduler.cancelScheduledNotificationAndPendingIntent(taskModel)
+                notificationScheduler.scheduleNotification(taskModel)
             },
             onError = {
                 taskLocalSource.saveTask(taskModel, modificationType)
@@ -27,14 +31,15 @@ class TaskRepositoryImpl(
     override suspend fun getTask(taskId: String) =
         taskLocalSource.getTaskById(taskId)
 
-    override suspend fun deleteTask(taskId: String) {
-        taskService.deleteTask(taskId = taskId)
+    override suspend fun deleteTask(taskModel: TaskModel) {
+        taskService.deleteTask(taskId = taskModel.id)
             .fold(
                 onSuccess = {
-                    taskLocalSource.deleteTask(taskId = taskId)
+                    taskLocalSource.deleteTask(taskId = taskModel.id)
+                    notificationScheduler.cancelScheduledNotificationAndPendingIntent(taskModel)
                 },
                 onError = {
-                    taskLocalSource.deleteTask(taskId = taskId, ModificationType.DELETE)
+                    taskLocalSource.deleteTask(taskId = taskModel.id, ModificationType.DELETE)
                 }
             )
     }

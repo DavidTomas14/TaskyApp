@@ -45,6 +45,11 @@ class ReminderLocalSourceImpl(
         .query<ReminderEntity>("id == $0", reminderId).find().first()
         .toReminderModel()
 
+    override suspend fun getFutureReminders(): List<ReminderModel> = realmDb
+        .query<ReminderEntity>("remindAt > $0", System.currentTimeMillis())
+        .find()
+        .map { it.toReminderModel() }
+
     override suspend fun deleteReminder(reminderId: String, modificationType: ModificationType?) {
         realmDb.write {
             val reminderToDelete = query<ReminderEntity>("id == $0", reminderId).find().first()

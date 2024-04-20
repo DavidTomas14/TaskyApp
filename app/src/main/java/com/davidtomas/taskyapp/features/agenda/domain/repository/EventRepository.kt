@@ -15,5 +15,5 @@ interface EventRepository {
 
     suspend fun checkAttendee(email: String): Result<AttendeeModel?, DataError.Network>
 
-    suspend fun deleteEvent(eventId: String)
+    suspend fun deleteEvent(eventModel: EventModel)
 }

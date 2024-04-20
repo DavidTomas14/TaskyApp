@@ -12,6 +12,8 @@ interface ReminderLocalSource {
 
     suspend fun getRemindById(reminderId: String): ReminderModel
 
+    suspend fun getFutureReminders(): List<ReminderModel>
+
     suspend fun deleteReminder(
         reminderId: String,
         modificationType: ModificationType? = null

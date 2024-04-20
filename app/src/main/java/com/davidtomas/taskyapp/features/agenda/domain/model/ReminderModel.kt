@@ -5,5 +5,6 @@ data class ReminderModel(
     override val title: String,
     override val description: String,
     override val date: Long,
-    val remindAt: Long
+    override val remindAt: Long,
+    override val agendaType: AgendaType = AgendaType.REMINDER
 ) : AgendaModel

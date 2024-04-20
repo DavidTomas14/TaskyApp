@@ -11,6 +11,8 @@ interface EventLocalSource {
 
     suspend fun getEventsByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<EventModel>>
 
+    suspend fun getFutureEvents(): List<EventModel>
+
     suspend fun getEventById(eventId: String): EventModel
 
     suspend fun deleteEvent(eventId: String, modificationType: ModificationType? = null)

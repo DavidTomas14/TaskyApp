@@ -5,6 +5,7 @@ data class TaskModel(
     override val title: String,
     override val description: String,
     override val date: Long,
-    val remindAt: Long,
+    override val remindAt: Long,
     val isDone: Boolean,
+    override val agendaType: AgendaType = AgendaType.TASK
 ) : AgendaModel
