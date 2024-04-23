@@ -4,11 +4,12 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
+import androidx.core.net.toUri
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.features.agenda.domain.model.ScreenMode
-import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
+import com.davidtomas.taskyapp.navigation.MainActivity
 
 object TaskyNotificationService {
 
@@ -25,28 +26,26 @@ object TaskyNotificationService {
         val notificationManager: NotificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val uri =
-            Uri.parse(
-                baseUriGenerator(agendaType, agendaId)
-            )
         val intent =
-            Intent(Intent.ACTION_VIEW, uri).apply {
-                setPackage(context.packageName)
-            }
-
-        val pendingIntent =
-            PendingIntent.getActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                baseUriGenerator(agendaType, agendaId).toUri(),
                 context,
-                1,
-                intent,
-                PendingIntent.FLAG_IMMUTABLE,
+                MainActivity::class.java
             )
 
+        val pendingIntent = TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(intent)
+            getPendingIntent(
+                notificationId,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        }
         val notification =
             NotificationCompat.Builder(context, TASKY_CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(description)
-                .setSmallIcon(R.drawable.tasky_logo)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
@@ -56,6 +55,6 @@ object TaskyNotificationService {
     }
 
     private fun baseUriGenerator(agendaType: String, agendaId: String): String {
-        return "${AgendaRoutes.AGENDA_DETAIL}/${agendaType}/${ScreenMode.REVIEW.name}/${agendaId}"
+        return "tasky://detail/$agendaType/${ScreenMode.REVIEW.name}/$agendaId"
     }
 }

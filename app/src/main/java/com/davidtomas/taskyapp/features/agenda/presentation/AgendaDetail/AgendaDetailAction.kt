@@ -7,9 +7,12 @@ sealed class AgendaDetailAction {
     data object OnEditIconClick : AgendaDetailAction()
     data object OnSaveClick : AgendaDetailAction()
     data object OnDeleteButtonClick : AgendaDetailAction()
-    data class OnHourMinutesChanged(val millisOfHour: Long, val millisOfMinutes: Long) :
+    data class OnFromHourMinutesChanged(val millisOfHour: Long, val millisOfMinutes: Long) :
         AgendaDetailAction()
-    data class OnDateChanged(val millisOfDate: Long) : AgendaDetailAction()
+    data class OnToHourMinutesChanged(val millisOfHour: Long, val millisOfMinutes: Long) :
+        AgendaDetailAction()
+    data class OnFromDateChanged(val millisOfDate: Long) : AgendaDetailAction()
+    data class OnToDateChanged(val millisOfDate: Long) : AgendaDetailAction()
     data class OnNotificationOptionSelected(val millisOfNotification: Long) : AgendaDetailAction()
     data object OnNavigateToEditTitleClick : AgendaDetailAction()
     data object OnNavigateToEditDescriptionClick : AgendaDetailAction()
