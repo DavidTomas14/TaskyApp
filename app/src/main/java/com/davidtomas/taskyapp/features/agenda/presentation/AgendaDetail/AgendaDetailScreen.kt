@@ -126,18 +126,18 @@ fun AgendaDetailScreen(
             }
             Spacer(modifier = Modifier.height(17.dp))
             TimeDatePicker(
-                zonedDateTime = state.toDate,
+                zonedDateTime = state.fromDate,
                 label = when (state.agendaType) {
                     AgendaType.EVENT -> "From"
                     else -> "At"
                 },
                 isEditable = state.screenMode != ScreenMode.REVIEW,
                 onConfirmChangedDateClick = { millisOfDate ->
-                    onAction(AgendaDetailAction.OnDateChanged(millisOfDate))
+                    onAction(AgendaDetailAction.OnFromDateChanged(millisOfDate))
                 },
                 onConfirmChangedTimeClick = { millisOfHour, millisOfMinutes ->
                     onAction(
-                        AgendaDetailAction.OnHourMinutesChanged(millisOfHour, millisOfMinutes)
+                        AgendaDetailAction.OnFromHourMinutesChanged(millisOfHour, millisOfMinutes)
                     )
                 },
             )
@@ -148,11 +148,11 @@ fun AgendaDetailScreen(
                     label = "To",
                     isEditable = state.screenMode != ScreenMode.REVIEW,
                     onConfirmChangedDateClick = { millisOfDate ->
-                        onAction(AgendaDetailAction.OnDateChanged(millisOfDate))
+                        onAction(AgendaDetailAction.OnToDateChanged(millisOfDate))
                     },
                     onConfirmChangedTimeClick = { millisOfHour, millisOfMinutes ->
                         onAction(
-                            AgendaDetailAction.OnHourMinutesChanged(
+                            AgendaDetailAction.OnToHourMinutesChanged(
                                 millisOfHour, millisOfMinutes
                             )
                         )

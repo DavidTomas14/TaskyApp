@@ -54,7 +54,7 @@ private suspend fun getBytesFromUrl(url: String): ByteArray =
             url.readBytes()
         }
         getBytes.await()
-}
+    }
 
 fun TaskResponse.toTaskModel() =
     TaskModel(

@@ -87,7 +87,7 @@ open class AgendaDetailViewModel(
                         state = state.copy(
                             title = reminder.title,
                             description = reminder.description,
-                            toDate = ZonedDateTime.ofInstant(
+                            fromDate = ZonedDateTime.ofInstant(
                                 Instant.ofEpochMilli(reminder.date),
                                 ZoneId.systemDefault()
                             ),
@@ -104,7 +104,7 @@ open class AgendaDetailViewModel(
                         state = state.copy(
                             title = task.title,
                             description = task.description,
-                            toDate = ZonedDateTime.ofInstant(
+                            fromDate = ZonedDateTime.ofInstant(
                                 Instant.ofEpochMilli(task.date),
                                 ZoneId.systemDefault()
                             ),
@@ -261,7 +261,33 @@ open class AgendaDetailViewModel(
                 }
             }
 
-            is AgendaDetailAction.OnHourMinutesChanged -> {
+            is AgendaDetailAction.OnFromHourMinutesChanged -> {
+
+                state = state.copy(
+                    fromDate = ZonedDateTime.ofInstant(
+                        Instant.ofEpochMilli(
+                            state.fromDate.extractFromStartOfTheDayOfDateMillis() +
+                                agendaDetailAction.millisOfHour +
+                                agendaDetailAction.millisOfMinutes
+                        ),
+                        ZoneId.systemDefault()
+                    ),
+                )
+            }
+
+            is AgendaDetailAction.OnFromDateChanged -> {
+                state = state.copy(
+                    fromDate = ZonedDateTime.ofInstant(
+                        Instant.ofEpochMilli(
+                            agendaDetailAction.millisOfDate.extractFromStartOfTheDayOfDateMillis() +
+                                state.fromDate.extractDayMillis()
+                        ),
+                        ZoneId.systemDefault()
+                    ),
+                )
+            }
+
+            is AgendaDetailAction.OnToHourMinutesChanged -> {
 
                 state = state.copy(
                     toDate = ZonedDateTime.ofInstant(
@@ -274,8 +300,7 @@ open class AgendaDetailViewModel(
                     ),
                 )
             }
-
-            is AgendaDetailAction.OnDateChanged -> {
+            is AgendaDetailAction.OnToDateChanged -> {
                 state = state.copy(
                     toDate = ZonedDateTime.ofInstant(
                         Instant.ofEpochMilli(

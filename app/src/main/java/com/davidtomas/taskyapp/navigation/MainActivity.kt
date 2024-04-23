@@ -1,9 +1,6 @@
 package com.davidtomas.taskyapp.navigation
 
-import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.view.View
-import android.view.animation.OvershootInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,9 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
@@ -32,13 +26,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TaskyNavHost(isAuthenticated = viewModel.isAuthenticated.collectAsState().value)
+                    TaskyNavHost(
+                        isAuthenticated = viewModel.isAuthenticated.collectAsState().value,
+                        isAuthChecked = viewModel.isAuthChecked.collectAsState().value
+                    )
                 }
                 WindowCompat.getInsetsController(window, window.decorView).apply {
                     isAppearanceLightStatusBars =
-                        true // Set to false if you want dark status bar icons
+                        false // Set to false if you want dark status bar icons
                 }
-                window.statusBarColor = Color.Green.toArgb()
             }
         }
     }
@@ -46,10 +42,10 @@ class MainActivity : ComponentActivity() {
     private fun initSplashScreen() {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                !viewModel.isAuthChecked.value
+                !viewModel.isSplashFinished.value
             }
 
-            setOnExitAnimationListener { screen ->
+            /*setOnExitAnimationListener { screen ->
                 val zoomX = ObjectAnimator.ofFloat(
                     screen.iconView,
                     View.SCALE_X,
@@ -71,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
                 zoomX.start()
                 zoomY.start()
-            }
+            }*/
         }
     }
 
