@@ -12,5 +12,6 @@ data class AgendaState(
     val isLogoutDropDownShown: Boolean = false,
     val isAddItemDropDownShown: Boolean = false,
     val dateSelected: ZonedDateTime = ZonedDateTime.now(),
-    val weekShown: Map<DayOfWeek, ZonedDateTime> = ZonedDateTime.now().daysOfWeekIncludingGivenDate()
+    val weekShown: Map<DayOfWeek, ZonedDateTime> = ZonedDateTime.now().daysOfWeekIncludingGivenDate(),
+    val userFullName: String? = null
 )

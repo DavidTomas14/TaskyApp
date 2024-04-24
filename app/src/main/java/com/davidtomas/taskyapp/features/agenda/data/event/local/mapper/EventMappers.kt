@@ -10,12 +10,13 @@ fun EventEntity.toEventModel() = EventModel(
     title = title,
     description = description,
     date = from,
-    toDate = to,
     remindAt = remindAt,
+    toDate = to,
     host = host,
     isUserEventCreator = isUserEventCreator,
     attendees = attendees.map { it.toAttendeeModel() },
-    photos = photos.map { it.toPhotoModel() }
+    photos = photos.map { it.toPhotoModel() },
+    isGoing = isGoing
 )
 
 fun EventModel.toEventEntity(modType: ModificationType? = null) = EventEntity().apply {
@@ -30,4 +31,5 @@ fun EventModel.toEventEntity(modType: ModificationType? = null) = EventEntity().
     attendees = this@toEventEntity.attendees.map { it.toAttendeeEntity() }.toRealmList()
     photos = this@toEventEntity.photos.map { it.toPhotoEntity(modType) }.toRealmList()
     syncType = modType?.name
+    isGoing = this@toEventEntity.isGoing
 }

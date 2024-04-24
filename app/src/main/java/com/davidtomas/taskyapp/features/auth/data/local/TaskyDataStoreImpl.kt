@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "data_store")
@@ -18,6 +19,18 @@ class TaskyDataStoreImpl(
         return context.dataStore.data.map { preferences ->
             preferences[TOKEN_KEY]
         }
+    }
+
+    override suspend fun getUserId(): String? {
+        return context.dataStore.data.map { preferences ->
+            preferences[USER_ID_KEY]
+        }.first()
+    }
+
+    override suspend fun getUserFullName(): String? {
+        return context.dataStore.data.map { preferences ->
+            preferences[FULL_NAME_KEY]
+        }.first()
     }
 
     override suspend fun saveToken(token: String) {

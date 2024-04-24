@@ -28,8 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.presentation.components.Header
-import com.davidtomas.taskyapp.core.presentation.util.formatToMMM
+import com.davidtomas.taskyapp.core.presentation.util.formatToMMMM
 import com.davidtomas.taskyapp.core.presentation.util.formatToMMMdHHmm
+import com.davidtomas.taskyapp.core.presentation.util.toInitials
 import com.davidtomas.taskyapp.coreUi.LocalSpacing
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
@@ -71,7 +72,7 @@ fun AgendaScreen(
                 modifier = Modifier.padding(vertical = spacing.spaceSmall),
                 leadingComposable = {
                     MonthSelector(
-                        month = state.dateSelected.formatToMMM(),
+                        month = state.dateSelected.formatToMMMM(),
                         onDateSelected = {
                             onAction(AgendaAction.OnDateMonthPickerSelected(it))
                         }
@@ -80,7 +81,7 @@ fun AgendaScreen(
                 trailingComposable = {
                     Box() {
                         InitialsIcon(
-                            initials = "AB",
+                            initials = state.userFullName?.toInitials() ?: "??",
                             onIconClick = {
                                 showLogoutDropDown = true
                             }

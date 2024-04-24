@@ -18,7 +18,10 @@ class EventRepositoryImpl(
     private val notificationScheduler: NotificationScheduler,
 ) : EventRepository {
 
-    override suspend fun saveEvent(eventModel: EventModel, modificationType: ModificationType) {
+    override suspend fun saveEvent(
+        eventModel: EventModel,
+        modificationType: ModificationType
+    ) {
         when (modificationType) {
             ModificationType.EDIT -> eventService.updateEvent(eventModel)
             else -> eventService.createEvent(eventModel)

@@ -14,5 +14,5 @@ class FakeAuthServiceImpl : AuthService {
     override suspend fun login(loginParams: LoginUseCase.LoginParams): Result<AuthModel, DataError.Network> =
         Result.Success(AuthModelStubs.stub())
 
-    override suspend fun authenticate(): Result<Unit, DataError> = Result.Success(Unit)
+    override suspend fun authenticate(): Result<Unit, DataError.Network> = Result.Success(Unit)
 }

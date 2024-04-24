@@ -9,6 +9,7 @@ import com.davidtomas.taskyapp.features.auth.domain.AuthRepository
 import com.davidtomas.taskyapp.features.auth.domain.model.AuthModel
 import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.RegisterUseCase
+import kotlinx.coroutines.flow.first
 
 class AuthRepositoryImpl(
     private val authService: AuthService,
@@ -28,18 +29,27 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun logout(): Result<Unit, DataError.Network> {
-        return authService.logout().also {
-            taskyDataStore.deleteToken()
-            it
-        }
-    }
-
     override suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError.Network> {
         return authService.register(registerParams)
     }
 
     override suspend fun authenticate(): Result<Unit, DataError> {
-        return authService.authenticate()
+        authService.authenticate().fold(
+            onError = {
+                return if (it == DataError.Network.NO_INTERNET) checkIfHasToken()
+                else Result.Error(it)
+            },
+            onSuccess = {
+                return Result.Success(Unit)
+            }
+        )
+        return Result.Success(Unit)
     }
+
+    private suspend fun checkIfHasToken(): Result<Unit, DataError.Network> =
+        if (!taskyDataStore.getToken().first().isNullOrBlank()) {
+            Result.Success(Unit)
+        } else {
+            Result.Error(DataError.Network.NO_INTERNET)
+        }
 }

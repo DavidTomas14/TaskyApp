@@ -19,4 +19,5 @@ class EventEntity : RealmObject {
     var attendees: RealmList<AttendeeEntity> = realmListOf()
     var photos: RealmList<PhotoEntity> = realmListOf()
     var syncType: String? = null
+    var isGoing: Boolean = false
 }

@@ -11,5 +11,6 @@ data class EventModel(
     val isUserEventCreator: Boolean,
     val attendees: List<AttendeeModel>,
     val photos: List<PhotoModel>,
-    override val agendaType: AgendaType = AgendaType.EVENT
+    override val agendaType: AgendaType = AgendaType.EVENT,
+    val isGoing: Boolean
 ) : AgendaModel

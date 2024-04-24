@@ -13,6 +13,7 @@ import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.Remind
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSource
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
+import com.davidtomas.taskyapp.features.auth.data.local.TaskyDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -25,6 +26,7 @@ class AgendaRepositoryImpl(
     private val eventLocalSource: EventLocalSource,
     private val reminderLocalSource: ReminderLocalSource,
     private val taskLocalSource: TaskLocalSource,
+    private val dataStore: TaskyDataStore,
     private val notificationScheduler: NotificationScheduler,
 ) : AgendaRepository {
     override suspend fun observeAgendaByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<AgendaModel>> =
@@ -42,18 +44,19 @@ class AgendaRepositoryImpl(
 
     override suspend fun fetchAgenda(): Result<Unit, DataError.Network> {
         return coroutineScope {
+            val userId = dataStore.getUserId()
             agendaService.getAgenda().map {
 
                 val saveEventsJob = launch(Dispatchers.IO) {
                     eventLocalSource.saveEvents(
                         it.eventResponses.map {
-                            it.toEventModel()
+                            it.toEventModel(userId)
                         }
                     )
                 }
                 val scheduleEventsJob = launch {
                     it.eventResponses.map {
-                        it.toEventModel()
+                        it.toEventModel(userId)
                     }.filter { it.remindAt > System.currentTimeMillis() }.forEach {
                         notificationScheduler.cancelScheduledNotificationAndPendingIntent(it)
                         notificationScheduler.scheduleNotification(it)

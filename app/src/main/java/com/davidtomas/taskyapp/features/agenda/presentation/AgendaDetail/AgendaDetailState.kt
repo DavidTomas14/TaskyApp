@@ -17,11 +17,13 @@ data class AgendaDetailState(
     val screenMode: ScreenMode = ScreenMode.REVIEW,
     val agendaType: AgendaType = AgendaType.REMINDER,
     val photos: List<PhotoModel> = emptyList(),
+    val isUserEventCreator: Boolean = true,
     val attendees: List<AttendeeModel>? = null,
     val addingVisitorEmail: String = String.EMPTY_STRING,
     val addingVisitorEmailErrMsg: UiText? = null,
     val isEmailChecked: Boolean = false,
     val isAddVisitorDialogShown: Boolean = false,
     val toDate: ZonedDateTime = ZonedDateTime.now(),
-    val host: String? = null
+    val host: String? = null,
+    val isGoing: Boolean = false
 )

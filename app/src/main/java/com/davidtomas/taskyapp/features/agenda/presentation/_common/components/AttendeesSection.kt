@@ -29,16 +29,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
+import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 
 @Composable
 fun AttendeesSection(
+    host: String,
     attendeeList: List<AttendeeModel>,
     isEditable: Boolean,
     onAddAttendeeButtonClick: () -> Unit,
-    onDeleteAttendeeIconClick: (AttendeeModel) -> Unit
+    onDeleteAttendeeIconClick: (String) -> Unit
 ) {
     var visitorsTypeSelected by remember {
         mutableStateOf(VisitorPill.ALL)
@@ -100,11 +103,13 @@ fun AttendeesSection(
             } else {
                 goingList.forEach {
                     AttendeeItem(
+                        userId = it.userId,
                         fullName = it.fullName,
                         onDeleteIconClicked = {
                             onDeleteAttendeeIconClick(it)
                         },
-                        isEditable = isEditable
+                        isEditable = isEditable,
+                        isCreator = it.userId == host
                     )
                 }
             }
@@ -131,15 +136,40 @@ fun AttendeesSection(
             } else {
                 notGoingList.forEach {
                     AttendeeItem(
+                        userId = it.userId,
                         fullName = it.fullName,
                         onDeleteIconClicked = {
                             onDeleteAttendeeIconClick(it)
                         },
-                        isEditable = isEditable
+                        isEditable = isEditable,
+                        isCreator = it.userId == host
                     )
                 }
             }
         }
         Spacer(modifier = Modifier.height(25.dp))
+    }
+}
+
+@Preview
+@Composable
+fun AttendeeSectionPreview() {
+    TaskyAppTheme {
+        AttendeesSection(
+            attendeeList = listOf(
+                AttendeeModel(
+                    email = "test@dt.com",
+                    fullName = "David Tomas",
+                    userId = "65e87ec3f967f72d00c706cb",
+                    eventId = "0253245c-60c8-4363-8a74-ef06a7d8b97a",
+                    isGoing = false,
+                    remindAt = 1713178894196
+                ),
+            ),
+            isEditable = false,
+            onAddAttendeeButtonClick = {},
+            onDeleteAttendeeIconClick = {},
+            host = "65e87ec3f967f72d00c706cb"
+        )
     }
 }

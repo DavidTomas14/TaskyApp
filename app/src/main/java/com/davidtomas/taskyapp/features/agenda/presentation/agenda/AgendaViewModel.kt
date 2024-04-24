@@ -12,11 +12,12 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.TaskModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
+import com.davidtomas.taskyapp.features.agenda.domain.repository.LogoutRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
+import com.davidtomas.taskyapp.features.agenda.domain.repository.UserRepository
 import com.davidtomas.taskyapp.features.agenda.domain.useCase.ObserveSelectedDayAgendaUseCase
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.AgendaUiEvent
-import com.davidtomas.taskyapp.features.auth.domain.AuthRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,10 +31,11 @@ import java.time.ZonedDateTime
 class AgendaViewModel(
     private val agendaRepository: AgendaRepository,
     private val observeSelectedDayAgendaUseCase: ObserveSelectedDayAgendaUseCase,
-    private val authRepository: AuthRepository,
+    private val logoutRepository: LogoutRepository,
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
     private val eventRepository: EventRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(AgendaState())
@@ -47,12 +49,19 @@ class AgendaViewModel(
 
     init {
         viewModelScope.launch {
-            agendaRepository.fetchAgenda().fold(
-                onError = {},
-                onSuccess = {}
+            val user = userRepository.getUserInfo()
+            state = state.copy(
+                userFullName = user.fullName
             )
             observeSelectedDayAgendaUseCase(selectedDate).collectLatest {
-                state = state.copy(agendaItems = it)
+                if (it.isEmpty()) {
+                    agendaRepository.fetchAgenda().fold(
+                        onError = {},
+                        onSuccess = {}
+                    )
+                } else {
+                    state = state.copy(agendaItems = it)
+                }
             }
         }
     }
@@ -112,7 +121,7 @@ class AgendaViewModel(
 
             is AgendaAction.OnInitialsIconClicked -> {
                 viewModelScope.launch {
-                    authRepository.logout().fold(
+                    logoutRepository.logout().fold(
                         onError = {},
                         onSuccess = {
                             _uiEvent.send(AgendaUiEvent.NavigateToLogin)

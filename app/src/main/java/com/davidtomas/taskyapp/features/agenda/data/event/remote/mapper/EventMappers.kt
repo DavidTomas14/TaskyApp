@@ -29,5 +29,5 @@ fun EventModel.toUpdateEventRequest() = UpdateEventRequest(
     },
     deletedPhotoKeys = photos.filter { it.modificationType == ModificationType.DELETE }
         .map { it.key },
-    isGoing = false
+    isGoing = isGoing
 )
