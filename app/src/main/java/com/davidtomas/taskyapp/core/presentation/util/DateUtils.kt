@@ -20,8 +20,8 @@ fun Long?.formatToMMDDYY(): String {
     return defaultZoneDateTime.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
 }
 
-fun ZonedDateTime.formatToMMM(): String {
-    return this.format(DateTimeFormatter.ofPattern("MMMM")).uppercase(Locale.ROOT)
+fun ZonedDateTime.formatToMMMM(): String {
+    return this.format(DateTimeFormatter.ofPattern("MMMM", Locale.ENGLISH)).uppercase(Locale.ENGLISH)
 }
 
 fun ZonedDateTime.daysOfWeekIncludingGivenDate(): Map<DayOfWeek, ZonedDateTime> {

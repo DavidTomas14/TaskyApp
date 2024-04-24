@@ -181,10 +181,7 @@ private fun AlertDialogDatePicker(
     AlertDialog(
         onDismissRequest = { onCancelDialog() },
         {
-            Column(
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
+            Column {
                 DatePicker(
                     state = state,
                     colors = DatePickerDefaults.colors(),

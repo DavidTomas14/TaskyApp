@@ -11,7 +11,7 @@ fun CheckAttendeeResponse.toAttendeeModel(): AttendeeModel? {
         fullName = attendee.fullName,
         userId = attendee.userId,
         eventId = String.EMPTY_STRING,
-        isGoing = false,
+        isGoing = true,
         remindAt = 0L
     )
 }

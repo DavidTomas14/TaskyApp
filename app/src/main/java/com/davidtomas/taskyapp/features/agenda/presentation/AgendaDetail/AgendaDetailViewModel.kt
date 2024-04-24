@@ -23,6 +23,7 @@ import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.PhotoRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
+import com.davidtomas.taskyapp.features.agenda.domain.repository.UserRepository
 import com.davidtomas.taskyapp.features.agenda.presentation._common.navigation.AgendaRoutes
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationError
 import com.davidtomas.taskyapp.features.auth.domain.useCase.ValidateEmailUseCase
@@ -39,8 +40,9 @@ open class AgendaDetailViewModel(
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
     private val photoRepository: PhotoRepository,
-    private val savedStateHandle: SavedStateHandle,
+    private val userRepository: UserRepository,
     private val validateEmailUseCase: ValidateEmailUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     var state by mutableStateOf(AgendaDetailState())
@@ -49,6 +51,7 @@ open class AgendaDetailViewModel(
     private val _uiEvent = Channel<AgendaDetailUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    private var userId = String.EMPTY_STRING
     private val agendaType =
         savedStateHandle.get<String>(AgendaRoutes.AGENDA_TYPE_PARAM)?.let { AgendaType.valueOf(it) }
     private val screenMode =
@@ -56,6 +59,9 @@ open class AgendaDetailViewModel(
     private val agendaItemId = savedStateHandle.get<String>(AgendaRoutes.AGENDA_ITEM_ID_PARAM)
 
     init {
+        viewModelScope.launch {
+            userId = userRepository.getUserInfo().userId
+        }
         when (screenMode) {
             ScreenMode.REVIEW -> {
                 populateData()
@@ -134,7 +140,10 @@ open class AgendaDetailViewModel(
                             toDate = ZonedDateTime.ofInstant(
                                 Instant.ofEpochMilli(event.toDate),
                                 ZoneId.systemDefault()
-                            )
+                            ),
+                            isUserEventCreator = event.isUserEventCreator,
+                            isGoing = event.isGoing
+
                         )
                     }
                 }
@@ -192,13 +201,14 @@ open class AgendaDetailViewModel(
                                     description = state.description,
                                     date = dateMillis,
                                     remindAt = remindAt,
-                                    isUserEventCreator = true,
-                                    attendees = state.attendees ?: listOf(),
                                     toDate = state.toDate.toInstant().toEpochMilli(),
-                                    host = "1234",
-                                    photos = state.photos
+                                    host = state.host ?: String.EMPTY_STRING,
+                                    isUserEventCreator = state.isUserEventCreator,
+                                    attendees = state.attendees ?: listOf(),
+                                    photos = state.photos,
+                                    isGoing = state.isGoing
                                 ),
-                                modificationType
+                                modificationType,
                             )
                         }
 
@@ -251,6 +261,7 @@ open class AgendaDetailViewModel(
                                     isUserEventCreator = false,
                                     attendees = emptyList(),
                                     photos = emptyList(),
+                                    isGoing = state.isGoing
                                 )
                             )
                         }
@@ -439,6 +450,28 @@ open class AgendaDetailViewModel(
                     )
                     _uiEvent.send(AgendaDetailUiEvent.NavigateToPhotoDetail(agendaDetailAction.photoModel.key))
                 }
+            }
+
+            is AgendaDetailAction.OnDeleteAttendee -> {
+                state =
+                    state.copy(attendees = state.attendees?.filter { it.userId != agendaDetailAction.userId })
+            }
+
+            is AgendaDetailAction.OnChangeUserAssistanceButtonClick -> {
+                val user = state.attendees?.find { it.userId == userId }
+                val newUser = user?.copy(isGoing = !user.isGoing)
+
+                state = state.copy(
+                    attendees = state.attendees?.map {
+                        if (it.userId == newUser?.userId) {
+                            newUser
+                        } else {
+                            it
+                        }
+                    },
+                    isGoing = newUser?.isGoing ?: false,
+                    screenMode = ScreenMode.EDIT_ADD
+                )
             }
 
             else -> Unit

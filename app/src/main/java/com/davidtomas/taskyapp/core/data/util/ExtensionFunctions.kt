@@ -10,7 +10,7 @@ import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
 import kotlinx.serialization.SerializationException
-import java.io.IOException
+import java.net.UnknownHostException
 
 suspend inline fun <reified D> HttpClient.safeRequest(
     block: HttpRequestBuilder.() -> Unit,
@@ -28,7 +28,7 @@ suspend inline fun <reified D> HttpClient.safeRequest(
             409 -> Result.Error(DataError.Network.BAD_REQUEST)
             else -> Result.Error(DataError.Network.UNKNOWN)
         }
-    } catch (e: IOException) {
+    } catch (e: UnknownHostException) {
         Log.d("Network Error", e.toString())
         Result.Error(DataError.Network.NO_INTERNET)
     } catch (e: SerializationException) {

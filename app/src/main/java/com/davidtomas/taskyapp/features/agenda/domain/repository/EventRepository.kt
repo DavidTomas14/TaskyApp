@@ -7,7 +7,10 @@ import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 
 interface EventRepository {
-    suspend fun saveEvent(eventModel: EventModel, modificationType: ModificationType)
+    suspend fun saveEvent(
+        eventModel: EventModel,
+        modificationType: ModificationType,
+    )
 
     suspend fun getEvent(eventId: String): EventModel
 

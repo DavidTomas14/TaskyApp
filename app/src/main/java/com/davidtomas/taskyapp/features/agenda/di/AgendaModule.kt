@@ -11,6 +11,9 @@ import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.AttendeeSer
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventService
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventServiceImpl
 import com.davidtomas.taskyapp.features.agenda.data.event.repository.EventRepositoryImpl
+import com.davidtomas.taskyapp.features.agenda.data.logout.LogoutRepositoryImpl
+import com.davidtomas.taskyapp.features.agenda.data.logout.remote.api.LogoutService
+import com.davidtomas.taskyapp.features.agenda.data.logout.remote.api.LogoutServiceImpl
 import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
 import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationSchedulerImpl
 import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSource
@@ -26,11 +29,14 @@ import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalS
 import com.davidtomas.taskyapp.features.agenda.data.task.remote.api.TaskService
 import com.davidtomas.taskyapp.features.agenda.data.task.remote.api.TaskServiceImpl
 import com.davidtomas.taskyapp.features.agenda.data.task.repository.TaskRepositoryImpl
+import com.davidtomas.taskyapp.features.agenda.data.user.UserRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
+import com.davidtomas.taskyapp.features.agenda.domain.repository.LogoutRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.PhotoRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 import com.davidtomas.taskyapp.features.agenda.domain.repository.TaskRepository
+import com.davidtomas.taskyapp.features.agenda.domain.repository.UserRepository
 import com.davidtomas.taskyapp.features.agenda.domain.useCase.ObserveSelectedDayAgendaUseCase
 import com.davidtomas.taskyapp.features.agenda.presentation.agenda.AgendaViewModel
 import com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail.AgendaDetailViewModel
@@ -54,6 +60,8 @@ private fun Module.domainModule() {
 
 private fun Module.dataModule() {
     single { TaskyRealmDB.create() }
+    singleOf(::LogoutRepositoryImpl) bind LogoutRepository::class
+    singleOf(::LogoutServiceImpl) bind LogoutService::class
     singleOf(::AttendeeServiceImpl) bind AttendeeService::class
     singleOf(::AttendeeServiceImpl) bind AttendeeService::class
     singleOf(::AgendaRepositoryImpl) bind AgendaRepository::class
@@ -70,6 +78,7 @@ private fun Module.dataModule() {
     singleOf(::PhotoRepositoryImpl) bind PhotoRepository::class
     singleOf(::PhotoLocalSourceImpl) bind PhotoLocalSource::class
     singleOf(::NotificationSchedulerImpl) bind NotificationScheduler::class
+    singleOf(::UserRepositoryImpl) bind UserRepository::class
 }
 
 private fun Module.presentationModule() {

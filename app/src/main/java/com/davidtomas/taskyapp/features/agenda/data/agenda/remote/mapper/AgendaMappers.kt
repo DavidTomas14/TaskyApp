@@ -15,7 +15,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.net.URL
 
-suspend fun EventResponse.toEventModel() = EventModel(
+suspend fun EventResponse.toEventModel(userId: String?) = EventModel(
     id = id,
     title = title,
     description = description,
@@ -24,6 +24,7 @@ suspend fun EventResponse.toEventModel() = EventModel(
     remindAt = remindAt,
     host = host,
     isUserEventCreator = isUserEventCreator,
+    isGoing = attendees.find { it.userId == userId }?.isGoing ?: false,
     attendees = attendees.map {
         it.toAttendeeModel()
     },

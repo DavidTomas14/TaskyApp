@@ -25,8 +25,9 @@ import com.davidtomas.taskyapp.features.agenda.presentation.agenda.components.In
 
 @Composable
 fun AttendeeItem(
+    userId: String,
     fullName: String,
-    onDeleteIconClicked: () -> Unit,
+    onDeleteIconClicked: (String) -> Unit,
     isCreator: Boolean = false,
     isEditable: Boolean
 ) {
@@ -53,11 +54,11 @@ fun AttendeeItem(
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onTertiary
             )
-        if (isEditable)
+        if (isEditable && !isCreator)
             Icon(
                 painter = painterResource(id = R.drawable.ic_delete_action),
                 modifier = Modifier
-                    .clickable { onDeleteIconClicked() },
+                    .clickable { onDeleteIconClicked(userId) },
                 contentDescription = "More Actions",
             )
     }
@@ -69,12 +70,14 @@ fun AttendeeItemPreview() {
     TaskyAppTheme {
         Column {
             AttendeeItem(
+                userId = "0",
                 fullName = "David Tomas",
                 onDeleteIconClicked = { /*TODO*/ },
                 isCreator = true,
                 isEditable = false
             )
             AttendeeItem(
+                userId = "0",
                 fullName = "David Tomas",
                 onDeleteIconClicked = { /*TODO*/ },
                 isEditable = true

@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.davidtomas.taskyapp.R
+import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.core.presentation.components.Header
 import com.davidtomas.taskyapp.core.presentation.util.formatToDayHourOrMinutes
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
@@ -93,8 +94,7 @@ fun AgendaDetailScreen(
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
                 .background(Color.White)
                 .padding(
-                    vertical = 30.dp,
-                    horizontal = 16.dp
+                    vertical = 30.dp, horizontal = 16.dp
                 )
                 .then(if (state.agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier)
         ) {
@@ -103,13 +103,13 @@ fun AgendaDetailScreen(
             Title(
                 title = state.title,
                 onNavigateToEditClick = { onAction(AgendaDetailAction.OnNavigateToEditTitleClick) },
-                isEditable = state.screenMode != ScreenMode.REVIEW
+                isEditable = state.screenMode != ScreenMode.REVIEW && state.isUserEventCreator
             )
             Spacer(modifier = Modifier.height(17.dp))
             Description(
                 description = state.description,
                 onNavigateToEditClick = { onAction(AgendaDetailAction.OnNavigateToEditDescriptionClick) },
-                isEditable = state.screenMode != ScreenMode.REVIEW
+                isEditable = state.screenMode != ScreenMode.REVIEW && state.isUserEventCreator
             )
 
             if (state.agendaType == AgendaType.EVENT) {
@@ -121,7 +121,7 @@ fun AgendaDetailScreen(
                     onAddedPhoto = {
                         onAction(AgendaDetailAction.OnAddedPhoto(it))
                     },
-                    isEditable = state.screenMode != ScreenMode.REVIEW
+                    isEditable = state.screenMode != ScreenMode.REVIEW && state.isUserEventCreator
                 )
             }
             Spacer(modifier = Modifier.height(17.dp))
@@ -131,7 +131,7 @@ fun AgendaDetailScreen(
                     AgendaType.EVENT -> "From"
                     else -> "At"
                 },
-                isEditable = state.screenMode != ScreenMode.REVIEW,
+                isEditable = state.screenMode != ScreenMode.REVIEW && state.isUserEventCreator,
                 onConfirmChangedDateClick = { millisOfDate ->
                     onAction(AgendaDetailAction.OnFromDateChanged(millisOfDate))
                 },
@@ -146,7 +146,7 @@ fun AgendaDetailScreen(
                 TimeDatePicker(
                     zonedDateTime = state.toDate,
                     label = "To",
-                    isEditable = state.screenMode != ScreenMode.REVIEW,
+                    isEditable = state.screenMode != ScreenMode.REVIEW && state.isUserEventCreator,
                     onConfirmChangedDateClick = { millisOfDate ->
                         onAction(AgendaDetailAction.OnToDateChanged(millisOfDate))
                     },
@@ -170,24 +170,40 @@ fun AgendaDetailScreen(
             if (state.agendaType == AgendaType.EVENT) {
                 AttendeesSection(
                     attendeeList = state.attendees ?: emptyList(),
-                    onDeleteAttendeeIconClick = {},
+                    onDeleteAttendeeIconClick = { onAction(AgendaDetailAction.OnDeleteAttendee(it)) },
                     onAddAttendeeButtonClick = { onAction(AgendaDetailAction.OnAddVisitorIconClick) },
-                    isEditable = state.screenMode != ScreenMode.REVIEW,
+                    isEditable = state.screenMode != ScreenMode.REVIEW && state.isUserEventCreator,
+                    host = state.host ?: String.EMPTY_STRING
                 )
             }
-            if (state.screenMode == ScreenMode.REVIEW) {
+            if (state.screenMode == ScreenMode.REVIEW && state.isUserEventCreator) {
                 Box(
                     modifier = if (state.agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier,
                     contentAlignment = Alignment.BottomCenter
                 ) {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onClick = {
-                            onAction(AgendaDetailAction.OnDeleteButtonClick)
-                        }
-                    ) {
-                        Text(text = "Delete Item")
+                    Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                        onAction(AgendaDetailAction.OnDeleteButtonClick)
+                    }) {
+                        Text(
+                            text = "Delete Item"
+                        )
+                    }
+                }
+            }
+            if (!state.isUserEventCreator) {
+                Box(
+                    modifier = if (state.agendaType != AgendaType.EVENT) Modifier.weight(1f) else Modifier,
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                        onAction(AgendaDetailAction.OnChangeUserAssistanceButtonClick)
+                    }) {
+                        Text(
+                            text = when {
+                                state.isGoing -> "Leave Event"
+                                else -> "Join Event"
+                            }
+                        )
                     }
                 }
             }

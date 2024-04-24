@@ -23,7 +23,9 @@ sealed class AgendaDetailAction {
     class OnPhotoDeleted(val photoKey: String) : AgendaDetailAction()
     data class OnEmailChanged(val email: String) : AgendaDetailAction()
     data class OnEmailInputFocusChanged(val isFocused: Boolean) : AgendaDetailAction()
+    data class OnDeleteAttendee(val userId: String) : AgendaDetailAction()
     data object OnAddVisitorButtonClicked : AgendaDetailAction()
     data object OnCloseAddVisitorDialogClick : AgendaDetailAction()
     data object OnAddVisitorIconClick : AgendaDetailAction()
+    data object OnChangeUserAssistanceButtonClick : AgendaDetailAction()
 }
