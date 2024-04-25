@@ -1,10 +1,7 @@
 package com.davidtomas.taskyapp.features.agenda.presentation.agendaDetail
 
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.davidtomas.taskyapp.core.presentation.util.ObserveAsEvents
@@ -15,11 +12,9 @@ import java.net.URLEncoder
 
 @Composable
 fun AgendaDetailRoot(
-    snackbarHostState: SnackbarHostState,
     navController: NavHostController,
     agendaDetailViewModel: AgendaDetailViewModel = koinViewModel(),
 ) {
-    val context = LocalContext.current
     val editedText = navController
         .currentBackStackEntry
         ?.savedStateHandle
@@ -66,12 +61,6 @@ fun AgendaDetailRoot(
         when (event) {
             is AgendaDetailUiEvent.NavigateUp -> {
                 navController.navigateUp()
-            }
-            is AgendaDetailUiEvent.ShowSnackBar -> {
-                snackbarHostState.showSnackbar(
-                    message = event.message.asString(context),
-                    duration = SnackbarDuration.Short
-                )
             }
             is AgendaDetailUiEvent.NavigateToPhotoDetail -> {
                 navController.navigate(

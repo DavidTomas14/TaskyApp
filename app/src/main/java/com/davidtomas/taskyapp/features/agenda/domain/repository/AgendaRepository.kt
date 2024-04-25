@@ -9,6 +9,8 @@ interface AgendaRepository {
     suspend fun observeAgendaByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<AgendaModel>>
 
     suspend fun fetchAgenda(): Result<Unit, DataError.Network>
+    suspend fun getAgenda(): List<AgendaModel>
 
+    suspend fun clearTables()
     suspend fun getFutureAgendaItems(): List<AgendaModel>
 }

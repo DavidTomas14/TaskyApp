@@ -37,6 +37,11 @@ class EventLocalSourceImpl(
             results.list.toList().map { it.toEventModel() }
         }
 
+    override suspend fun getEvents(): List<EventModel> = realmDb
+        .query<EventEntity>()
+        .find()
+        .map { it.toEventModel() }
+
     override suspend fun getFutureEvents(): List<EventModel> = realmDb
         .query<EventEntity>("from > $0", System.currentTimeMillis())
         .find()
@@ -69,6 +74,12 @@ class EventLocalSourceImpl(
             val eventModified =
                 eventToUpdate.toEventModel().copy(attendees = actualAttendeeList + attendeeModel)
             copyToRealm(eventModified.toEventEntity(), UpdatePolicy.ALL)
+        }
+    }
+
+    override suspend fun clearRealmTables() {
+        realmDb.write {
+            deleteAll()
         }
     }
 }

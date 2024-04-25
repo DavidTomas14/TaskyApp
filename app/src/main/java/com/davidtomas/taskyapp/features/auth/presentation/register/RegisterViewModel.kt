@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.domain._util.Error
+import com.davidtomas.taskyapp.core.presentation.TaskyUiEvent
+import com.davidtomas.taskyapp.core.presentation.util.UiEventSender
 import com.davidtomas.taskyapp.core.presentation.util.UiText
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationError
 import com.davidtomas.taskyapp.features.auth.domain.model.InputValidationErrors
@@ -20,7 +22,8 @@ import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val validateRegistrationFieldsUseCase: ValidateRegistrationFieldsUseCase,
-    private val registerUseCase: RegisterUseCase
+    private val registerUseCase: RegisterUseCase,
+    private val eventSender: UiEventSender
 ) : ViewModel() {
 
     var state by mutableStateOf(RegisterState())
@@ -182,8 +185,8 @@ class RegisterViewModel(
                 )
             ).fold(
                 onError = { dataError ->
-                    _uiEvent.send(
-                        RegisterUiEvent.ShowSnackBar(
+                    eventSender.sendEvent(
+                        TaskyUiEvent.ShowSnackBar(
                             UiText.StringResource(
                                 resId = dataError.toStringResource()
                             )
@@ -191,13 +194,14 @@ class RegisterViewModel(
                     )
                 }
             ) {
-                _uiEvent.send(
-                    RegisterUiEvent.ShowSnackBar(
+                eventSender.sendEvent(
+                    TaskyUiEvent.ShowSnackBar(
                         UiText.StringResource(
                             R.string.register_success
                         )
                     )
                 )
+                _uiEvent.send(RegisterUiEvent.NavigateUp)
             }
         }
     }

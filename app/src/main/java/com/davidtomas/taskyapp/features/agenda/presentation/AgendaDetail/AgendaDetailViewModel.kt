@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.davidtomas.taskyapp.R
 import com.davidtomas.taskyapp.core.domain._util.EMPTY_STRING
 import com.davidtomas.taskyapp.core.domain.model.DataError
+import com.davidtomas.taskyapp.core.presentation.TaskyUiEvent
+import com.davidtomas.taskyapp.core.presentation.util.UiEventSender
 import com.davidtomas.taskyapp.core.presentation.util.UiText
 import com.davidtomas.taskyapp.core.presentation.util.extractDayMillis
 import com.davidtomas.taskyapp.core.presentation.util.extractFromStartOfTheDayOfDateMillis
@@ -43,6 +45,7 @@ open class AgendaDetailViewModel(
     private val userRepository: UserRepository,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val savedStateHandle: SavedStateHandle,
+    private val eventSender: UiEventSender
 ) : ViewModel() {
 
     var state by mutableStateOf(AgendaDetailState())
@@ -405,16 +408,16 @@ open class AgendaDetailViewModel(
                                     UiText.StringResource(R.string.error_unknown)
                                 }
                             }
-                            _uiEvent.send(
-                                AgendaDetailUiEvent.ShowSnackBar(
+                            eventSender.sendEvent(
+                                TaskyUiEvent.ShowSnackBar(
                                     message
                                 )
                             )
                         },
                         onSuccess = { attendeeModel ->
                             if (attendeeModel == null) {
-                                _uiEvent.send(
-                                    AgendaDetailUiEvent.ShowSnackBar(
+                                eventSender.sendEvent(
+                                    TaskyUiEvent.ShowSnackBar(
                                         UiText.StringResource(R.string.error_visitor_does_not_exist)
                                     )
                                 )
@@ -422,8 +425,8 @@ open class AgendaDetailViewModel(
                                 state = state.copy(
                                     attendees = state.attendees?.plus(attendeeModel)
                                 )
-                                _uiEvent.send(
-                                    AgendaDetailUiEvent.ShowSnackBar(
+                                eventSender.sendEvent(
+                                    TaskyUiEvent.ShowSnackBar(
                                         UiText.StringResource(R.string.message_added_visitor)
                                     )
                                 )
