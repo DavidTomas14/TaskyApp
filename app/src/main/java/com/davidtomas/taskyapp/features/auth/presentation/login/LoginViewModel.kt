@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidtomas.taskyapp.R
+import com.davidtomas.taskyapp.core.presentation.TaskyUiEvent
+import com.davidtomas.taskyapp.core.presentation.util.UiEventSender
 import com.davidtomas.taskyapp.core.presentation.util.UiText
 import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
 import com.davidtomas.taskyapp.features.auth.presentation._common.mapper.toStringResource
@@ -14,7 +16,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val eventSender: UiEventSender
 ) : ViewModel() {
 
     var state by mutableStateOf(LoginState())
@@ -42,8 +45,8 @@ class LoginViewModel(
                     login()
                 } else {
                     viewModelScope.launch {
-                        _uiEvent.send(
-                            LoginUiEvent.ShowSnackBar(
+                        eventSender.sendEvent(
+                            TaskyUiEvent.ShowSnackBar(
                                 UiText.StringResource(
                                     resId = R.string.error_fields_must_be_filled
                                 )
@@ -68,8 +71,8 @@ class LoginViewModel(
                 )
             ).fold(
                 onError = { dataError ->
-                    _uiEvent.send(
-                        LoginUiEvent.ShowSnackBar(
+                    eventSender.sendEvent(
+                        TaskyUiEvent.ShowSnackBar(
                             UiText.StringResource(
                                 resId = dataError.toStringResource()
                             )
@@ -77,8 +80,8 @@ class LoginViewModel(
                     )
                 },
                 onSuccess = {
-                    _uiEvent.send(
-                        LoginUiEvent.ShowSnackBar(
+                    eventSender.sendEvent(
+                        TaskyUiEvent.ShowSnackBar(
                             UiText.StringResource(
                                 R.string.login_success
                             )

@@ -1,6 +1,8 @@
 package com.davidtomas.taskyapp.core.di
 
 import com.davidtomas.taskyapp.TaskyApp
+import com.davidtomas.taskyapp.core.presentation.TaskyUiEventsChannel
+import com.davidtomas.taskyapp.core.presentation.util.UiEventSender
 import com.davidtomas.taskyapp.features.auth.data.local.TaskyDataStore
 import com.davidtomas.taskyapp.features.auth.data.local.TaskyDataStoreImpl
 import com.davidtomas.taskyapp.features.auth.domain.useCase.AuthenticateUseCase
@@ -31,4 +33,5 @@ private fun Module.domainModule() {
 
 private fun Module.presentation() {
     viewModelOf(::MainActivityViewModel)
+    single<UiEventSender> { TaskyUiEventsChannel }
 }

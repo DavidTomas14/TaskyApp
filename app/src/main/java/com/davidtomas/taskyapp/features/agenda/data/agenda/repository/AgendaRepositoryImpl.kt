@@ -105,6 +105,25 @@ class AgendaRepositoryImpl(
         }
     }
 
+    override suspend fun getAgenda(): List<AgendaModel> {
+        return coroutineScope {
+            val job1 = async(Dispatchers.IO) {
+                eventLocalSource.getEvents()
+            }
+            val job2 = async {
+                taskLocalSource.getTasks()
+            }
+            val job3 = async {
+                reminderLocalSource.getReminders()
+            }
+            job1.await() + job2.await() + job3.await()
+        }
+    }
+
+    override suspend fun clearTables() {
+        eventLocalSource.clearRealmTables()
+    }
+
     override suspend fun getFutureAgendaItems(): List<AgendaModel> {
         return coroutineScope {
             val job1 = async(Dispatchers.IO) {

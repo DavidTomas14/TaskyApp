@@ -49,6 +49,11 @@ class TaskLocalSourceImpl(
         .find()
         .map { it.toTaskModel() }
 
+    override suspend fun getTasks(): List<TaskModel> = realmDb
+        .query<TaskEntity>()
+        .find()
+        .map { it.toTaskModel() }
+
     override suspend fun deleteTask(taskId: String, modificationType: ModificationType?) {
         realmDb.write {
             val taskToDelete = query<TaskEntity>("id == $0", taskId).find().first()

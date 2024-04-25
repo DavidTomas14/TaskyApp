@@ -9,11 +9,9 @@ interface ReminderLocalSource {
 
     suspend fun saveReminders(reminders: List<ReminderModel>)
     suspend fun getReminderByDate(startOfDayMillis: Long, endOfDateMillis: Long): Flow<List<ReminderModel>>
-
     suspend fun getRemindById(reminderId: String): ReminderModel
-
     suspend fun getFutureReminders(): List<ReminderModel>
-
+    suspend fun getReminders(): List<ReminderModel>
     suspend fun deleteReminder(
         reminderId: String,
         modificationType: ModificationType? = null

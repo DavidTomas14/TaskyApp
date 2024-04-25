@@ -1,21 +1,33 @@
 package com.davidtomas.taskyapp.navigation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import com.davidtomas.taskyapp.core.presentation.TaskyUiEvent
+import com.davidtomas.taskyapp.core.presentation.TaskyUiEventsChannel
+import com.davidtomas.taskyapp.core.presentation.util.ObserveAsEvents
 import com.davidtomas.taskyapp.coreUi.TaskyAppTheme
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by inject()
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initSplashScreen()
@@ -26,14 +38,36 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TaskyNavHost(
-                        isAuthenticated = viewModel.isAuthenticated.collectAsState().value,
-                        isAuthChecked = viewModel.isAuthChecked.collectAsState().value
+                    val snackbarHostState = remember { SnackbarHostState() }
+                    ObserveTaskyUiEvents(snackbarHostState)
+                    Scaffold(
+                        snackbarHost = { SnackbarHost(snackbarHostState) },
+                        content = {
+                            TaskyNavHost(
+                                isAuthenticated = viewModel.isAuthenticated.collectAsState().value,
+                                isAuthChecked = viewModel.isAuthChecked.collectAsState().value
+                            )
+                        }
                     )
+                    WindowCompat.getInsetsController(window, window.decorView).apply {
+                        isAppearanceLightStatusBars =
+                            false // Set to false if you want dark status bar icons
+                    }
                 }
-                WindowCompat.getInsetsController(window, window.decorView).apply {
-                    isAppearanceLightStatusBars =
-                        false // Set to false if you want dark status bar icons
+            }
+        }
+    }
+
+    @Composable
+    private fun ObserveTaskyUiEvents(snackbarHostState: SnackbarHostState) {
+        ObserveAsEvents(flow = TaskyUiEventsChannel.taskyUiEvent) { taskyEvent ->
+            when (taskyEvent) {
+                is TaskyUiEvent.ShowSnackBar -> {
+                    snackbarHostState.showSnackbar(
+                        message = taskyEvent.message.asString(this@MainActivity),
+                        actionLabel = "Dismiss",
+                        duration = SnackbarDuration.Long,
+                    )
                 }
             }
         }

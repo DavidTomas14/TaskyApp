@@ -49,20 +49,28 @@ class AgendaViewModel(
 
     init {
         viewModelScope.launch {
-            val user = userRepository.getUserInfo()
-            state = state.copy(
-                userFullName = user.fullName
-            )
-            observeSelectedDayAgendaUseCase(selectedDate).collectLatest {
-                if (it.isEmpty()) {
+            val getUserJob = launch {
+                val user = userRepository.getUserInfo()
+                state = state.copy(
+                    userFullName = user.fullName
+                )
+            }
+            val checkCachedDataJob = launch {
+                if (agendaRepository.getAgenda().isEmpty()) {
                     agendaRepository.fetchAgenda().fold(
                         onError = {},
                         onSuccess = {}
                     )
-                } else {
+                }
+            }
+            val observeAgendaJob = launch {
+                observeSelectedDayAgendaUseCase(selectedDate).collectLatest {
                     state = state.copy(agendaItems = it)
                 }
             }
+            getUserJob.join()
+            checkCachedDataJob.join()
+            observeAgendaJob.join()
         }
     }
 
