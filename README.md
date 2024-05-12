@@ -1,2 +1,2 @@
 # Tasky App
-The road to being freelance -> The 2024 goal
+Tasks, events and reminder scheduler app, similar to Google Calendar
