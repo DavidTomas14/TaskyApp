@@ -3,8 +3,8 @@ package com.davidtomas.taskyapp.features.agenda.data.event.repository
 import com.davidtomas.taskyapp.core.domain._util.Result
 import com.davidtomas.taskyapp.core.domain.model.DataError
 import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLocalSource
-import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.AttendeeService
-import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventService
+import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.AttendeeRemoteSource
+import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventRemoteSource
 import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
 import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
@@ -13,8 +13,8 @@ import com.davidtomas.taskyapp.features.agenda.domain.repository.EventRepository
 
 class EventRepositoryImpl(
     private val eventLocalSource: EventLocalSource,
-    private val attendeeService: AttendeeService,
-    private val eventService: EventService,
+    private val attendeeRemoteSource: AttendeeRemoteSource,
+    private val eventRemoteSource: EventRemoteSource,
     private val notificationScheduler: NotificationScheduler,
 ) : EventRepository {
 
@@ -23,8 +23,8 @@ class EventRepositoryImpl(
         modificationType: ModificationType
     ) {
         when (modificationType) {
-            ModificationType.EDIT -> eventService.updateEvent(eventModel)
-            else -> eventService.createEvent(eventModel)
+            ModificationType.EDIT -> eventRemoteSource.updateEvent(eventModel)
+            else -> eventRemoteSource.createEvent(eventModel)
         }.fold(onSuccess = {
             eventLocalSource.saveEvent(eventModel)
             notificationScheduler.cancelScheduledNotificationAndPendingIntent(eventModel)
@@ -41,10 +41,10 @@ class EventRepositoryImpl(
         eventLocalSource.saveAttendee(eventId, attendeeModel)
 
     override suspend fun checkAttendee(email: String): Result<AttendeeModel?, DataError.Network> =
-        attendeeService.checkAttendee(email)
+        attendeeRemoteSource.checkAttendee(email)
 
     override suspend fun deleteEvent(eventModel: EventModel) {
-        eventService.deleteEvent(eventId = eventModel.id)
+        eventRemoteSource.deleteEvent(eventId = eventModel.id)
             .fold(
                 onSuccess = {
                     eventLocalSource.deleteEvent(eventId = eventModel.id)

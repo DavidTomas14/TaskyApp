@@ -22,9 +22,9 @@ import io.ktor.http.path
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class EventServiceImpl(
+class EventRemoteSourceImpl(
     private val client: HttpClient,
-) : EventService {
+) : EventRemoteSource {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override suspend fun createEvent(event: EventModel): Result<Unit, DataError.Network> {

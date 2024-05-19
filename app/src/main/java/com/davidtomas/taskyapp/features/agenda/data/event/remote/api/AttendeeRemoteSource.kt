@@ -4,6 +4,6 @@ import com.davidtomas.taskyapp.core.domain._util.Result
 import com.davidtomas.taskyapp.core.domain.model.DataError
 import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 
-interface AttendeeService {
+interface AttendeeRemoteSource {
     suspend fun checkAttendee(email: String): Result<AttendeeModel?, DataError.Network>
 }

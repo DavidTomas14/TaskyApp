@@ -3,7 +3,7 @@ package com.davidtomas.taskyapp.features.agenda.data.agenda.repository
 import com.davidtomas.taskyapp.core.domain._util.Result
 import com.davidtomas.taskyapp.core.domain._util.map
 import com.davidtomas.taskyapp.core.domain.model.DataError
-import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.api.AgendaService
+import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.api.AgendaRemoteSource
 import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.mapper.toEventModel
 import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.mapper.toReminderModel
 import com.davidtomas.taskyapp.features.agenda.data.agenda.remote.mapper.toTaskModel
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class AgendaRepositoryImpl(
-    private val agendaService: AgendaService,
+    private val agendaRemoteSource: AgendaRemoteSource,
     private val eventLocalSource: EventLocalSource,
     private val reminderLocalSource: ReminderLocalSource,
     private val taskLocalSource: TaskLocalSource,
@@ -45,7 +45,7 @@ class AgendaRepositoryImpl(
     override suspend fun fetchAgenda(): Result<Unit, DataError.Network> {
         return coroutineScope {
             val userId = dataStore.getUserId()
-            agendaService.getAgenda().map {
+            agendaRemoteSource.getAgenda().map {
 
                 val saveEventsJob = launch(Dispatchers.IO) {
                     eventLocalSource.saveEvents(

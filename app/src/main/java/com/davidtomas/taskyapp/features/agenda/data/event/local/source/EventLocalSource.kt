@@ -17,6 +17,8 @@ interface EventLocalSource {
 
     suspend fun deleteEvent(eventId: String, modificationType: ModificationType? = null)
     suspend fun saveAttendee(eventId: String, attendeeModel: AttendeeModel)
-
+    suspend fun getUnsyncedDeletedEvents(): List<String>
+    suspend fun getUnsyncedCreatedEvents(): List<EventModel>
+    suspend fun getUnsyncedUpdatedEvents(): List<EventModel>
     suspend fun clearRealmTables()
 }

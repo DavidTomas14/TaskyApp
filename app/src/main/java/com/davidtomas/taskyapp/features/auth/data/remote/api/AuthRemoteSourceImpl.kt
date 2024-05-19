@@ -18,9 +18,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.http.path
 
-class AuthServiceImpl(
+class AuthRemoteSourceImpl(
     val client: HttpClient,
-) : AuthService {
+) : AuthRemoteSource {
     override suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError.Network> =
         client.safeRequest<Unit> {
             url { path(AuthPaths.REGISTER_ROUTE) }

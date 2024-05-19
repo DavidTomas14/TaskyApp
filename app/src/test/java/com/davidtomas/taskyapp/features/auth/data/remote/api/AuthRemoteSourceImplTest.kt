@@ -24,14 +24,14 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.koin.test.KoinTest
 
 @ExtendWith(AddLogExtension::class)
-internal class AuthServiceImplTest : KoinTest {
+internal class AuthRemoteSourceImplTest : KoinTest {
 
-    private lateinit var authService: AuthServiceImpl
+    private lateinit var authService: AuthRemoteSourceImpl
 
     @Test
     fun `Login is executed with valid data, it returns success response`() =
         runTest {
-            authService = spyk(AuthServiceImpl(client = ktorSuccessClient))
+            authService = spyk(AuthRemoteSourceImpl(client = ktorSuccessClient))
             val result = authService.login(
                 LoginUseCase.LoginParams(
                     email = "email",
@@ -47,7 +47,7 @@ internal class AuthServiceImplTest : KoinTest {
     fun `When an error occurs in login, it returns DataError Network`(statusCode: HttpStatusCode) {
         runTest {
             authService =
-                spyk(AuthServiceImpl(client = ktorErrorClientWithSpecificError(statusCode)))
+                spyk(AuthRemoteSourceImpl(client = ktorErrorClientWithSpecificError(statusCode)))
             val result = authService.login(
                 LoginUseCase.LoginParams(
                     email = "email",
@@ -65,7 +65,7 @@ internal class AuthServiceImplTest : KoinTest {
     fun `When there is an exception during api call, such error is returned`(exception: Exception) {
         runTest {
             authService =
-                spyk(AuthServiceImpl(client = ktorExceptionErrorClient(exception)))
+                spyk(AuthRemoteSourceImpl(client = ktorExceptionErrorClient(exception)))
             val result = authService.login(
                 LoginUseCase.LoginParams(
                     email = "email",
@@ -87,7 +87,7 @@ internal class AuthServiceImplTest : KoinTest {
     @Test
     fun `Register is executed with valid data, it returns success response`() =
         runTest {
-            authService = spyk(AuthServiceImpl(client = ktorSuccessClient))
+            authService = spyk(AuthRemoteSourceImpl(client = ktorSuccessClient))
             val result = authService.register(
                 RegisterUseCase.RegisterParams(
                     fullName = "fullName",
@@ -101,7 +101,7 @@ internal class AuthServiceImplTest : KoinTest {
     @Test
     fun `Authenticate is executed with valid data, it returns success response`() =
         runTest {
-            authService = spyk(AuthServiceImpl(client = ktorSuccessClient))
+            authService = spyk(AuthRemoteSourceImpl(client = ktorSuccessClient))
             val result = authService.authenticate()
             assertThat(result).isInstanceOf(Result.Success::class)
         }

@@ -11,9 +11,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.http.path
 
-class AgendaServiceImpl(
+class AgendaRemoteSourceImpl(
     private val client: HttpClient,
-) : AgendaService {
+) : AgendaRemoteSource {
     override suspend fun getAgenda(): Result<AgendaResponse, DataError.Network> =
         client.safeRequest<AgendaResponse> {
             url { path(AgendaPaths.GET_FULL_AGENDA_ROUTE) }

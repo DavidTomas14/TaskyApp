@@ -38,7 +38,9 @@ class ReminderLocalSourceImpl(
         .query<ReminderEntity>("time > $0 && time < $1", startOfDayMillis, endOfDateMillis)
         .asFlow()
         .map { results ->
-            results.list.toList().map { it.toReminderModel() }
+            results.list.toList()
+                .filter { it.syncType?.let { it1 -> ModificationType.valueOf(it1) } != ModificationType.DELETE }
+                .map { it.toReminderModel() }
         }
 
     override suspend fun getRemindById(reminderId: String): ReminderModel = realmDb
@@ -70,4 +72,19 @@ class ReminderLocalSourceImpl(
             }
         }
     }
+
+    override suspend fun getUnsyncedDeletedReminder(): List<String> = realmDb
+        .query<ReminderEntity>("syncType == $0", ModificationType.DELETE.name).find().map {
+            it.id
+        }
+
+    override suspend fun getUnsyncedCreatedReminder(): List<ReminderModel> = realmDb
+        .query<ReminderEntity>("syncType == $0", ModificationType.ADD.name).find().map {
+            it.toReminderModel()
+        }
+
+    override suspend fun getUnsyncedUpdatedReminder(): List<ReminderModel> = realmDb
+        .query<ReminderEntity>("syncType == $0", ModificationType.EDIT.name).find().map {
+            it.toReminderModel()
+        }
 }

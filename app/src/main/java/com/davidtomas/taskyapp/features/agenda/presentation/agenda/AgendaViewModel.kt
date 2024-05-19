@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidtomas.taskyapp.core.presentation.util.daysOfWeekIncludingGivenDate
+import com.davidtomas.taskyapp.features.agenda.domain.ScheduleSyncAgendaScheduler
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
@@ -35,6 +36,8 @@ class AgendaViewModel(
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
     private val eventRepository: EventRepository,
+    private val scheduleSyncAgendaSchedulerImpl: ScheduleSyncAgendaScheduler,
+    private val scheduleSyncAgendaScheduler: ScheduleSyncAgendaScheduler,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -49,6 +52,7 @@ class AgendaViewModel(
 
     init {
         viewModelScope.launch {
+            scheduleSyncAgendaScheduler.schedule()
             val getUserJob = launch {
                 val user = userRepository.getUserInfo()
                 state = state.copy(
@@ -132,6 +136,7 @@ class AgendaViewModel(
                     logoutRepository.logout().fold(
                         onError = {},
                         onSuccess = {
+                            scheduleSyncAgendaSchedulerImpl.cancelWork()
                             _uiEvent.send(AgendaUiEvent.NavigateToLogin)
                         }
                     )

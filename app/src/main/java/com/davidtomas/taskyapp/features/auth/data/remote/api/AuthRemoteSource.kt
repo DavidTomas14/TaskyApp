@@ -6,7 +6,7 @@ import com.davidtomas.taskyapp.features.auth.domain.model.AuthModel
 import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.RegisterUseCase
 
-interface AuthService {
+interface AuthRemoteSource {
 
     suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError.Network>
     suspend fun login(loginParams: LoginUseCase.LoginParams): Result<AuthModel, DataError.Network>

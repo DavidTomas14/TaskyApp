@@ -7,7 +7,7 @@ import com.davidtomas.taskyapp.features.auth.domain.model.AuthModelStubs
 import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.RegisterUseCase
 
-class FakeAuthServiceImpl : AuthService {
+class FakeAuthRemoteSourceImpl : AuthRemoteSource {
     override suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError.Network> =
         Result.Success(Unit)
 

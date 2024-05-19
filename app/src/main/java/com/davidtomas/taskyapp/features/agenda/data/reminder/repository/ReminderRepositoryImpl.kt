@@ -2,13 +2,13 @@ package com.davidtomas.taskyapp.features.agenda.data.reminder.repository
 
 import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.ReminderLocalSource
-import com.davidtomas.taskyapp.features.agenda.data.reminder.remote.api.ReminderService
+import com.davidtomas.taskyapp.features.agenda.data.reminder.remote.api.ReminderRemoteSource
 import com.davidtomas.taskyapp.features.agenda.domain.model.ModificationType
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 import com.davidtomas.taskyapp.features.agenda.domain.repository.ReminderRepository
 
 class ReminderRepositoryImpl(
-    private val reminderService: ReminderService,
+    private val reminderRemoteSource: ReminderRemoteSource,
     private val reminderLocalSource: ReminderLocalSource,
     private val notificationScheduler: NotificationScheduler,
 ) : ReminderRepository {
@@ -17,8 +17,8 @@ class ReminderRepositoryImpl(
         modificationType: ModificationType
     ) {
         when (modificationType) {
-            ModificationType.EDIT -> reminderService.updateReminder(reminderModel)
-            else -> reminderService.createReminder(reminderModel)
+            ModificationType.EDIT -> reminderRemoteSource.updateReminder(reminderModel)
+            else -> reminderRemoteSource.createReminder(reminderModel)
         }.fold(
             onSuccess = {
                 reminderLocalSource.saveReminder(reminderModel)
@@ -35,7 +35,7 @@ class ReminderRepositoryImpl(
         reminderLocalSource.getRemindById(reminderId = reminderId)
 
     override suspend fun deleteReminder(reminderModel: ReminderModel) {
-        reminderService.deleteReminder(reminderId = reminderModel.id)
+        reminderRemoteSource.deleteReminder(reminderId = reminderModel.id)
             .fold(
                 onSuccess = {
                     reminderLocalSource.deleteReminder(reminderId = reminderModel.id)

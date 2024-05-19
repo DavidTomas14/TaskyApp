@@ -4,7 +4,7 @@ import com.davidtomas.taskyapp.core.domain._util.Result
 import com.davidtomas.taskyapp.core.domain.model.DataError
 import com.davidtomas.taskyapp.features.agenda.domain.model.ReminderModel
 
-interface ReminderService {
+interface ReminderRemoteSource {
 
     suspend fun createReminder(reminder: ReminderModel): Result<Unit, DataError.Network>
     suspend fun updateReminder(reminder: ReminderModel): Result<Unit, DataError.Network>
