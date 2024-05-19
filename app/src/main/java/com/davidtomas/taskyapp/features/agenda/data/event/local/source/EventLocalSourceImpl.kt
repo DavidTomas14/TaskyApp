@@ -94,12 +94,6 @@ class EventLocalSourceImpl(
             it.toEventModel()
         }
 
-    override suspend fun clearRealTables() {
-        realmDb.write {
-            deleteAll()
-        }
-    }
-
     override suspend fun clearRealmTables() {
         realmDb.write {
             deleteAll()

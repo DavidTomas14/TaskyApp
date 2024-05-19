@@ -10,9 +10,9 @@ import io.ktor.client.plugins.plugin
 import io.ktor.http.HttpMethod
 import io.ktor.http.path
 
-class LogoutServiceImpl(
+class LogoutRemoteSourceImpl(
     val client: HttpClient,
-) : LogoutService {
+) : LogoutRemoteSource {
 
     override suspend fun logout(): Result<Unit, DataError.Network> =
         client.safeRequest<Unit> {

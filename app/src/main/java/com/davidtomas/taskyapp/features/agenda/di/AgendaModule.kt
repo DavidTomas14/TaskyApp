@@ -13,8 +13,8 @@ import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventRemote
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventRemoteSourceImpl
 import com.davidtomas.taskyapp.features.agenda.data.event.repository.EventRepositoryImpl
 import com.davidtomas.taskyapp.features.agenda.data.logout.LogoutRepositoryImpl
-import com.davidtomas.taskyapp.features.agenda.data.logout.remote.api.LogoutService
-import com.davidtomas.taskyapp.features.agenda.data.logout.remote.api.LogoutServiceImpl
+import com.davidtomas.taskyapp.features.agenda.data.logout.remote.api.LogoutRemoteSource
+import com.davidtomas.taskyapp.features.agenda.data.logout.remote.api.LogoutRemoteSourceImpl
 import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
 import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationSchedulerImpl
 import com.davidtomas.taskyapp.features.agenda.data.photo.local.source.PhotoLocalSource
@@ -69,7 +69,7 @@ private fun Module.dataModule() {
     singleOf(::ScheduleSyncAgendaSchedulerImpl) bind ScheduleSyncAgendaScheduler::class
     single { TaskyRealmDB.create() }
     singleOf(::LogoutRepositoryImpl) bind LogoutRepository::class
-    singleOf(::LogoutServiceImpl) bind LogoutService::class
+    singleOf(::LogoutRemoteSourceImpl) bind LogoutRemoteSource::class
     singleOf(::AttendeeRemoteSourceImpl) bind AttendeeRemoteSource::class
     singleOf(::AttendeeRemoteSourceImpl) bind AttendeeRemoteSource::class
     singleOf(::AgendaRepositoryImpl) bind AgendaRepository::class

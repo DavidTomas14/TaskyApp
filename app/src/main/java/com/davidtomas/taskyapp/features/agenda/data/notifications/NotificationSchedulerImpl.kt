@@ -6,9 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.davidtomas.taskyapp.features.agenda.domain.model.AgendaModel
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
 class NotificationSchedulerImpl(private val context: Context) : NotificationScheduler {
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
@@ -41,10 +38,7 @@ class NotificationSchedulerImpl(private val context: Context) : NotificationSche
                     putExtra("TITLE", agendaItem.title)
                     putExtra(
                         "DESCRIPTION",
-                        ZonedDateTime.ofInstant(
-                            Instant.ofEpochMilli(agendaItem.remindAt),
-                            ZoneId.systemDefault()
-                        ).toString()
+                        agendaItem.description
                     )
                 }
         return PendingIntent.getBroadcast(

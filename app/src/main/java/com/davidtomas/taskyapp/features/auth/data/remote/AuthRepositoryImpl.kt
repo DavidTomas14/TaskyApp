@@ -29,13 +29,6 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun logout(): Result<Unit, DataError.Network> {
-        return authRemoteSource.logout().also {
-            taskyDataStore.deleteToken()
-            it
-        }
-    }
-
     override suspend fun register(registerParams: RegisterUseCase.RegisterParams): Result<Unit, DataError.Network> {
         return authRemoteSource.register(registerParams)
     }

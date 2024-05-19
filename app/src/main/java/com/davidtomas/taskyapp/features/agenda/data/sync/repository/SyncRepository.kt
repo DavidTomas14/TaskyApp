@@ -39,7 +39,7 @@ class SyncRepository(
     }
 
     private suspend fun clearTaskyTables() {
-        eventLocalSource.clearRealTables()
+        eventLocalSource.clearRealmTables()
     }
 
     private suspend fun deleteAgendaItems(): Result<Unit, DataError.Network> {

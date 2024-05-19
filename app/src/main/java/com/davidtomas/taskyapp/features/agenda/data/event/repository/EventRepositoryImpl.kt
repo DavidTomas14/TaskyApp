@@ -5,8 +5,6 @@ import com.davidtomas.taskyapp.core.domain.model.DataError
 import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.AttendeeRemoteSource
 import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventRemoteSource
-import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.AttendeeService
-import com.davidtomas.taskyapp.features.agenda.data.event.remote.api.EventService
 import com.davidtomas.taskyapp.features.agenda.data.notifications.NotificationScheduler
 import com.davidtomas.taskyapp.features.agenda.domain.model.AttendeeModel
 import com.davidtomas.taskyapp.features.agenda.domain.model.EventModel
