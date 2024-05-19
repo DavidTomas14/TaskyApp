@@ -16,9 +16,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.http.path
 
-class AttendeeServiceImpl(
+class AttendeeRemoteSourceImpl(
     private val client: HttpClient
-) : AttendeeService {
+) : AttendeeRemoteSource {
 
     override suspend fun checkAttendee(email: String): Result<AttendeeModel?, DataError.Network> =
         client.safeRequest<CheckAttendeeResponse> {

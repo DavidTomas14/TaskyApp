@@ -12,9 +12,9 @@ import io.ktor.client.request.setBody
 import io.ktor.http.HttpMethod
 import io.ktor.http.path
 
-class TaskServiceImpl(
+class TaskRemoteSourceImpl(
     private val client: HttpClient,
-) : TaskService {
+) : TaskRemoteSource {
 
     override suspend fun createTask(task: TaskModel): Result<Unit, DataError.Network> =
         client.safeRequest<Unit> {

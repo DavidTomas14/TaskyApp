@@ -79,17 +79,17 @@ class EventLocalSourceImpl(
         }
     }
 
-    override suspend fun getUnSyncedDeletedEvents(): List<String> = realmDb
+    override suspend fun getUnsyncedDeletedEvents(): List<String> = realmDb
         .query<EventEntity>("syncType == $0", ModificationType.DELETE.name).find().map {
             it.id
         }
 
-    override suspend fun getUnSyncedCreatedEvents(): List<EventModel> = realmDb
+    override suspend fun getUnsyncedCreatedEvents(): List<EventModel> = realmDb
         .query<EventEntity>("syncType == $0", ModificationType.ADD.name).find().map {
             it.toEventModel()
         }
 
-    override suspend fun getUnSyncedUpdatedEvents(): List<EventModel> = realmDb
+    override suspend fun getUnsyncedUpdatedEvents(): List<EventModel> = realmDb
         .query<EventEntity>("syncType == $0", ModificationType.EDIT.name).find().map {
             it.toEventModel()
         }

@@ -12,7 +12,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.http.path
 
-class SyncService(
+class SyncRemoteSource(
     private val client: HttpClient,
 ) {
     suspend fun syncAgendaItems(

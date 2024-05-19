@@ -17,7 +17,6 @@ class ScheduleSyncAgendaSchedulerImpl(
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-
         val syncAgendaWorkRequest = PeriodicWorkRequestBuilder<SyncAgendaWorker>(
             repeatInterval = 15,
             repeatIntervalTimeUnit = TimeUnit.MINUTES

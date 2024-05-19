@@ -12,9 +12,9 @@ import io.ktor.client.request.setBody
 import io.ktor.http.HttpMethod
 import io.ktor.http.path
 
-class ReminderServiceImpl(
+class ReminderRemoteSourceImpl(
     private val client: HttpClient,
-) : ReminderService {
+) : ReminderRemoteSource {
 
     override suspend fun createReminder(reminder: ReminderModel): Result<Unit, DataError.Network> =
         client.safeRequest<Unit> {

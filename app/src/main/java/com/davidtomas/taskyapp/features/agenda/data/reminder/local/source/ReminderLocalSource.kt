@@ -16,7 +16,7 @@ interface ReminderLocalSource {
         reminderId: String,
         modificationType: ModificationType? = null
     )
-    suspend fun getUnSyncedDeletedReminder(): List<String>
-    suspend fun getUnSyncedCreatedReminder(): List<ReminderModel>
-    suspend fun getUnSyncedUpdatedReminder(): List<ReminderModel>
+    suspend fun getUnsyncedDeletedReminder(): List<String>
+    suspend fun getUnsyncedCreatedReminder(): List<ReminderModel>
+    suspend fun getUnsyncedUpdatedReminder(): List<ReminderModel>
 }

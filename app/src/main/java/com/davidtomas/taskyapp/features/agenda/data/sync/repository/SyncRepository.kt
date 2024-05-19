@@ -5,18 +5,20 @@ import com.davidtomas.taskyapp.core.domain._util.Result
 import com.davidtomas.taskyapp.core.domain.model.DataError
 import com.davidtomas.taskyapp.features.agenda.data.event.local.source.EventLocalSource
 import com.davidtomas.taskyapp.features.agenda.data.reminder.local.source.ReminderLocalSource
-import com.davidtomas.taskyapp.features.agenda.data.reminder.remote.api.ReminderService
-import com.davidtomas.taskyapp.features.agenda.data.sync.remote.api.SyncService
+import com.davidtomas.taskyapp.features.agenda.data.reminder.remote.api.ReminderRemoteSource
+import com.davidtomas.taskyapp.features.agenda.data.sync.remote.api.SyncRemoteSource
 import com.davidtomas.taskyapp.features.agenda.data.task.local.source.TaskLocalSource
-import com.davidtomas.taskyapp.features.agenda.data.task.remote.api.TaskService
+import com.davidtomas.taskyapp.features.agenda.data.task.remote.api.TaskRemoteSource
 import com.davidtomas.taskyapp.features.agenda.domain.repository.AgendaRepository
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class SyncRepository(
-    private val syncService: SyncService,
-    private val taskService: TaskService,
-    private val reminderService: ReminderService,
+    private val syncRemoteSource: SyncRemoteSource,
+    private val taskRemoteSource: TaskRemoteSource,
+    private val reminderRemoteSource: ReminderRemoteSource,
     private val eventLocalSource: EventLocalSource,
     private val reminderLocalSource: ReminderLocalSource,
     private val taskLocalSource: TaskLocalSource,
@@ -46,20 +48,20 @@ class SyncRepository(
         val deletedRemindersIds = mutableListOf<String>()
         return coroutineScope {
             val getDeletedEvents = launch {
-                deletedEventsIds.addAll(eventLocalSource.getUnSyncedDeletedEvents())
+                deletedEventsIds.addAll(eventLocalSource.getUnsyncedDeletedEvents())
             }
             val getDeletedTasks = launch {
-                deletedTasksIds.addAll(taskLocalSource.getUnSyncedDeletedTasks())
+                deletedTasksIds.addAll(taskLocalSource.getUnsyncedDeletedTasks())
             }
             val getDeletedReminders = launch {
-                deletedRemindersIds.addAll(reminderLocalSource.getUnSyncedDeletedReminder())
+                deletedRemindersIds.addAll(reminderLocalSource.getUnsyncedDeletedReminder())
             }
 
             getDeletedEvents.join()
             getDeletedTasks.join()
             getDeletedReminders.join()
             Log.d("WorkerStatus", "$deletedEventsIds $deletedRemindersIds $deletedTasksIds")
-            syncService.syncAgendaItems(
+            syncRemoteSource.syncAgendaItems(
                 deletedEventsIds = deletedEventsIds,
                 deletedTasksIds = deletedTasksIds,
                 deletedRemindersIds = deletedRemindersIds
@@ -68,43 +70,48 @@ class SyncRepository(
     }
 
     private suspend fun updateTasks(): Result<Unit, DataError.Network> {
-        val updatedUnSyncedTasks = taskLocalSource.getUnSyncedUpdatedTasks()
-        Log.d("WorkerStatus", "$updatedUnSyncedTasks")
-        if (updatedUnSyncedTasks.isNotEmpty()) {
-            updatedUnSyncedTasks.map {
-                val result = taskService.updateTask(it)
-                if (result is Result.Error) return result
+        return coroutineScope {
+            val updatedUnsyncedTasks = taskLocalSource.getUnsyncedUpdatedTasks()
+            val updatedJobs = updatedUnsyncedTasks.map { taskId ->
+                async {
+                    taskRemoteSource.updateTask(taskId)
+                }
             }
-        }
-        val createdUnSyncedTasks = taskLocalSource.getUnSyncedCreatedTasks()
-        Log.d("WorkerStatus", "$createdUnSyncedTasks")
-        if (createdUnSyncedTasks.isNotEmpty()) {
-            createdUnSyncedTasks.map {
-                val result = taskService.createTask(it)
-                if (result is Result.Error) return result
+
+            val createdUnsyncedTasks = taskLocalSource.getUnsyncedCreatedTasks()
+
+            val createdJobs = createdUnsyncedTasks.map { taskId ->
+                async {
+                    taskRemoteSource.createTask(taskId)
+                }
             }
+            (createdJobs + updatedJobs).awaitAll().map {
+                if (it is Result.Error) return@coroutineScope it
+            }
+            return@coroutineScope Result.Success(Unit)
         }
-        return Result.Success(Unit)
     }
 
     private suspend fun updateReminders(): Result<Unit, DataError.Network> {
-        val updatedUnSyncedReminders = reminderLocalSource.getUnSyncedUpdatedReminder()
-        Log.d("WorkerStatus", "$updatedUnSyncedReminders")
-        if (updatedUnSyncedReminders.isNotEmpty()) {
-            updatedUnSyncedReminders.map {
-                val result = reminderService.updateReminder(it)
-                if (result is Result.Error) return result
+        return coroutineScope {
+            val updatedUnsyncedReminders = reminderLocalSource.getUnsyncedUpdatedReminder()
+            val updatedJobs = updatedUnsyncedReminders.map { reminderId ->
+                async {
+                    reminderRemoteSource.updateReminder(reminderId)
+                }
             }
-        }
 
-        val createdUnSyncedReminders = reminderLocalSource.getUnSyncedCreatedReminder()
-        Log.d("WorkerStatus", "$createdUnSyncedReminders")
-        if (createdUnSyncedReminders.isNotEmpty()) {
-            createdUnSyncedReminders.map {
-                val result = reminderService.createReminder(it)
-                if (result is Result.Error) return result
+            val createdUnsyncedReminders = reminderLocalSource.getUnsyncedCreatedReminder()
+
+            val createdJobs = createdUnsyncedReminders.map { reminderId ->
+                async {
+                    reminderRemoteSource.createReminder(reminderId)
+                }
             }
+            (createdJobs + updatedJobs).awaitAll().map {
+                if (it is Result.Error) return@coroutineScope it
+            }
+            return@coroutineScope Result.Success(Unit)
         }
-        return Result.Success(Unit)
     }
 }

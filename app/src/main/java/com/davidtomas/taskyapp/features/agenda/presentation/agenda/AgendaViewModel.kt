@@ -36,6 +36,7 @@ class AgendaViewModel(
     private val taskRepository: TaskRepository,
     private val reminderRepository: ReminderRepository,
     private val eventRepository: EventRepository,
+    private val scheduleSyncAgendaSchedulerImpl: ScheduleSyncAgendaScheduler
     private val scheduleSyncAgendaScheduler: ScheduleSyncAgendaScheduler,
     private val userRepository: UserRepository
 ) : ViewModel() {

@@ -73,17 +73,17 @@ class ReminderLocalSourceImpl(
         }
     }
 
-    override suspend fun getUnSyncedDeletedReminder(): List<String> = realmDb
+    override suspend fun getUnsyncedDeletedReminder(): List<String> = realmDb
         .query<ReminderEntity>("syncType == $0", ModificationType.DELETE.name).find().map {
             it.id
         }
 
-    override suspend fun getUnSyncedCreatedReminder(): List<ReminderModel> = realmDb
+    override suspend fun getUnsyncedCreatedReminder(): List<ReminderModel> = realmDb
         .query<ReminderEntity>("syncType == $0", ModificationType.ADD.name).find().map {
             it.toReminderModel()
         }
 
-    override suspend fun getUnSyncedUpdatedReminder(): List<ReminderModel> = realmDb
+    override suspend fun getUnsyncedUpdatedReminder(): List<ReminderModel> = realmDb
         .query<ReminderEntity>("syncType == $0", ModificationType.EDIT.name).find().map {
             it.toReminderModel()
         }

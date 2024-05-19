@@ -6,8 +6,8 @@ import com.davidtomas.taskyapp.core.domain._util.Result
 import com.davidtomas.taskyapp.core.domain._util.isSuccess
 import com.davidtomas.taskyapp.features.auth.data.local.FakeTaskyDataStoreImpl
 import com.davidtomas.taskyapp.features.auth.data.local.TaskyDataStore
-import com.davidtomas.taskyapp.features.auth.data.remote.api.AuthService
-import com.davidtomas.taskyapp.features.auth.data.remote.api.FakeAuthServiceImpl
+import com.davidtomas.taskyapp.features.auth.data.remote.api.AuthRemoteSource
+import com.davidtomas.taskyapp.features.auth.data.remote.api.FakeAuthRemoteSourceImpl
 import com.davidtomas.taskyapp.features.auth.domain.useCase.LoginUseCase
 import com.davidtomas.taskyapp.features.auth.domain.useCase.RegisterUseCase
 import kotlinx.coroutines.flow.first
@@ -20,14 +20,14 @@ class AuthRepositoryImplTest {
 
     private lateinit var authRepository: AuthRepositoryImpl
     private lateinit var taskyDataStore: TaskyDataStore
-    private lateinit var authService: AuthService
+    private lateinit var authRemoteSource: AuthRemoteSource
 
     @BeforeEach
     fun setUp() {
         taskyDataStore = FakeTaskyDataStoreImpl()
-        authService = FakeAuthServiceImpl()
+        authRemoteSource = FakeAuthRemoteSourceImpl()
         authRepository = AuthRepositoryImpl(
-            authService = authService,
+            authRemoteSource = authRemoteSource,
             taskyDataStore = taskyDataStore
         )
     }
